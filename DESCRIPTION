@@ -1,0 +1,26 @@
+Package: tobalcepi
+Type: Package
+Title: Risk functions and attributable fractions for tobacco and alcohol
+Version: 0.1.0
+Author: Duncan Gillespie
+Maintainer: Duncan Gillespie <duncan.gillespie@sheffield.ac.uk>
+Description: Functions to assign relative risks of disease to individuals based on their tobacco and/or alcohol consumption, and to estimate the attributable fractions of disease.
+License: For internal University of Sheffield use only
+Encoding: UTF-8
+LazyData: true
+Suggests: 
+    knitr,
+    rmarkdown,
+    roxygen2,
+    usethis
+Depends: 
+    data.table
+Imports: 
+    boot,
+    VGAM,
+    stringr,
+    readxl,
+    testthat,
+    dplyr
+VignetteBuilder: knitr
+RoxygenNote: 6.1.1

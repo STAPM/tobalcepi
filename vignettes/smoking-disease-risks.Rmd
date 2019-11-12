@@ -125,7 +125,7 @@ From our pilot searches for evidence on dose-response effects, we selected 12 il
 
 ```{r rel risks, eval = T, echo=F, warning=F, out.extra='', fig.width = 7.5, fig.height = 8.5, fig.cap = "Relative risks of disease in current vs. never smokers."}
 
-data <- read_xlsx("vignettes/16102018tobaccoandalcoholDiseaseListandRiskFunctions.xlsx", sheet = "TobaccoCI")
+data <- read_xlsx("16102018tobaccoandalcoholDiseaseListandRiskFunctions.xlsx", sheet = "TobaccoCI")
 
 data.table::setDT(data)
 
@@ -162,7 +162,7 @@ We have begun to develop our own further assumptions: We assume that the decline
 
 ```{r tob lags, eval = T, echo=F, warning=F, out.extra='', fig.width = 4.55, fig.height = 8.5, fig.cap = "Rate at which the excess risk of disease due to smoking declines over time after quitting."}
 
-data_Kontis <- fread("vignettes/excess_risk_decline_from_KontisLancet.csv")
+data_Kontis <- fread("excess_risk_decline_from_KontisLancet.csv")
 
 # These data give lag times for one of 3 groups
 #unique(data$cause_group)
@@ -182,7 +182,7 @@ p
 
 # Laryngeal
 
-data_laryngeal <- read_xlsx("vignettes/2015-09-06_Risk_changes_after_cessation.xlsx", sheet = "Laryngeal_comparison")
+data_laryngeal <- read_xlsx("2015-09-06_Risk_changes_after_cessation.xlsx", sheet = "Laryngeal_comparison")
 
 setDT(data_laryngeal)
 
@@ -206,7 +206,7 @@ p1
 
 # Oropharyngeal
 
-data_oropharyngeal <- read_xlsx("vignettes/2015-09-06_Risk_changes_after_cessation.xlsx", sheet = "OralPharyngeal_comparison")
+data_oropharyngeal <- read_xlsx("2015-09-06_Risk_changes_after_cessation.xlsx", sheet = "OralPharyngeal_comparison")
 
 setDT(data_oropharyngeal)
 
@@ -229,7 +229,7 @@ p2
 
 # oesophageal
 
-data_oesophageal <- read_xlsx("vignettes/2015-09-06_Risk_changes_after_cessation.xlsx", sheet = "Oesophargeal_comparison")
+data_oesophageal <- read_xlsx("2015-09-06_Risk_changes_after_cessation.xlsx", sheet = "Oesophargeal_comparison")
 
 setDT(data_oesophageal)
 

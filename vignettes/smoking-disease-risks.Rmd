@@ -125,7 +125,7 @@ From our pilot searches for evidence on dose-response effects, we selected 12 il
 
 ```{r rel risks, eval = T, echo=F, warning=F, out.extra='', fig.width = 7.5, fig.height = 8.5, fig.cap = "Relative risks of disease in current vs. never smokers."}
 
-data <- read_xlsx("vignettes/16102018 tobacco and alcohol Disease List and Risk Functions.xlsx", sheet = "TobaccoCI")
+data <- read_xlsx("vignettes/16102018tobaccoandalcoholDiseaseListandRiskFunctions.xlsx", sheet = "TobaccoCI")
 
 data.table::setDT(data)
 

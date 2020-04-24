@@ -123,6 +123,7 @@ Not incorporating these dose-response effects of smoking into our model has two 
 From our pilot searches for evidence on dose-response effects, we selected 12 illustrative studies, each for a different type of cancer [@Tredaniel;@Macacu2015;@Zou2014;@Xu2012;@Liang2009;@Maasland2014;@Fircanis2014;@Osch2016;@Pang2015;@Gandini2008;@Liang2009]. They show the inconsistency in reporting of exposure (current smoking intensity, duration, pack-years), level of exposure (e.g. categorical vs. continuous) and in the format that the risk relationships are reported (in one study, the information we would want to extract is not reported, so we would need to contact the authors). For cancer of the oral cavity, we did not find a meta-analysis but did find a recent and cohort study [@Maasland2014], suggesting that we might have to relax our criteria to look only at meta-analyses. 
 
 
+
 ```{r rel risks, eval = T, echo=F, warning=F, out.extra='', fig.width = 7.5, fig.height = 8.5, fig.cap = "Relative risks of disease in current vs. never smokers."}
 
 data <- read_xlsx("16102018tobaccoandalcoholDiseaseListandRiskFunctions.xlsx", sheet = "TobaccoCI")
@@ -225,7 +226,7 @@ p2
 
 ```
 
-```{r tob lags IARC comparison oesophageal, eval = T, results = 'hide', echo=F, warning=F, out.extra='', fig.width = 7.5, fig.height = 6.5, fig.cap = "Comparison of decline in cancer risk after quitting to results of IARC review for Oesophageal cancers."}
+```{r tob lags IARC comparison oesophageal, eval = T, results = 'hide', echo = F, warning = F, out.extra = '', fig.width = 7.5, fig.height = 6.5, fig.cap = "Comparison of decline in cancer risk after quitting to results of IARC review for Oesophageal cancers."}
 
 # oesophageal
 
@@ -297,6 +298,12 @@ ggplot(av_risk) + geom_bar(aes(x = sex, y = av_risk_), stat = "identity") +
   ggtitle("Laryngeal cancer") + theme_minimal()
 
 ```
+
+# Code developments
+To integrate dose-response risk functions into our modelling, we have started to develop a new function to replace `RRtob()`. The function `RRTobDR` estimates each individual in the data their dose-response relative risk based on the number of cigarettes they consume per day. This function has not yet been integrated into the function `RRFunc()`. 
+
+In order to this this we need to work out if and how we assign risk to former smokers, as there is no cigs per day information for former smokers. 
+
 
 # Acknowledgements
 We thank Professor John Britton and Dr Katrina Brown. This work was conducted as part of our development of the Sheffield Tobacco and Alcohol Policy Model as part of the UK Centre for Tobacco and Alcohol Studies (http://ukctas.net/). Funding for UKCTAS from the British Heart Foundation, Cancer Research UK, the Economic and Social Research Council, the Medical Research Council and the National Institute of Health Research, under the auspices of the UK Clinical Research Collaboration, is gratefully acknowledged. The funders had no role in study design, data collection and analysis, decision to publish or preparation of this work.  

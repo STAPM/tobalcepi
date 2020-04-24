@@ -25,7 +25,7 @@ TobAlcInt <- function(
   disease = "Pharynx",
   alcohol_var = "weekmean",
   tobacco_var = "smk.state",
-  rr_data,
+  rr.data,
   account_for_synergy = TRUE
 ) {
 

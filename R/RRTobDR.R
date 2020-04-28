@@ -14,6 +14,7 @@
 #' average number of daily cigarettes.
 #' 
 #' @return Returns a numeric vector of each individual's relative risks for the tobacco related disease specified by "disease".
+#' @importFrom data.table := setDT setnames
 #' @export
 #'
 #' @examples

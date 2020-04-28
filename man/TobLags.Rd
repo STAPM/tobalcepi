@@ -4,8 +4,11 @@
 \alias{TobLags}
 \title{Tobacco lag times}
 \usage{
-TobLags(disease_name = c("Pharynx", "Oral_cavity"), n_years = 40,
-  lag_data = tobalcepi::tobacco_lag_times)
+TobLags(
+  disease_name = c("Pharynx", "Oral_cavity"),
+  n_years = 40,
+  lag_data = tobalcepi::tobacco_lag_times
+)
 }
 \arguments{
 \item{disease_name}{Character - the name of the disease under consideration.}

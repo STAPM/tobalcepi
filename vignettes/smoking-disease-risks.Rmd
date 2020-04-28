@@ -1,39 +1,36 @@
 ---
 title: "Smoking and the risks of adult diseases"
-author: "Duncan Gillespie, Laura Webster, Colin Angus, Alan Brennan"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Smoking disease risks}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 bibliography: disease-risks.bib
-header-includes:
-  \usepackage{float}
-  \usepackage{amsmath}
 link-citations: yes
 citation_package: natbib
 biblio-style: vancouver
 urlcolor: blue
 ---
 
-
-```{r setup, include = FALSE, results = 'hide', warning = FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.pos = 'H'
 )
-
-library(readxl)
-library(data.table)
-suppressPackageStartupMessages(library(ggplot2))
-#library(cowplot)
-
-#knitr::opts_knit$set(root.dir = "/Volumes/Shared/ScHARR/PR_STAPM/Code/R_packages/tobalcepi")
-#knitr::opts_knit$set(root.dir = "X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi")
-
 ```
+
+```{r setup, include = FALSE, results = 'hide', warning = FALSE, eval = T}
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(magrittr))
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(testthat))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(tobalcepi))
+suppressPackageStartupMessages(library(readxl))
+```
+# Acknowledgements
+We thank Professor John Britton and Dr Katrina Brown. This work was conducted as part of our development of the Sheffield Tobacco and Alcohol Policy Model as part of the UK Centre for Tobacco and Alcohol Studies (http://ukctas.net/). Funding for UKCTAS from the British Heart Foundation, Cancer Research UK, the Economic and Social Research Council, the Medical Research Council and the National Institute of Health Research, under the auspices of the UK Clinical Research Collaboration, is gratefully acknowledged. The funders had no role in study design, data collection and analysis, decision to publish or preparation of this work.  
 
 # Summary
 In the Sheffield Tobacco Policy Model (STPM), we consider 52 adult diseases related to smoking and the corresponding relative risks of developing these diseases in current vs. never smokers, and in former smokers according to the time since they quit [@Webster2018]. For current smokers, we assume that the relative risks of disease are the same for all smokers regardless of the amount currently smoked and the length of time as a smoker. We limit ourselves to diseases that affect the consumer themselves e.g. excluding secondary effects of smoking.  
@@ -230,7 +227,7 @@ p2
 
 # oesophageal
 
-data_oesophageal <- read_xlsx("2015-09-06_Risk_changes_after_cessation.xlsx", sheet = "Oesophargeal_comparison")
+data_oesophageal <- readxl::read_xlsx("2015-09-06_Risk_changes_after_cessation.xlsx", sheet = "Oesophargeal_comparison")
 
 setDT(data_oesophageal)
 
@@ -278,26 +275,6 @@ This average risk is calculated by the function `subgroupRisk()`. The functon `U
 
 The `tobalcepi` package contains data on smoking from the Health Survey for England, 2001-2016 in `hse_data_smoking`. To illustrate, we take a subset of 10,000 individuals from these data, assign them their smoking attributable relative risks for laryngeal cancer, and calculate the average risk for males and females.  
 
-```{r example risk calc, eval = T, echo=T, warning=F, out.extra='', fig.width = 4, fig.height = 4, fig.cap = "Example calculation of average relative risks for a subgroup."}
-
-#install.packages("X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi_0.1.0.zip", repos = NULL)
-library(tobalcepi)
-
-# Create sample
-n <- nrow(hse_data_smoking)
-data <- hse_data_smoking[sample(1:n, 1e4, replace = F, prob = wt_int)]
-
-# Assign relative risks for laryngeal cancer
-data <- RRFunc(data, substance = "tob", tob_diseases = "Larynx")
-
-# Calculate the average risk for males and females
-av_risk <- subgroupRisk(data, disease_names = "Larynx", pool = T, subgroups = "sex")
-
-# Plot the results
-ggplot(av_risk) + geom_bar(aes(x = sex, y = av_risk_), stat = "identity") + 
-  ggtitle("Laryngeal cancer") + theme_minimal()
-
-```
 
 # Code developments
 To integrate dose-response risk functions into our modelling, we have started to develop a new function to replace `RRtob()`. The function `RRTobDR` estimates each individual in the data their dose-response relative risk based on the number of cigarettes they consume per day. This function has not yet been integrated into the function `RRFunc()`. 
@@ -305,8 +282,7 @@ To integrate dose-response risk functions into our modelling, we have started to
 In order to this this we need to work out if and how we assign risk to former smokers, as there is no cigs per day information for former smokers. 
 
 
-# Acknowledgements
-We thank Professor John Britton and Dr Katrina Brown. This work was conducted as part of our development of the Sheffield Tobacco and Alcohol Policy Model as part of the UK Centre for Tobacco and Alcohol Studies (http://ukctas.net/). Funding for UKCTAS from the British Heart Foundation, Cancer Research UK, the Economic and Social Research Council, the Medical Research Council and the National Institute of Health Research, under the auspices of the UK Clinical Research Collaboration, is gratefully acknowledged. The funders had no role in study design, data collection and analysis, decision to publish or preparation of this work.  
+
 
 # References
 

@@ -12,14 +12,23 @@
 #' @param disease Character
 #' @param alcohol_var Character
 #' @param tobacco_var Character
-#' @param rr_data Data table
+#' @param rr.data Data table
 #' @param account_for_synergy Logical
 #'
 #' @return Returns a numeric vector containing  of each individual's relative risks for the tobacco-related disease
 #' specified by "disease".
+#' @importFrom data.table := setDT setnames
 #' @export
 #'
-#' @examples
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' TobAlcInt()
+#' 
+#' }
+#' 
+#' 
 TobAlcInt <- function(
   data,
   disease = "Pharynx",
@@ -31,7 +40,7 @@ TobAlcInt <- function(
 
   rr <- rr.data[Disease == disease]
 
-  dtmp <- copy(data[ , .(x.tob = get(tobacco_var), x.alc = get(alcohol_var))])
+  dtmp <- data.table::copy(data[ , .(x.tob = get(tobacco_var), x.alc = get(alcohol_var))])
 
   # Conditions with a tobacco alcohol interaction
   str1 <- c(

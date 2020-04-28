@@ -15,12 +15,13 @@
 #' @return Returns a data table with two columns - one for the years since consumption changed, and the other
 #' that gives the proportion by which the effect of a change in consumption
 #' on an individual's relative risk of disease has so far emerged.
+#' @importFrom data.table := setDT setnames
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' AlcLags("Pharynx")
-#'
+#'}
 AlcLags <- function(
   disease_name = c("Pharynx", "Oral_cavity"),
   n_years = 20
@@ -107,12 +108,12 @@ AlcLags <- function(
   # Re-format so they show the cumulative proportion by which risk reduces over time
   # i.e. after 20 years, all excess risk has gone, so the cumulative proportion of risk reduction = 1
 
-  lag_data <- data.table(
+  lag_data <- data.table::data.table(
     years_since_change = 1:n_years,
     prop_risk_reduction = cumsum(lag_func) / 100
   )
 
-return(lag_data)
+return(lag_data[])
 }
 
 

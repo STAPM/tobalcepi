@@ -4,9 +4,16 @@
 \alias{subgroupRisk}
 \title{Summarise relative risk}
 \usage{
-subgroupRisk(data, label = NULL, disease_names = c("Pharynx",
-  "Oral_cavity"), af = FALSE, use_weights = FALSE,
-  year_range = "all", pool = FALSE, subgroups = c("sex", "age_cat"))
+subgroupRisk(
+  data,
+  label = NULL,
+  disease_names = c("Pharynx", "Oral_cavity"),
+  af = FALSE,
+  use_weights = FALSE,
+  year_range = "all",
+  pool = FALSE,
+  subgroups = c("sex", "age_cat")
+)
 }
 \arguments{
 \item{data}{A data table of individual characteristics.}
@@ -39,7 +46,7 @@ Attributable fractions are calculated using the method as in Bellis & Jones 2014
 method described in the Brennan et al. 2015 SAPM mathematical description paper.
 }
 \examples{
-
+\dontrun{
 # Simulate individual data
 
 # Using the parameters for the Gamma distribution from Kehoe et al. 2012
@@ -92,5 +99,5 @@ test_aafs <- subgroupRisk(
 )
 
 test_aafs
-
+}
 }

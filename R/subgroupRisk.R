@@ -19,10 +19,11 @@
 #' @param subgroups Character vector - the variable names of the subgroups used to stratify the estimates.
 #'
 #' @return Returns a data table containing the subgroup specific summaries for each disease.
+#' @importFrom data.table := setDT setnames
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' # Simulate individual data
 #'
 #' # Using the parameters for the Gamma distribution from Kehoe et al. 2012
@@ -75,7 +76,7 @@
 #' )
 #'
 #' test_aafs
-#'
+#' }
 subgroupRisk <- function(
   data,
   label = NULL,
@@ -87,7 +88,7 @@ subgroupRisk <- function(
   subgroups = c("sex", "age_cat")
 ) {
 
-  out <- copy(data)
+  out <- data.table::copy(data)
 
   if("age_cat" %in% subgroups & !("age_cat" %in% colnames(out))) {
     out[ , age_cat := c("12-15", "16-17", "18-24", "25-34", "35-49", "50-64", "65-74", "75-89")[findInterval(age, c(-10, 16, 18, 25, 35, 50, 65, 75))]]
@@ -135,9 +136,9 @@ subgroupRisk <- function(
                     by =  c(subgroups, "year"),
                     .SDcols = paste0(disease_names, "_z")]
 
-    setnames(out_risk, paste0(disease_names, "_z"), disease_names)
+    data.table::setnames(out_risk, paste0(disease_names, "_z"), disease_names)
 
-    out_risk <- melt(
+    out_risk <- data.table::melt(
       out_risk,
       id.vars = c(subgroups, "year"),
       variable.name = "condition",
@@ -159,9 +160,9 @@ subgroupRisk <- function(
                   by =  c(subgroups, "year"),
                   .SDcols = paste0(disease_names, "_z")]
 
-    setnames(out_risk, paste0(disease_names, "_z"), disease_names)
+    data.table::setnames(out_risk, paste0(disease_names, "_z"), disease_names)
 
-    out_risk <- melt(
+    out_risk <- data.table::melt(
       out_risk,
       id.vars = c(subgroups, "year"),
       variable.name = "condition",

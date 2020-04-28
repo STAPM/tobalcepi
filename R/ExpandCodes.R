@@ -11,6 +11,7 @@
 #' @param lkup Data frame containing the disease list.
 #'
 #' @return Returns a data frame containing a row for each single ICD-10 code to be searched for.
+#' @importFrom data.table := setDT setnames
 #' @export
 #'
 #' @examples
@@ -63,9 +64,9 @@ ExpandCodes <- function(lkup) {
     }
   }
 
-  setDT(lkup1)
+  data.table::setDT(lkup1)
 
-return(lkup1)
+return(lkup1[])
 }
 
 

@@ -25,6 +25,8 @@ and how these vary socio-demographically.
 }
 \examples{
 
+\dontrun{
+
 # Simulate individual data
 
 # Using the parameters for the Gamma distribution from Kehoe et al. 2012
@@ -48,6 +50,6 @@ data <- data.table(
 )
 
 test_data <- AlcBinge(data)
-
+}
 
 }

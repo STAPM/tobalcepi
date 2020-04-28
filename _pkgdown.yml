@@ -1,0 +1,19 @@
+destination: docs
+home:
+  title: Risk Functions and Attributable Fractions for Tobacco and Alcohol
+  links:
+  - text: Browse source code
+    href: https://github.com/STAPM/tobalcepi
+url: https://github.com/STAPM/tobalcepi
+template:
+  params:
+    bootswatch: flatly
+authors:
+  Duncan Gillespie:
+    href: https://www.sheffield.ac.uk/scharr/sections/heds/staff/gillespie_d
+  Maddy Henney:
+    href: https://www.sheffield.ac.uk/scharr/sections/heds/staff/henney_m
+  Colin Angus:
+    href: https://www.sheffield.ac.uk/scharr/sections/heds/staff/angus_c
+  Alan Brennan:
+    href: https://www.sheffield.ac.uk/scharr/sections/heds/staff/brennan_a

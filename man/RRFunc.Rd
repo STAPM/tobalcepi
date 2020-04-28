@@ -4,16 +4,24 @@
 \alias{RRFunc}
 \title{Individual relative risks of disease}
 \usage{
-RRFunc(data, substance = c("tob", "alc", "tobalc"), k_year = NULL,
+RRFunc(
+  data,
+  substance = c("tob", "alc", "tobalc"),
+  k_year = NULL,
   alc_diseases = c("Pharynx", "Oral_cavity"),
   alc_mort_and_morb = c("Ischaemic_heart_disease", "LiverCirrhosis"),
-  alc_risk_lags = TRUE, alc_indiv_risk_trajectories_store = NULL,
-  alc_protective = TRUE, alc_wholly_chronic_thresholds = c(6, 8),
-  alc_wholly_acute_thresholds = c(6, 8), grams_ethanol_per_unit = 8,
+  alc_risk_lags = TRUE,
+  alc_indiv_risk_trajectories_store = NULL,
+  alc_protective = TRUE,
+  alc_wholly_chronic_thresholds = c(6, 8),
+  alc_wholly_acute_thresholds = c(6, 8),
+  grams_ethanol_per_unit = 8,
   tob_diseases = c("Pharynx", "Oral_cavity"),
   tob_include_risk_in_former_smokers = TRUE,
-  tobalc_include_int = FALSE, tobalc_int_data = NULL,
-  show_progress = FALSE)
+  tobalc_include_int = FALSE,
+  tobalc_int_data = NULL,
+  show_progress = FALSE
+)
 }
 \arguments{
 \item{data}{Data table of individual characteristics - this function uses current smoking and drinking status/amount.}
@@ -112,7 +120,7 @@ have the option of scaling the joint risks by a 'synergy index', which takes the
 risk faced by people because they consume both tobacco and alcohol.
 }
 \examples{
-
+\dontrun{
 #############################
 ## ALCOHOL
 
@@ -222,5 +230,5 @@ RRFunc(
 #############################
 ## TOBACCO AND ALCOHOL
 
-
+}
 }

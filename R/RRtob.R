@@ -35,10 +35,11 @@
 #'
 #' @return Returns a numeric vector of each individual's relative risks for the tobacco-related disease
 #' specified by "disease".
+#' @importFrom data.table := setDT setnames
 #' @export
 #'
 #' @examples
-#'
+#'\dontrun{
 #' # Example data
 #'
 #' n <- 1e2
@@ -54,7 +55,7 @@
 #'   data,
 #'   disease = "Pharynx"
 #' )
-#'
+#'}
 RRtob <- function(
   data,
   disease = "Pharynx",
@@ -71,7 +72,7 @@ RRtob <- function(
   rr <- rr_data[condition == disease]
 
   # Select the consumption, age and sex columns
-  data_temp <- copy(data[ , .(x = get(smoker_status_var), sex = get(sex_var), age = get(age_var))])
+  data_temp <- data.table::copy(data[ , .(x = get(smoker_status_var), sex = get(sex_var), age = get(age_var))])
 
   data_temp[ , ageband := c(
     "<35",

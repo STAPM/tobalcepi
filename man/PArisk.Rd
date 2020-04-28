@@ -4,9 +4,17 @@
 \alias{PArisk}
 \title{Relative risks for alcohol-related injuries}
 \usage{
-PArisk(SODMean, SODSDV, SODFreq, Weight, Widmark_r, cause = "Transport",
-  grams_ethanol_per_unit = 8, grams_ethanol_per_std_drink = 12.8,
-  liver_clearance_rate_h = 0.017)
+PArisk(
+  SODMean,
+  SODSDV,
+  SODFreq,
+  Weight,
+  Widmark_r,
+  cause = "Transport",
+  grams_ethanol_per_unit = 8,
+  grams_ethanol_per_std_drink = 12.8,
+  liver_clearance_rate_h = 0.017
+)
 }
 \arguments{
 \item{SODMean}{Numeric vector - the average amount that each individual is expected to
@@ -51,18 +59,22 @@ or the time interval between drinks within an occassion. This could introduce in
  are taken from Cherpitel et al 2015.
 }
 \examples{
+
+\dontrun{
 # For a male with the following characteristics:
 Weight <- 70 # weight in kg
 Height <- 2 # height in m
 Age <- 25 # age in years
 
-# We can estimate their r value from the Widmark equation using parameter values from Posey and Mozayani (2007)
+# We can estimate their r value from the Widmark equation 
+# using parameter values from Posey and Mozayani (2007)
 Widmark_r <- 0.39834 + ((12.725 * Height - 0.11275 * Age + 2.8993) / Weight)
 
 # They might drink from 1 to 100 grams of ethanol on one occassion
 grams_ethanol <- 1:100
 
-# In minutes, We would expect them to remain intoxicated (with blood alcohol content > 0 percent) for
+# In minutes, We would expect them to remain intoxicated 
+# (with blood alcohol content > 0 percent) for
 Duration_m <- 100 * grams_ethanol / (Widmark_r * Weight * 1000 * (liver_clearance_rate_h / 60))
 
 # and hours
@@ -125,7 +137,6 @@ Annual_risk <- min(
   365 * 24, na.rm = T)
 
 
-\dontrun{
 
 # THE FOLLOWING ARE NOT CONSIDERED IN THIS CALCULATION
 

@@ -27,7 +27,7 @@ All lag times are taken from the review by Holmes et al. 2012,
  and are the numbers used in the current version of SAPM.
 }
 \examples{
-
+\dontrun{
 AlcLags("Pharynx")
-
+}
 }

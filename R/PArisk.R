@@ -31,21 +31,26 @@
 #' @param liver_clearance_rate_h The rate at which blood alcohol concentration declines (percent / hour).
 #'
 #' @return Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.
+#' @importFrom data.table := setDT setnames
 #' @export
 #'
 #' @examples
+#' 
+#' \dontrun{
 #' # For a male with the following characteristics:
 #' Weight <- 70 # weight in kg
 #' Height <- 2 # height in m
 #' Age <- 25 # age in years
 #'
-#' # We can estimate their r value from the Widmark equation using parameter values from Posey and Mozayani (2007)
+#' # We can estimate their r value from the Widmark equation 
+#' # using parameter values from Posey and Mozayani (2007)
 #' Widmark_r <- 0.39834 + ((12.725 * Height - 0.11275 * Age + 2.8993) / Weight)
 #'
 #' # They might drink from 1 to 100 grams of ethanol on one occassion
 #' grams_ethanol <- 1:100
 #'
-#' # In minutes, We would expect them to remain intoxicated (with blood alcohol content > 0 percent) for
+#' # In minutes, We would expect them to remain intoxicated 
+#' # (with blood alcohol content > 0 percent) for
 #' Duration_m <- 100 * grams_ethanol / (Widmark_r * Weight * 1000 * (liver_clearance_rate_h / 60))
 #'
 #' # and hours
@@ -108,7 +113,6 @@
 #'   365 * 24, na.rm = T)
 #'
 #'
-#' \dontrun{
 #'
 #' # THE FOLLOWING ARE NOT CONSIDERED IN THIS CALCULATION
 #'
@@ -153,7 +157,7 @@ PArisk <- function(
 
   #######################
   # Calculate the cumulative probability distribution of each amount of alcohol (1 to 100 g) being drunk on an occassion
-  x <- pnorm(
+  x <- stats::pnorm(
     grams_ethanol,
     SODMean * grams_ethanol_per_unit, # mean
     SODSDV * grams_ethanol_per_unit # variance
@@ -214,7 +218,7 @@ PArisk <- function(
     b3 <- 0.42362
     b4 <- 0.562549
 
-    lvold_1 <- (v1^-.5) - b1
+    lvold_1 <- (v1^-0.5) - b1
     lvold_2 <- (v1^3) - b2
     logitp <- lvold_1 * -b3 + lvold_2 * b4
     p <- boot::inv.logit(logitp)
@@ -231,7 +235,7 @@ PArisk <- function(
     b3 <- 17.84434
     b4 <- 17.6229
 
-    lvold_1 <- (v1^.5) - b1
+    lvold_1 <- (v1^0.5) - b1
     lvold_2 <- v1 - b2
     logitp <- lvold_1 * b3 + lvold_2 * -b4
     p <- boot::inv.logit(logitp)
@@ -248,7 +252,7 @@ PArisk <- function(
     b3 <- 0.28148
     b4 <- 2.00946
 
-    lvold_1 <- (v1^-.5) - b1
+    lvold_1 <- (v1^-0.5) - b1
     lvold_2 <- v1 - b2
     logitp <- lvold_1 * -b3 + lvold_2 * -b4
     p <- boot::inv.logit(logitp)
@@ -266,6 +270,7 @@ PArisk <- function(
   # Annual risk
   Annual_risk <- min((Risk_sum + 1 * (365 * 24 - Time_intox_sum)) / (365 * 24), (365 * 24), na.rm = T)
 
+  
 return(Annual_risk)
 }
 

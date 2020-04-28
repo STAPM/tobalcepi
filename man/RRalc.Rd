@@ -4,12 +4,19 @@
 \alias{RRalc}
 \title{Relative risks for alcohol related diseases}
 \usage{
-RRalc(data, disease = "Pharynx",
+RRalc(
+  data,
+  disease = "Pharynx",
   av_weekly_grams_per_day_var = "GPerDay",
-  peak_grams_per_day_var = "peakday_grams", sex_var = "sex",
-  age_var = "age", mort_or_morb = c("mort", "morb"),
-  protective = TRUE, alc_wholly_chronic_thresholds = c(6, 8),
-  alc_wholly_acute_thresholds = c(6, 8), grams_ethanol_per_unit = 8)
+  peak_grams_per_day_var = "peakday_grams",
+  sex_var = "sex",
+  age_var = "age",
+  mort_or_morb = c("mort", "morb"),
+  protective = TRUE,
+  alc_wholly_chronic_thresholds = c(6, 8),
+  alc_wholly_acute_thresholds = c(6, 8),
+  grams_ethanol_per_unit = 8
+)
 }
 \arguments{
 \item{data}{Data table of individual characteristics.}
@@ -61,6 +68,8 @@ RR < 1 = 1. Relative risks for partially attributable acute are computed by the 
 }
 \examples{
 
+\dontrun{
+
 # Draw disease specific risk functions
 
 # Example data
@@ -91,9 +100,12 @@ test3 <- RRalc(
 )
 
 # Plot the risk functions
-plot(test1 ~ I(0:100), type = "l", ylim = c(0, 10), ylab = "rr", main = "Females, age 30", xlab = "g per day")
+plot(test1 ~ I(0:100), type = "l", ylim = c(0, 10), ylab = "rr", 
+main = "Females, age 30", xlab = "g per day")
 lines(test2 ~ I(0:100), col = 2)
 lines(test3 ~ I(0:100), col = 3)
-legend("topleft", c("Pharyngeal cancer", "Ischaemic heart disease morbidity", "Liver Cirrhosis mortality"), lty = 1, col = 1:3)
-
+legend("topleft", 
+c("Pharyngeal cancer", "Ischaemic heart disease morbidity", "Liver Cirrhosis mortality"), 
+lty = 1, col = 1:3)
+}
 }

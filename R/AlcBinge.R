@@ -13,9 +13,12 @@
 #' @param data Data table of individual characteristics.
 #'
 #' @return Returns data plus the estimated variables.
+#' @importFrom data.table := setDT setnames
 #' @export
 #'
 #' @examples
+#'
+#'\dontrun{
 #'
 #' # Simulate individual data
 #'
@@ -40,7 +43,7 @@
 #' )
 #'
 #' test_data <- AlcBinge(data)
-#'
+#'}
 #'
 AlcBinge <- function(
 
@@ -254,7 +257,7 @@ AlcBinge <- function(
   # Formula taken from Hill-McManus 2014
   # standard normal density function / (1 - standard normal cumulative distribution function)
 
-  data[ , imr := dnorm(drink_3_or_more) / (1 - pnorm(drink_3_or_more))]
+  data[ , imr := stats::dnorm(drink_3_or_more) / (1 - stats::pnorm(drink_3_or_more))]
 
 
   # step 3 : calculate the predicted occasion level standard deviation
@@ -301,7 +304,7 @@ AlcBinge <- function(
 
   data[ , age_temp := NULL]
 
-return(data)
+return(data[])
 }
 
 

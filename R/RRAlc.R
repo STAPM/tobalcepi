@@ -35,9 +35,12 @@
 #' ethanol in one UK standard unit of alcohol.
 #'
 #' @return Returns a numeric vector of each individual's relative risks for the alcohol related disease specified by "disease".
+#' @importFrom data.table := setDT setnames
 #' @export
 #'
 #' @examples
+#'
+#'\dontrun{
 #'
 #' # Draw disease specific risk functions
 #'
@@ -69,11 +72,14 @@
 #' )
 #'
 #' # Plot the risk functions
-#' plot(test1 ~ I(0:100), type = "l", ylim = c(0, 10), ylab = "rr", main = "Females, age 30", xlab = "g per day")
+#' plot(test1 ~ I(0:100), type = "l", ylim = c(0, 10), ylab = "rr", 
+#' main = "Females, age 30", xlab = "g per day")
 #' lines(test2 ~ I(0:100), col = 2)
 #' lines(test3 ~ I(0:100), col = 3)
-#' legend("topleft", c("Pharyngeal cancer", "Ischaemic heart disease morbidity", "Liver Cirrhosis mortality"), lty = 1, col = 1:3)
-#'
+#' legend("topleft", 
+#' c("Pharyngeal cancer", "Ischaemic heart disease morbidity", "Liver Cirrhosis mortality"), 
+#' lty = 1, col = 1:3)
+#'}
 RRalc <- function(
   data,
   disease = "Pharynx",

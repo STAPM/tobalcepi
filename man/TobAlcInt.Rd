@@ -4,8 +4,14 @@
 \alias{TobAlcInt}
 \title{Risk interaction between tobacco and alcohol}
 \usage{
-TobAlcInt(data, disease = "Pharynx", alcohol_var = "weekmean",
-  tobacco_var = "smk.state", rr_data, account_for_synergy = TRUE)
+TobAlcInt(
+  data,
+  disease = "Pharynx",
+  alcohol_var = "weekmean",
+  tobacco_var = "smk.state",
+  rr.data,
+  account_for_synergy = TRUE
+)
 }
 \arguments{
 \item{data}{Data table}
@@ -16,7 +22,7 @@ TobAlcInt(data, disease = "Pharynx", alcohol_var = "weekmean",
 
 \item{tobacco_var}{Character}
 
-\item{rr_data}{Data table}
+\item{rr.data}{Data table}
 
 \item{account_for_synergy}{Logical}
 }
@@ -27,4 +33,14 @@ specified by "disease".
 \description{
 Assigns the disease-specific interaction term (synergy index) appropriate to each
 individual's tobacco and alcohol consumption.
+}
+\examples{
+
+\dontrun{
+
+TobAlcInt()
+
+}
+
+
 }

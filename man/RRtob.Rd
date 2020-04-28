@@ -4,9 +4,14 @@
 \alias{RRtob}
 \title{Tobacco relative risks}
 \usage{
-RRtob(data, disease = "Pharynx", smoker_status_var = "smk.state",
-  sex_var = "sex", age_var = "age",
-  rr_data = tobalcepi::tobacco_relative_risks)
+RRtob(
+  data,
+  disease = "Pharynx",
+  smoker_status_var = "smk.state",
+  sex_var = "sex",
+  age_var = "age",
+  rr_data = tobalcepi::tobacco_relative_risks
+)
 }
 \arguments{
 \item{data}{Data table of individual characteristics.}
@@ -53,7 +58,7 @@ We focus on the risks of current smoking and limit ourselves to diseases that af
  }
 }
 \examples{
-
+\dontrun{
 # Example data
 
 n <- 1e2
@@ -69,5 +74,5 @@ test <- RRtob(
   data,
   disease = "Pharynx"
 )
-
+}
 }

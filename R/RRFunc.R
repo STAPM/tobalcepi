@@ -77,10 +77,11 @@
 #' \item "new_alc_indiv_risk_trajectories_store" is a copy of "alc_indiv_risk_trajectories_store" with
 #' the relative risks for the current year added to the store.
 #' }
+#' @importFrom data.table := setDT setnames
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' #############################
 #' ## ALCOHOL
 #'
@@ -190,7 +191,7 @@
 #' #############################
 #' ## TOBACCO AND ALCOHOL
 #'
-#'
+#' }
 RRFunc <- function(
   data,
   substance = c("tob", "alc", "tobalc"),
@@ -281,7 +282,7 @@ RRFunc <- function(
         # For the individuals present in the population sample for the current year,
         # add the relative risks for the current year
         # to the trajectories of past relative risks that have been stored for each individual
-        indiv_risk_trajectories_alc <- rbindlist(list(
+        indiv_risk_trajectories_alc <- data.table::rbindlist(list(
           data[ , c("ran_id", "year", d_alc), with = F], # current alcohol risks
           alc_indiv_risk_trajectories_store[ran_id %in% data[ , ran_id], c("ran_id", "year", d_alc), with = F] # past relative risk trajectories
         ), use.names = T)
@@ -313,7 +314,7 @@ RRFunc <- function(
         data[ , (d_alc) := NULL]
 
         # Assign the adjusted relative risk the appropriate disease-specific name
-        setnames(indiv_risk_trajectories_alc_adjusted, "rr_adj", d_alc)
+        data.table::setnames(indiv_risk_trajectories_alc_adjusted, "rr_adj", d_alc)
 
         # Marge the adjused relative risks into the data
         data <- merge(
@@ -382,7 +383,7 @@ RRFunc <- function(
       # into a further calculation of joint relative risk for the disease being considered,
       # then the temporary name can be changed to be just the name of disease
       if(substance == "tob" | (substance == "tobalc" & !(d %in% intersect(alc_diseases, tob_diseases)))) {
-        setnames(data, d_tob, d)
+        data.table::setnames(data, d_tob, d)
       }
 
     }
@@ -436,14 +437,14 @@ RRFunc <- function(
       if(is.null(alc_indiv_risk_trajectories_store)) {
 
         # If the first year, then create the storage data table
-        alc_indiv_risk_trajectories_store <- copy(data[ , c("ran_id", "year", paste0(alc_diseases, "_alc")), with = F])
+        alc_indiv_risk_trajectories_store <- data.table::copy(data[ , c("ran_id", "year", paste0(alc_diseases, "_alc")), with = F])
 
       } else {
 
         # Otherwise append the relative risks for the current year to the stored data table
-        alc_indiv_risk_trajectories_store <- rbindlist(list(
+        alc_indiv_risk_trajectories_store <- data.table::rbindlist(list(
           alc_indiv_risk_trajectories_store,
-          copy(data[ , c("ran_id", "year", paste0(alc_diseases, "_alc")), with = F])
+          data.table::copy(data[ , c("ran_id", "year", paste0(alc_diseases, "_alc")), with = F])
         ), use.names = T)
 
       }
@@ -458,11 +459,11 @@ RRFunc <- function(
   # Outputs
 
   if(is.null(alc_indiv_risk_trajectories_store)) {
-    return(copy(data))
+    return(data.table::copy(data))
   } else {
 
     return(list(
-      data_plus_rr = copy(data),
+      data_plus_rr = data.table::copy(data),
       new_alc_indiv_risk_trajectories_store = alc_indiv_risk_trajectories_store
     ))
   }

@@ -39,18 +39,21 @@ consumption.
 > from published sources, which we have referenced. They are under
 > continual review.
 
-This work builds on the disease lists and risk functions collated during
-the process of developing the Sheffield Alcohol Policy Model (Angus et
-al. [2018](#ref-Angus2018)). For tobacco, we based our inital disease
-list and risk functions on those collated for the Royal College of
-Physician’s report “Hiding in plain sight: Treating tobacco dependency
-in the NHS” (Tobacco Advisory Group of the Royal College of Physicians
-[2018](#ref-RCP2018)). We then went through a process of checking and
-harmonising the tobacco disease list and risk functions against our work
-for alcohol (Angus et al. [2018](#ref-Angus2018)) and work by Cancer
-Research UK (Brown et al. [2018](#ref-Brown2018)). We have documented
-the decisions we made in this initial process in a short report (Webster
-et al. [2018](#ref-Webster2018)).
+This work builds on the [disease lists and risk functions collated
+during the process of developing the Sheffield Alcohol Policy
+Model](https://figshare.shef.ac.uk/articles/Alcohol-attributable_diseases_and_dose-response_curves_for_the_Sheffield_Alcohol_Policy_Model_version_4_0/6819689/2)
+(Angus et al. [2018](#ref-Angus2018)). For tobacco, we based our inital
+disease list and risk functions on those collated for the Royal College
+of Physician’s report “Hiding in plain sight: Treating tobacco
+dependency in the NHS” (Tobacco Advisory Group of the Royal College of
+Physicians [2018](#ref-RCP2018)). We then went through a process of
+checking and harmonising the tobacco disease list and risk functions
+against our work for alcohol (Angus et al. [2018](#ref-Angus2018)) and
+work by Cancer Research UK (Brown et al. [2018](#ref-Brown2018)). We
+have documented the decisions we made in this initial process in a
+[short
+report](https://figshare.com/articles/Smoking_and_the_risks_of_adult_diseases/7411451)
+(Webster et al. [2018](#ref-Webster2018)).
 
 ## Usage
 
@@ -165,8 +168,8 @@ library(ggplot2) # for plotting
 <div id="ref-Angus2018">
 
 Angus, Colin, M Henney, L Webster, and Duncan Gillespie. 2018.
-*Alcohol-Attributable Diseases and Dose-Response Curves for the
-Sheffield Alcohol Policy Model Version 4.0*. Book.
+“Alcohol-Attributable Diseases and Dose-Response Curves for the
+Sheffield Alcohol Policy Model Version 4.0.”
 <https://doi.org/10.15131/shef.data.6819689.v1>.
 
 </div>
@@ -194,7 +197,7 @@ Https://Www.rcplondon.ac.uk/Projects/Outputs/Hiding-Plain-Sight-Treating-Tobacco
 <div id="ref-Webster2018">
 
 Webster, L, C Angus, A Brennan, and D. Gillespie. 2018. “Smoking and the
-Risks of Adult Diseases.” Journal Article.
+Risks of Adult Diseases.”
 
 </div>
 

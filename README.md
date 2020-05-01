@@ -5,7 +5,8 @@
 
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
-developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)  
+[![DOI](https://zenodo.org/badge/221235909.svg)](https://zenodo.org/badge/latestdoi/221235909)
 
 The package is usable but there are still bugs and further developments
 that are being worked through i.e. some code and documentation is still
@@ -24,17 +25,32 @@ consequences of clustering and interactions between tobacco and alcohol
 consumption behaviours.
 
 The motivation for `tobalcepi` was to organise the information on the
-relative risks of diseases related to tobacco and alcohol consumption
-and to provide functions to easily work with these data in modelling.
-The suite of functions within `tobalcepi` processes the published data
-on disease risks that stem from chronic and acute alcohol consumption,
-from smoking, and on the decline in risk after ceasing or reducing
-consumption. The package also includes functions to estimate population
-attributable fractions, and to explore the interaction between the
-disease risks that stem from tobacco and alcohol consumption.
+relative risks of diseases in adults related to their own tobacco and
+alcohol consumption and to provide functions to easily work with these
+data in modelling. The suite of functions within `tobalcepi` processes
+the published data on disease risks that stem from chronic and acute
+alcohol consumption, from smoking, and on the decline in risk after
+ceasing or reducing consumption. The package also includes functions to
+estimate population attributable fractions, and to explore the
+interaction between the disease risks that stem from tobacco and alcohol
+consumption.
 
-> The risk functions in this package are all collated from published
-> sources, which we have referenced.
+> The disease lists and risk functions in this package are all collated
+> from published sources, which we have referenced. They are under
+> continual review.
+
+This work builds on the disease lists and risk functions collated during
+the process of developing the Sheffield Alcohol Policy Model (Angus et
+al. [2018](#ref-Angus2018)). For tobacco, we based our inital disease
+list and risk functions on those collated for the Royal College of
+Physician’s report “Hiding in plain sight: Treating tobacco dependency
+in the NHS” (Tobacco Advisory Group of the Royal College of Physicians
+[2018](#ref-RCP2018)). We then went through a process of checking and
+harmonising the tobacco disease list and risk functions against our work
+for alcohol (Angus et al. [2018](#ref-Angus2018)) and work by Cancer
+Research UK (Brown et al. [2018](#ref-Brown2018)). We have documented
+the decisions we made in this initial process in a short report (Webster
+et al. [2018](#ref-Webster2018)).
 
 ## Usage
 
@@ -136,4 +152,50 @@ library(ggplot2) # for plotting
 
 ## Getting started
 
+*to be added*
+
 ## Basic functionality
+
+*to be added*
+
+-----
+
+<div id="refs" class="references">
+
+<div id="ref-Angus2018">
+
+Angus, Colin, M Henney, L Webster, and Duncan Gillespie. 2018.
+*Alcohol-Attributable Diseases and Dose-Response Curves for the
+Sheffield Alcohol Policy Model Version 4.0*. Book.
+<https://doi.org/10.15131/shef.data.6819689.v1>.
+
+</div>
+
+<div id="ref-Brown2018">
+
+Brown, Katrina F., Harriet Rumgay, Casey Dunlop, Margaret Ryan, Frances
+Quartly, Alison Cox, Andrew Deas, et al. 2018. “The Fraction of Cancer
+Attributable to Modifiable Risk Factors in England, Wales, Scotland,
+Northern Ireland, and the United Kingdom in 2015.” Journal Article.
+*British Journal of Cancer* 118 (8): 1130–41.
+<https://doi.org/10.1038/s41416-018-0029-6>.
+
+</div>
+
+<div id="ref-RCP2018">
+
+Tobacco Advisory Group of the Royal College of Physicians. 2018. “Hiding
+in plain sight: Treating tobacco dependency in the NHS.” Research
+report. *Available from:
+Https://Www.rcplondon.ac.uk/Projects/Outputs/Hiding-Plain-Sight-Treating-Tobacco-Dependency-Nhs*.
+
+</div>
+
+<div id="ref-Webster2018">
+
+Webster, L, C Angus, A Brennan, and D. Gillespie. 2018. “Smoking and the
+Risks of Adult Diseases.” Journal Article.
+
+</div>
+
+</div>

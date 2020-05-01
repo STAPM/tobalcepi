@@ -1,5 +1,10 @@
 ---
 output: github_document
+bibliography: disease-risks.bib
+link-citations: yes
+citation_package: natbib
+biblio-style: vancouver
+urlcolor: blue
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -15,17 +20,19 @@ knitr::opts_chunk$set(
 # tobalcepi <img src="tools/tobalcepi_hex.png" align="right" style="padding-left:10px;background-color:white;" width="100" height="100" />
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)  
-
+[![DOI](https://zenodo.org/badge/221235909.svg)](https://zenodo.org/badge/latestdoi/221235909)
 
 The package is usable but there are still bugs and further developments that are being worked through i.e. some code and documentation is still incomplete or in need of being refined. The code and documentation are still undergoing internal review by the analyst team.   
 
 ## Motivation
 `tobalcepi` was created as part of a programme of work on the health economics of tobacco and alcohol at the School of Health and Related Research (ScHARR), The University of Sheffield. This programme is based around the construction of the Sheffield Tobacco and Alcohol Policy Model (STAPM), which aims to use comparable methodologies to evaluate the impacts of tobacco and alcohol policies, and investigate the consequences of clustering and interactions between tobacco and alcohol consumption behaviours.   
 
-The motivation for `tobalcepi` was to organise the information on the relative risks of diseases related to tobacco and alcohol consumption and to provide functions to easily work with these data in modelling. The suite of functions within `tobalcepi` processes the published data on disease risks that stem from chronic and acute alcohol consumption, from smoking, and on the decline in risk after ceasing or reducing consumption. The package also includes functions to estimate population attributable fractions, and to explore the interaction between the disease risks that stem from tobacco and alcohol consumption.     
+The motivation for `tobalcepi` was to organise the information on the relative risks of diseases in adults related to their own tobacco and alcohol consumption and to provide functions to easily work with these data in modelling. The suite of functions within `tobalcepi` processes the published data on disease risks that stem from chronic and acute alcohol consumption, from smoking, and on the decline in risk after ceasing or reducing consumption. The package also includes functions to estimate population attributable fractions, and to explore the interaction between the disease risks that stem from tobacco and alcohol consumption.     
 
- > The risk functions in this package are all collated from published sources, which we have referenced.    
- 
+ > The disease lists and risk functions in this package are all collated from published sources, which we have referenced. They are under continual review.      
+
+This work builds on the disease lists and risk functions collated during the process of developing the Sheffield Alcohol Policy Model [@Angus2018]. For tobacco, we based our inital disease list and risk functions on those collated for the Royal College of Physician's report "Hiding in plain sight: Treating tobacco dependency in the NHS" [@RCP2018]. We then went through a process of checking and harmonising the tobacco disease list and risk functions against our work for alcohol [@Angus2018] and work by Cancer Research UK [@Brown2018]. We have documented the decisions we made in this initial process in a short report [@Webster2018].  
+
 ## Usage
 
 `tobalcepi` is a package for predicting individual risk of disease due to tobacco and alcohol consumption based on published sources, and summarising that risk.    
@@ -95,15 +102,17 @@ library(ggplot2) # for plotting
 
 ## Getting started
 
+*to be added*
 
 
 
 
 ## Basic functionality
 
+*to be added*
 
 
-
+---
 
 
 

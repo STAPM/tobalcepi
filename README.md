@@ -35,9 +35,10 @@ estimate population attributable fractions, and to explore the
 interaction between the disease risks that stem from tobacco and alcohol
 consumption.
 
-> The disease lists and risk functions in this package are all collated
-> from published sources, which we have referenced. They are under
-> continual review.
+> The disease lists and risk functions in this package all have
+> published sources, which we have referenced. In order to obtain
+> mathematical descriptions of the risk functions for use in modelling,
+> we needed to contact some authors to ask for addition information.
 
 This work builds on the [disease lists and risk functions collated
 during the process of developing the Sheffield Alcohol Policy
@@ -53,7 +54,9 @@ work by Cancer Research UK (Brown et al. [2018](#ref-Brown2018)). We
 have documented the decisions we made in this initial process in a
 [short
 report](https://figshare.com/articles/Smoking_and_the_risks_of_adult_diseases/7411451)
-(Webster et al. [2018](#ref-Webster2018)).
+(Webster et al. [2018](#ref-Webster2018)). Subsequent updates to the
+tobacco related risk functions are documented in
+`vignette("smoking-disease-risks")`.
 
 ## Usage
 
@@ -160,6 +163,15 @@ library(ggplot2) # for plotting
 ## Basic functionality
 
 *to be added*
+
+## Acknowledgements
+
+This work builds on the years of work and experience of the Sheffield
+Alcohol Research Group in constructing the Sheffield Alcohol Policy
+Model. The extension of the work for alcohol was initially extended to
+tobacco as part of our development of the Sheffield Tobacco and Alcohol
+Policy Model as part of the UK Centre for Tobacco and Alcohol Studies
+(<http://ukctas.net/>).
 
 -----
 

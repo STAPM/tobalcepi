@@ -1,0 +1,205 @@
+---
+title: "Population attributable fractions of disease"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Attributable fractions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: disease-risks.bib
+link-citations: yes
+citation_package: natbib
+biblio-style: vancouver
+urlcolor: blue
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.pos = 'H'
+)
+```
+
+```{r setup, include = FALSE, results = 'hide', warning = FALSE, eval = T}
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(magrittr))
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(testthat))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(tobalcepi))
+suppressPackageStartupMessages(library(readxl))
+```
+
+# Background
+Tobacco and alcohol are risk factors for a broad range of health conditions, however the relationship between smoking, drinking and some health conditions is complex. Whilst some conditions, such as alcohol liver disease, are caused solely by alcohol, there are many other conditions for which alcohol is a contributory, but not the only, risk factor. Estimating the proportions of these partially alcohol-attributable and tobacc-attributable conditions that are due to smoking and drinking is critical in understanding the burden which tobacco and alcohol place upon health and healthcare services. These proportions, known generally as *Population Attributable Fractions* (PAFs) or specifically *Alcohol Attributable Fractions* (AAFs) and *Smoking Attributable Fractions* (SAFs), are defined as the proportion of the cases of a partially attributable disease or injury that would be prevented if exposure to alcohol or tobacco was eliminated. PAFs are applied routinely to mortality and morbidity data to estimate the impact that behavioural risk factors have on population health and health service use.    
+
+# Theory
+The disease attributable to an exposure can be described in terms of the PAF, which for the purposes of this explanation is defined as an estimate of the proportion of new disease cases (e.g. the proportion of cases that are newly diagnosed) in each year that are due to the exposure.   
+
+The basic derivation of the PAF is as follows:    
+
+First, express the number of new cases $X$ of disease $d$ (e.g. $d =$ lung cancer) in period $t$ (e.g. $t = 2019$) at age $a$ (e.g. $a = 75$ years) in terms of the proportion of people $\theta$ with each level of exposure $u$, the relative increase in the risk of the disease at that level of exposure (i.e. the relative risk) $r_u(d)$, and the probability that people who are not exposed get the disease $z(d)$       
+
+\begin{align}
+X(d,a,t) &= N(a,t)\sum_{u}\theta_{u}(a,t)z(d,a,t)r_{u}(d)
+\end{align}
+
+Next, re-write the relative risk $r$ using $r = 1 + h$, where $h$ is the proportional increase in risk due to exposure       
+
+\begin{align}
+X(d,a,t) &= N(a,t)\sum_{u}\theta_{u}(a,t)z(d,a,t)[1+h_{u}(d)]
+\end{align}
+
+The formula for the fraction of new disease cases that are due to exposure (the $PAF$) is then obtained as follows:     
+
+For the numerator, expand the brackets    
+
+\begin{align}
+X(d,a,t) &= N(a,t)\sum_{u}\theta_{u}(a,t)z(d,a,t)[1+h_{u}(d)] \\
+&= N(a,t)\sum_{u}\left(\theta_{u}(a,t)z(d,a,t)+\theta_{u}(a,t)z(d,a,t)h_{u}(d)\right)
+\end{align}
+
+and then retain only the terms that give the new disease cases that are due to exposure   
+
+\begin{align}
+N(a,t)\sum_{u}\theta_{u}(a,t)z(d,a,t)h_{u}(d)
+\end{align}
+
+For the denominator, use the full expanded version, i.e. the total new disease cases.    
+
+The resulting formula for the $PAF$ is    
+
+\begin{align}
+PAF = \frac{N(a,t)\sum_{u}\theta_{u}(a,t)z(d,a,t)h_{u}(d)}{N(a,t)\sum_{u}\left(\theta_{u}(a,t)z(d,a,t)+\theta_{u}(a,t)z(d,a,t)h_{u}(d)\right)}
+\end{align}
+
+This simplifies to   
+
+\begin{align}
+PAF &= \frac{\sum_{u}\theta_{u}(a,t)h_{u}(d)}{1+\sum_{u}\theta_{u}(a,t)h_{u}(d)} \\
+&= \frac{\sum_{u}\theta_{u}(a,t)[r_{u}(d)-1]}{1+\sum_{u}\theta_{u}(a,t)[r_{u}(d)-1]}
+\end{align}
+
+# Caution in the use of PAFs
+Sometimes PAFs calculated in this way are just applied to the total number of disease cases or deaths at a particular age, in a particular year. However, the total number of disease cases or deaths due to an exposure at each age are the cumulative result of the age patterns in disease incidence, recovery and survival, and each of these processes will likely have their own age-specific relationship to the exposure. Furthermore, exposure varies across the lifecourse of each individual and disease risk can depend on cumulative exposure over the lifecourse rather than just current exposure. In `tobalcepi`, we do not take these factors into account, which will cause some bias in our estimated PAFs. For example, since smoking rates typically fall with age, we will likely underestimte the fraction of deaths at old ages that are attributable to smoking. This issue could potentially be solved by simulating individual histories of disease incidence, progression and death, but that is beyond the scope of `tobalcepi`.       
+
+# Data required
+In order to calculate PAFs, `tobalcepi` requires two things:   
+
+1. individual-level data on tobacco and/or alcohol consumption and how this varies across the population,  
+1. estimates of the relative risk of each health condition at different levels of consumption.    
+
+Tobacco consumption is described by whether someone is a current, former or never regular smoker, and the time since quitting for former smokers. Alcohol consumption is described by the current average consumption of ethanol in a year (for partially-attributable chronic conditions) and the estimated frequency of intoxication (for partially-attributable acute conditions).    
+
+# Example calculations
+
+
+
+
+
+
+
+
+
+
+# References
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

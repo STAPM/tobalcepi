@@ -1,0 +1,143 @@
+---
+title: "Tobacco and alcohol interactions in disease risk"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tobacco-Alcohol disease interactions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: disease-risks.bib
+link-citations: yes
+citation_package: natbib
+biblio-style: vancouver
+urlcolor: blue
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.pos = 'H'
+)
+```
+
+```{r setup, include = FALSE, results = 'hide', warning = FALSE, eval = T}
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(magrittr))
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(testthat))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(tobalcepi))
+suppressPackageStartupMessages(library(readxl))
+```
+
+# Background
+
+
+
+
+
+
+
+
+
+# References
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,166 @@
+---
+title: "Alcohol consumption and the risks of adult diseases"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Alcohol disease risks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: disease-risks.bib
+link-citations: yes
+citation_package: natbib
+biblio-style: vancouver
+urlcolor: blue
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.pos = 'H'
+)
+```
+
+```{r setup, include = FALSE, results = 'hide', warning = FALSE, eval = T}
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(magrittr))
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(testthat))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(tobalcepi))
+suppressPackageStartupMessages(library(readxl))
+```
+
+# Background
+The latest versions of the dose-response curve linking alcohol consumption to disease are available in a [short report](https://figshare.shef.ac.uk/articles/Alcohol-attributable_diseases_and_dose-response_curves_for_the_Sheffield_Alcohol_Policy_Model_version_4_0/6819689/2) [@Angus2018]. This vignette does not aim to reproduce that report - instead this vignette explains how the risk functions within the `tobalcepi` code can be accessed and used.   
+
+
+# Disease list
+
+
+
+# Partially-attributable chronic conditions
+
+
+
+
+# Partially-attributable acute conditions
+
+
+
+
+# Wholly-attributable acute conditions
+
+
+
+
+
+# Wholly-attributable acute conditions
+
+
+
+# Use of relative risks in SAPM
+
+
+
+
+# References
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -8,10 +8,11 @@ state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)  
 [![DOI](https://zenodo.org/badge/221235909.svg)](https://zenodo.org/badge/latestdoi/221235909)
 
-The package is usable but there are still bugs and further developments
-that are being worked through i.e. some code and documentation is still
-incomplete or in need of being refined. The code and documentation are
-still undergoing internal review by the analyst team.
+**DRAFT WORKING VERSION** - The package is usable but there are still
+bugs and further developments that are being worked through i.e. some
+code and documentation is still incomplete or in need of being refined.
+The code and documentation are still undergoing internal review by the
+analyst team.
 
 ## Motivation
 

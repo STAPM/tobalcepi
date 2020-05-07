@@ -76,8 +76,8 @@ to discuss). To access you need to [**sign-up for a GitLab
 account**](https://gitlab.com/). You will then need to be added to the
 STAPM project team to gain access.
 
-Once that is sorted, you can **install the development version of
-`hseclean`** from GitLab with:
+Once that is sorted, you can **install the development version** from
+GitLab with:
 
 ``` r
 #install.packages("devtools")
@@ -97,7 +97,7 @@ syntax.
 
 ``` r
 # Load the package
-library(hseclean)
+library(tobalcepi)
 
 # Other useful packages
 library(dplyr) # for data manipulation and summary

@@ -50,7 +50,7 @@ The **outputs** of these processes are datasets in which an individual's tobacco
 ## Installation
 `tobalcepi` is currently available only to members of the project team (but please contact Duncan Gillespie duncan.gillespie@sheffield.ac.uk to discuss). To access you need to [**sign-up for a GitLab account**](https://gitlab.com/). You will then need to be added to the STAPM project team to gain access.   
 
-Once that is sorted, you can **install the development version of `hseclean`** from GitLab with:     
+Once that is sorted, you can **install the development version** from GitLab with:     
 
 ```{r gh_installation, message=FALSE, eval = FALSE}
 #install.packages("devtools")
@@ -68,7 +68,7 @@ Then load the package, and some other packages that are useful. Note that the co
 
 ```{r pkgs, eval = F}
 # Load the package
-library(hseclean)
+library(tobalcepi)
 
 # Other useful packages
 library(dplyr) # for data manipulation and summary

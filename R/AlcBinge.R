@@ -288,7 +288,7 @@ AlcBinge <- function(
   data[weekmean == 0, mean_sod := 0]
 
 
-  # weights from the coefficients at the bottom of sAPM Binge code
+  # weights from the coefficients at the bottom of SAPM Binge code
   #Weight = ifelse(sex == 2, 63.42913136, 77.12631198)
 
   # Calculate the Wildemark r value for each individual using their weight and height from the HSE
@@ -306,60 +306,6 @@ AlcBinge <- function(
 
 return(data[])
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,0 +1,69 @@
+---
+title: "Risk of acute conditions partially-attributable to alcohol"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Alcohol partially-attributable acute risk}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: disease-risks.bib
+link-citations: yes
+citation_package: natbib
+biblio-style: vancouver
+urlcolor: blue
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+Here we describe how we model health harms partially attributable to level of acute alcohol intake on a single occasion (e.g. falls, road traffic accidents or assault). "Partially attributable acute" means that the harm can occur without alcohol but the risk of occurrence changes with acute exposure to alcohol including intoxication. The alcohol consumption patterns reported in the Health Survey for England (HSE) provide the data for our analysis (see the [`hseclean` R package](https://stapm.gitlab.io/hseclean/)). The HSE provides, for each individual, details on mean consumption of alcohol (used for modelling ‘chronic’ harms), and maximum per day alcohol intake in the survey week (used for modelling ‘acute’ harms).     
+
+We have also given a brief description of methods in our [alcohol attributable fractions report](https://figshare.shef.ac.uk/articles/Alcohol_attributable_fractions_for_England/8181845).    
+
+# The number of drinking occassions in a year
+The first step is to estimate the number of drinking occassions that an individual has in a year. The HSE asks repondents about the frequency they drank alcoholic drinks in the last 12 months (in the variable `dnoft`), offering the responses: Almost every day, Five or six days a week, Three or four days a week, Once or twice a week, Once or twice a month, Once every couple of months, Once or twice a year. For interval frequencies, we take the mid point value. We convert yearly frequencies to weekly frequency. For example, Three or four days a week becomes 3.5 times a week. This processing is done by the function `hseclean::alc_drink_now_allages()` that calls the function `hseclean::alc_drink_freq()`.      
+
+We have also developed an alternative method to estimate the number of drinking occassions per year. This method is based on a study by Hill-McManus et al. [-@hill2014estimation], who analysed drinking occasions using data from detailed diaries in the National Diet and Nutrition Survey (NDNS) 2000/2001. Using the regression coefficients from this study, it is possible to predict each individual's expected number of drinking occasions across the year, the average amount they drunk on an occasion, the variability in the amount drunk among occasions, and how these vary socio-demographically. Within our team this method is known as "the new binge model". The new binge model is applied to the HSE data by the function `tobalcepi::AlcBinge()`. Hill-McManus et al. use a negative binomial regression model for the number of weekly drinking occasions (see their Table 3). The explanatory variables for the number of weekly drinking occassions were: log weekly mean consumption, age, income (in poverty or not), ethnicity (white/non-white), age left education, number of children, social class (manual/nonmanual). From the regression coefficients we calculate the expected number of weekly drinking occasions for each individual in the HSE data. Note that this model was fitted to a population sample aged below 65 years, but we assume effect at 55--65 years applies at older ages too.     
+
+We therefore have two methods to choose from to estimate each individual's number of drinking occassions in a year.   
+
+# Amount drunk on drinking occassions
+The second step is to estimate the distribution of the amounts that each individual is likely to drink on their drinking occassions. The HSE asks questions to ascertain the number of units that each individual drank on their heaviest drinking day in the last seven days. However, this data does not tell us about the distribution of amounts that they are likely to consume across all their drinking occassions in a year.    
+
+The average quantity of alcohol that we expect each individual to consume during a drinking occasion can be obtained by dividing the average weekly consumption from the HSE data by the number of weekly drinking occasions. The analysis by Hill-McManus et al. [-@hill2014estimation] mentioned above estimated regression coefficients that allow predictions the variation in the quantity that each individual consumes in a drinking occassion. To estimate this variability in amount consumed, they fitted two models to the NDNS data:    
+
+- Due to the data only recording a seven-day period of each individual's annual drinking, a Heckman selection model was fitted to estimate the probability that an individual drinks on at least three separate occasions during the diary period (see their Table 5). The results were used to correct the estimates of variability for selection bias via the [Inverse Mills Ratio](https://en.wikipedia.org/wiki/Mills_ratio#Inverse_Mills_ratio). The predictors of an individual drinking on at least three separate occassions during the diary period were: log weekly mean consumption, age, income (in poverty or not), employed/not-employed, ethnicity (non-white/white), age left education, number of children, social class (manual/non-manual).         
+- Variability in drinking occassions was then estimated by fitting a Heckman outcome regression to the standard deviation in the quantity of alcohol consumed in a drinking occasion. The predictors of the standard deviation in the quantity of alcohol consumed in a drinking occasion were: log weekly mean consumption, income (in poverty or not), and the Inverse Mills ratio.    
+
+The function `tobalcepi::AlcBinge()` applies the regression coefficients from Hill-McManus et al. to the HSE data. The output is an estimate for each individual in the HSE of the mean and standard deviation of the amount drunk on their drinking occassions throughout the year. From this, we calculate individual-specific probability density functions of the amount of alcohol that could be consumed on a drinking occasion (this is done within the function `tobalcepi::PArisk()`).    
+
+Therefore, at the moment, our only way to model the distribution of the amount of alcohol consumed on drinking occassions uses the "new binge model".   
+
+# Time spent intoxicated
+Each individual's annual exposure to the risk of health conditions from acute alcohol consumption is defined by the amount of time that they spend intoxicated during a year (here we use 'intoxicated' to mean having a percentage blood alcohol content (\%BAC) greater than zero). The method that we use to estimate the time that each individual spends intoxicated over a year is based on Taylor et al. [-@taylor2011combining] and Hill-McManus et al. [-@Hill-McManus2014]. The method multiplies the expected number of weekly drinking occasions by 52 weeks in a year, by the probability that each level of alcohol is consumed on a drinking occassion, and by the expected duration of intoxication for each amount of alcohol that could be drunk. We sum this to give the total annual time spent intoxicated over all levels of conusumption. This is implemented by the function `tobalcepi::PArisk()`.   
+
+We define the expected duration of intoxication for each amount of alcohol that could be drunk in terms of the time, in hours, after a drinking occassion that it would take for an individual's \%BAC to drop to zero. This calculation considers an individual's sex, height and weight, Widmark's $r$ (the fraction of the body mass in which alcohol would be present if it were distributed at concentrations equal to that in blood - see examples of use of the Widmark equation in Watson [-@watson1981prediction] and Posey and Mozayani [-@Posey2007], and the rate at which the liver clears alcohol from the body (we assume this is 0.017 \%BAC/hour). To simplify the calculation, we do not consider the rate of alcohol absorbtion (i.e. there is no alcohol absorbtion rate constant) or the time interval between drinks within a drinking occassion.     
+
+For example, suppose that on average a male of a certain age, weight and height has 5 drinking occasions per week, and that on average they drink 3 units of alcohol on an occasion, and that the standard deviation of amount drunk on an occasion is 14 units. We calculate the probability distribution for the amount of alcohol that our male drinks on a drinking occassion, and we would then calculate the expected total amount of time spent intoxicated in a year.
+
+Therefore, the best method we have to estimate the time spent intoxicated in a year is based on using the distribution of the amount that each individual drinks on a drinking occassion.     
+
+# The annual relative risk of partially-attributable acute conditions
+The relative risks for alcohol-related injuries are taken from Cherpitel et al. [-@cherpitel2015relative] and described in our alcohol risk functions report [@Angus2018]. Note that Cherpitel et al. report relative risks by the number of standard drinks consumed (we assume 1 Std. drink = 16ml (12.8g) of ethanol). The risk functions in Cherpital differ by four causes, which we map onto our disease list as follows:       
+
+- Traffic   
+- Violence: "Assault", "Other_intentional_injuries"   
+- Falls  
+- Other: "Mechanical_forces", "Drowning", "Other_unintentional_injuries", "intentional_self_harm", "Accidental_poisoning", "Fire_injuries".   
+
+The calculations are implemented by the function `tobalcepi::PArisk()`. To calculate the annual relative risk for each condition, we first match each amount drunk on a drinking occassion to the associated relative risk (e.g. the relative risk of violence after a drinking occassion where 6 standard drinks were consumed). We multiply the relative risk associated with each drinking occassion by the expected amount of time spent intoxicated following that drinking occassion. We then sum the relative risk associated with the time during the year that is spent intoxicated. The remaining time in the year (that is not spent intoxicated) has a relative risk of 1. The final estimate of each individual's annual relative risk of a partially-attributable acute condition is the average risk considering time spent intoxicated and time not spent intoxicated.      
+
+# References
+
+
+
+

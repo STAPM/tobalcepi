@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 ```
 
 # Introduction
-Here we describe how we model health harms partially attributable to level of acute alcohol intake on a single occasion (e.g. falls, road traffic accidents or assault). "Partially attributable acute" means that the harm can occur without alcohol but the risk of occurrence changes with acute exposure to alcohol including intoxication. The alcohol consumption patterns reported in the Health Survey for England (HSE) provide the data for our analysis (see the [`hseclean` R package](https://stapm.gitlab.io/hseclean/)). The HSE provides, for each individual, details on mean consumption of alcohol (used for modelling ‘chronic’ harms), and maximum per day alcohol intake in the survey week (used for modelling ‘acute’ harms).     
+Here we describe how we model health harms partially attributable to level of acute alcohol intake on a single occasion (e.g. falls, road traffic accidents or assault). "Partially attributable acute" means that the harm can occur without alcohol but the risk of occurrence changes with acute exposure to alcohol including intoxication. The alcohol consumption patterns reported in the Health Survey for England (HSE) provide the data for our analysis (see the [`hseclean` R package](https://stapm.gitlab.io/hseclean/)). The HSE provides, for each individual, details on mean consumption of alcohol (used for modelling ‘chronic’ harms), and maximum per day alcohol intake in the survey week (used for modelling acute harms).     
 
 We have also given a brief description of methods in our [alcohol attributable fractions report](https://figshare.shef.ac.uk/articles/Alcohol_attributable_fractions_for_England/8181845).    
 

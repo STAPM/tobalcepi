@@ -155,6 +155,12 @@
 <div id="adaptation-to-suit-stapm" class="section level1">
 <h1 class="hasAnchor">
 <a href="#adaptation-to-suit-stapm" class="anchor"></a>Adaptation to suit STAPM</h1>
+<p><em>The problem</em><br>
+STAPM uses a different method of modelling to SAPM in that STAPM tracks individuals as they age (the within-cohort dynamics) but SAPM does not – instead SAPM models changes over time (in one-year time steps) to repeated cross-sectional samples of individuals from the HSE. The method described above is easily applied to a sample of individuals from the HSE, because the HSE contains the necessary covariate (i.e. in the HSE sample there is also data on ethnicity, income, number of children etc.). For STAPM to use the method, would require it to also track the individual age trajectories of traits such as income – and this is beyond the current scope of the STAPM modelling.</p>
+<p><em>The solution</em><br>
+The STAPM modelling tracks the individual age trajectories of the average weekly amount of alcohol consumed – the dynamics of these trajectories are stratified by sex and Index of Multiple Deprivation (IMD) quintiles. We therefore need to adapt the method to predict the number of drinking occassions and the distribution of amount consumed as a function of the average weekly amount of alcohol consumed, age, sex and IMD quintile. The simplest way to do this is to assign the parameter values from Hill-McManus et al. <span class="citation">(<a href="#ref-hill2014estimation">2014</a>)</span> to each individual in a sample of the HSE, and then to average these values by age, sex and IMD quintile (the IMD quintile averages will then reflect the variation among IMD quintiles in the distribution of ethnicity, income, number of children etc.).</p>
+<p><em>Implementing in the STAPM code</em></p>
+<p><em>[to be added]</em></p>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">

@@ -86,6 +86,15 @@ To calculate the annual relative risk for each condition, we do the following:
 The final estimate of each individual's annual relative risk of a partially-attributable acute condition is the average risk considering time spent intoxicated and time not spent intoxicated (in the STAPM code the calculations are implemented by the function `tobalcepi::PArisk()`).     
 
 # Adaptation to suit STAPM
+*The problem*  
+STAPM uses a different method of modelling to SAPM in that STAPM tracks individuals as they age (the within-cohort dynamics) but SAPM does not -- instead SAPM models changes over time (in one-year time steps) to repeated cross-sectional samples of individuals from the HSE. The method described above is easily applied to a sample of individuals from the HSE, because the HSE contains the necessary covariate (i.e. in the HSE sample there is also data on ethnicity, income, number of children etc.). For STAPM to use the method, would require it to also track the individual age trajectories of traits such as income -- and this is beyond the current scope of the STAPM modelling.    
+
+*The solution*  
+The STAPM modelling tracks the individual age trajectories of the average weekly amount of alcohol consumed -- the dynamics of these trajectories are stratified by sex and Index of Multiple Deprivation (IMD) quintiles. We therefore need to adapt the method to predict the number of drinking occassions and the distribution of amount consumed as a function of the average weekly amount of alcohol consumed, age, sex and IMD quintile. The simplest way to do this is to assign the parameter values from Hill-McManus et al. [-@hill2014estimation] to each individual in a sample of the HSE, and then to average these values by age, sex and IMD quintile (the IMD quintile averages will then reflect the variation among IMD quintiles in the distribution of ethnicity, income, number of children etc.).    
+
+*Implementing in the STAPM code*   
+
+*[to be added]*   
 
 
 

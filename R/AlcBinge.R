@@ -243,7 +243,7 @@ AlcBinge <- function(
 
   # make the calculation
 
-  data[ , drink_3_or_more := VGAM::probit(mean_consump_coef * log(weekmean) +
+  data[ , drink_3_or_more := VGAM::probitlink(mean_consump_coef * log(weekmean) +
     age_coef + employ_coef + income_coef + ethn_coef + leaveed_coef + child_coef + class_coef + const_coef, inverse = T)]
 
   data[ , `:=`(mean_consump_coef = NULL, age_coef = NULL, employ_coef = NULL, income_coef = NULL,

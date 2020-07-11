@@ -93,14 +93,7 @@ STAPM uses a different method of modelling to SAPM in that STAPM tracks individu
 The STAPM modelling tracks the individual age trajectories of the average weekly amount of alcohol consumed -- the dynamics of these trajectories are stratified by sex and Index of Multiple Deprivation (IMD) quintiles. We therefore need to adapt the method to predict the number of drinking occassions and the distribution of amount consumed as a function of the average weekly amount of alcohol consumed, age, sex and IMD quintile. The simplest way to do this is to assign the parameter values from Hill-McManus et al. [-@hill2014estimation] to each individual in a sample of the HSE, and then to average these values by age, sex and IMD quintile (the IMD quintile averages will then reflect the variation among IMD quintiles in the distribution of ethnicity, income, number of children etc.).    
 
 *Implementing in the STAPM code*   
-
-*[to be added]*   
-
-
-
-
-
-
+The code to average the parameter values from Hill-McManus et al is in the folder `data-raw/binge_params` within the `tobalcepi` package. This code also averages individual height and weight by age, sex and IMD quintile, for use in the calculations of time spent intoxicated. A new function `tobalcepi::AlcBinge_stapm()` has been written to implement the calculations using these averaged parameter values. The functions `tobalcepi::RRAlc()` and `tobalcepi::PArisk()` have also had minor edits so that they work with the `tobalcepi::AlcBinge_stapm()` function.    
 
 # References
 

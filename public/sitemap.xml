@@ -7,6 +7,9 @@
     <loc>https://stapm.gitlab.io/tobalcepi/reference/AlcBinge.html</loc>
   </url>
   <url>
+    <loc>https://stapm.gitlab.io/tobalcepi/reference/AlcBinge_stapm.html</loc>
+  </url>
+  <url>
     <loc>https://stapm.gitlab.io/tobalcepi/reference/AlcLags.html</loc>
   </url>
   <url>
@@ -35,6 +38,12 @@
   </url>
   <url>
     <loc>https://stapm.gitlab.io/tobalcepi/reference/alc_disease_names.html</loc>
+  </url>
+  <url>
+    <loc>https://stapm.gitlab.io/tobalcepi/reference/binge_params.html</loc>
+  </url>
+  <url>
+    <loc>https://stapm.gitlab.io/tobalcepi/reference/binge_params_stapm.html</loc>
   </url>
   <url>
     <loc>https://stapm.gitlab.io/tobalcepi/reference/disease_groups.html</loc>

@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Calculate variables to inform alcohol binge model — AlcBinge" />
-<meta property="og:description" content="Uses survey data and previously estimated coefficients to describe
+<meta property="og:description" content="Designed to work with cross-sectional survey data with a wide range of individual-level covariates. 
+Uses survey data and previously estimated coefficients to describe
 the patterns of single occassion drinking." />
 
 
@@ -128,11 +129,12 @@ the patterns of single occassion drinking." />
     </div>
 
     <div class="ref-description">
-    <p>Uses survey data and previously estimated coefficients to describe
+    <p>Designed to work with cross-sectional survey data with a wide range of individual-level covariates. 
+Uses survey data and previously estimated coefficients to describe
 the patterns of single occassion drinking.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>AlcBinge</span>(<span class='no'>data</span>)</pre>
+    <pre class="usage"><span class='fu'>AlcBinge</span>(<span class='no'>data</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='kw pkg'>tobalcepi</span><span class='kw ns'>::</span><span class='no'><a href='binge_params.html'>binge_params</a></span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -140,6 +142,11 @@ the patterns of single occassion drinking.</p>
     <tr>
       <th>data</th>
       <td><p>Data table of individual characteristics.</p></td>
+    </tr>
+    <tr>
+      <th>params</th>
+      <td><p>List of three data tables containing the parameter estimates 
+from Hill-McManus et al 2014, Tables 3, 5 and 6.</p></td>
     </tr>
     </table>
 
@@ -174,10 +181,10 @@ and how these vary socio-demographically.</p>
   <span class='kw'>kids</span> <span class='kw'>=</span> <span class='st'>"0"</span>,
   <span class='kw'>social_grade</span> <span class='kw'>=</span> <span class='st'>"C2DE"</span>,
   <span class='kw'>eduend4cat</span> <span class='kw'>=</span> <span class='st'>"16-18"</span>, <span class='co'># age finished education</span>
-  <span class='kw'>ethnic2cat</span> <span class='kw'>=</span> <span class='st'>"white"</span>, <span class='co'># white / non-white</span>
+  <span class='kw'>ethnicity_2cat</span> <span class='kw'>=</span> <span class='st'>"white"</span>, <span class='co'># white / non-white</span>
   <span class='kw'>employ2cat</span> <span class='kw'>=</span> <span class='st'>"yes"</span>, <span class='co'># employed / not</span>
-  <span class='kw'>wtval</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>60</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>5</span>), <span class='co'># weight in kg</span>
-  <span class='kw'>htval</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>1.7</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>.1</span>) <span class='co'># height in m</span>
+  <span class='kw'>weight</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>60</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>5</span>), <span class='co'># weight in kg</span>
+  <span class='kw'>height</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>1.7</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>.1</span>) <span class='co'># height in m</span>
 )
 
 <span class='no'>test_data</span> <span class='kw'>&lt;-</span> <span class='fu'>AlcBinge</span>(<span class='no'>data</span>)

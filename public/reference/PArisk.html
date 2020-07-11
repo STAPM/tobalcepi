@@ -208,6 +208,9 @@ or the time interval between drinks within an occassion. This could introduce in
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+
+<span class='co'>## Further explanation</span>
+
 <span class='co'># For a male with the following characteristics:</span>
 <span class='no'>Weight</span> <span class='kw'>&lt;-</span> <span class='fl'>70</span> <span class='co'># weight in kg</span>
 <span class='no'>Height</span> <span class='kw'>&lt;-</span> <span class='fl'>2</span> <span class='co'># height in m</span>
@@ -296,7 +299,7 @@ or the time interval between drinks within an occassion. This could introduce in
 <span class='co'># Alcohol absorbtion</span>
 <span class='no'>alcohol_absorbed</span> <span class='kw'>&lt;-</span> <span class='no'>grams_ethanol</span> * (<span class='fl'>1</span> - <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span>(-<span class='no'>k_empty_stomach</span> * <span class='no'>t</span>))
 
-<span class='co'># Calculate blood alcohol content using the Wildemark eqn</span>
+<span class='co'># Calculate blood alcohol content using the Widemark eqn</span>
 <span class='no'>bac</span> <span class='kw'>&lt;-</span> (<span class='fl'>100</span> * <span class='no'>alcohol_absorbed</span> / (<span class='no'>Widmark_r</span> * <span class='no'>Weight</span> * <span class='fl'>1000</span>)) - ((<span class='no'>liver_clearance_rate_h</span> / <span class='fl'>60</span>) * <span class='no'>t</span>)
 }</div></pre>
   </div>

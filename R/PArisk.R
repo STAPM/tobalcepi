@@ -37,6 +37,9 @@
 #' @examples
 #' 
 #' \dontrun{
+#' 
+#' ## Further explanation
+#'  
 #' # For a male with the following characteristics:
 #' Weight <- 70 # weight in kg
 #' Height <- 2 # height in m
@@ -125,7 +128,7 @@
 #' # Alcohol absorbtion
 #' alcohol_absorbed <- grams_ethanol * (1 - exp(-k_empty_stomach * t))
 #'
-#' # Calculate blood alcohol content using the Wildemark eqn
+#' # Calculate blood alcohol content using the Widemark eqn
 #' bac <- (100 * alcohol_absorbed / (Widmark_r * Weight * 1000)) - ((liver_clearance_rate_h / 60) * t)
 #' }
 #'

@@ -62,8 +62,13 @@ Relative risks for partially attributable chronic come from published risk funct
 hard-coded within this function rather than being read from an external spreadsheet. For some conditions there are
 separate risk functions for morbidity and mortality. For conditions that show a J-shaped risk function that
 indicates protective effects of alcohol, there is an option to remove the protective effect by setting all
-RR < 1 = 1. Relative risks for partially attributable acute are computed by the PArisk function called from within
- this function. Relative risks for wholly attributable chronic and wholly attributable acute conditions are calculated
+RR < 1 = 1.   
+
+Relative risks for partially attributable acute are computed by the PArisk function called from within
+ this function. The characteristics of individual single occassion drinking are also calculated within this function 
+ using AlcBinge_stapm().     
+ 
+ Relative risks for wholly attributable chronic and wholly attributable acute conditions are calculated
  based on the extent to which either weekly or daily consumption exceeds a pre-specified threshold.
 }
 \examples{

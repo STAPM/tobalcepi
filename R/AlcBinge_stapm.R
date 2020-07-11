@@ -111,7 +111,7 @@ AlcBinge_stapm <- function(
   # But it turned to be units for all weekly consumption (independent variable) and gram for standard deviation of the model.
   # hence divided by 8.
   
-  data[ , `:=`(mean_consump_coef = NULL, imd_coef = NULL, imr_coef = NULL, imr = NULL)]
+  data[ , `:=`(mean_consump_coef = NULL, imd_coef = NULL, imr_coef = NULL, imr = NULL, drink_3_or_more = NULL)]
   
   
   # calculate the average quantity of alcohol consumed during a drinking occasion,
@@ -132,7 +132,7 @@ AlcBinge_stapm <- function(
   data[sex == "Male", rwatson := 0.39834 + ((12.725 * height - 0.11275 * age + 2.8993) / weight)]
   data[sex == "Female", rwatson := 0.29218 + ((12.666 * height - 2.4846) / weight)]
   
-  data[ , `:=`(age_cat = NULL, height = NULL, weight = NULL)]
+  data[ , `:=`(age_cat = NULL, height = NULL)]
   
   
   return(data[])

@@ -8,8 +8,13 @@
 #' hard-coded within this function rather than being read from an external spreadsheet. For some conditions there are
 #' separate risk functions for morbidity and mortality. For conditions that show a J-shaped risk function that
 #' indicates protective effects of alcohol, there is an option to remove the protective effect by setting all
-#' RR < 1 = 1. Relative risks for partially attributable acute are computed by the PArisk function called from within
-#'  this function. Relative risks for wholly attributable chronic and wholly attributable acute conditions are calculated
+#' RR < 1 = 1.   
+#' 
+#' Relative risks for partially attributable acute are computed by the PArisk function called from within
+#'  this function. The characteristics of individual single occassion drinking are also calculated within this function 
+#'  using AlcBinge_stapm().     
+#'  
+#'  Relative risks for wholly attributable chronic and wholly attributable acute conditions are calculated
 #'  based on the extent to which either weekly or daily consumption exceeds a pre-specified threshold.
 #'
 #' @param data Data table of individual characteristics.
@@ -796,6 +801,10 @@ RRalc <- function(
 
   ################################################################################
   # Partial acute--------
+  
+  # Estimate the characteristics of single occassion drinking
+  # based on the coefficients from Hill-McManus et al 2014
+  data <- tobalcepi::AlcBinge_stapm(data)
 
 
   # Transport injuries----
@@ -808,7 +817,7 @@ RRalc <- function(
         SODMean = mean_sod[z],
         SODSDV = occ_sd[z],
         SODFreq = drink_freq[z],
-        Weight = wtval[z],
+        Weight = weight[z],
         Widmark_r = rwatson[z],
         cause = "Transport",
         grams_ethanol_per_unit = grams_ethanol_per_unit
@@ -831,7 +840,7 @@ RRalc <- function(
         SODMean = mean_sod[z],
         SODSDV = occ_sd[z],
         SODFreq = drink_freq[z],
-        Weight = wtval[z],
+        Weight = weight[z],
         Widmark_r = rwatson[z],
         cause = "Fall",
         grams_ethanol_per_unit = grams_ethanol_per_unit
@@ -853,7 +862,7 @@ RRalc <- function(
         SODMean = mean_sod[z],
         SODSDV = occ_sd[z],
         SODFreq = drink_freq[z],
-        Weight = wtval[z],
+        Weight = weight[z],
         Widmark_r = rwatson[z],
         cause = "Violence",
         grams_ethanol_per_unit = grams_ethanol_per_unit
@@ -875,7 +884,7 @@ RRalc <- function(
         SODMean = mean_sod[z],
         SODSDV = occ_sd[z],
         SODFreq = drink_freq[z],
-        Weight = wtval[z],
+        Weight = weight[z],
         Widmark_r = rwatson[z],
         cause = "Other",
         grams_ethanol_per_unit = grams_ethanol_per_unit
@@ -888,8 +897,7 @@ RRalc <- function(
 
   }
 
-
-
+  data[ , `:=`(mean_sod = NULL, occ_sd = NULL, drink_freq = NULL, weight = NULL, rwatson = NULL)]
 
   ################################################################################
   # Wholly attributable acute--------
@@ -954,35 +962,6 @@ RRalc <- function(
 
 return(risk_indiv)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

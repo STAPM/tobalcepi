@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 
 The motivation for `tobalcepi` was to organise the information on the relative risks of diseases in adults related to their own tobacco and alcohol consumption and to provide functions to easily work with these data in modelling. The suite of functions within `tobalcepi` processes the published data on disease risks that stem from chronic and acute alcohol consumption, from smoking, and on the decline in risk after ceasing or reducing consumption. The package also includes functions to estimate population attributable fractions, and to explore the interaction between the disease risks that stem from tobacco and alcohol consumption.     
 
- > The disease lists and risk functions in this package all have published sources, which we have referenced. In order to obtain mathematical descriptions of the risk functions for use in modelling, we needed to contact some authors to ask for addition information.  
+ > The disease lists and risk functions in this package all have published sources, which we have referenced. In order to obtain mathematical descriptions of the risk functions for use in modelling, we needed to contact some authors to ask for additional information.  
 
 ## Usage
 

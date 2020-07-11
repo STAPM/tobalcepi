@@ -38,7 +38,7 @@ consumption.
 > The disease lists and risk functions in this package all have
 > published sources, which we have referenced. In order to obtain
 > mathematical descriptions of the risk functions for use in modelling,
-> we needed to contact some authors to ask for addition information.
+> we needed to contact some authors to ask for additional information.
 
 ## Usage
 

@@ -4,15 +4,19 @@
 \alias{AlcBinge}
 \title{Calculate variables to inform alcohol binge model}
 \usage{
-AlcBinge(data)
+AlcBinge(data, params = tobalcepi::binge_params)
 }
 \arguments{
 \item{data}{Data table of individual characteristics.}
+
+\item{params}{List of three data tables containing the parameter estimates 
+from Hill-McManus et al 2014, Tables 3, 5 and 6.}
 }
 \value{
 Returns data plus the estimated variables.
 }
 \description{
+Designed to work with cross-sectional survey data with a wide range of individual-level covariates. 
 Uses survey data and previously estimated coefficients to describe
 the patterns of single occassion drinking.
 }
@@ -43,10 +47,10 @@ data <- data.table(
   kids = "0",
   social_grade = "C2DE",
   eduend4cat = "16-18", # age finished education
-  ethnic2cat = "white", # white / non-white
+  ethnicity_2cat = "white", # white / non-white
   employ2cat = "yes", # employed / not
-  wtval = rnorm(n, mean = 60, sd = 5), # weight in kg
-  htval = rnorm(n, mean = 1.7, sd = .1) # height in m
+  weight = rnorm(n, mean = 60, sd = 5), # weight in kg
+  height = rnorm(n, mean = 1.7, sd = .1) # height in m
 )
 
 test_data <- AlcBinge(data)

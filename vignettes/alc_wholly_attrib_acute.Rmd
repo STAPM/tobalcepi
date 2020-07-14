@@ -1,0 +1,71 @@
+---
+title: "Risk of acute conditions wholly-attributable to alcohol"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Alcohol wholly-attributable acute risk}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+bibliography: disease-risks.bib
+link-citations: yes
+citation_package: natbib
+biblio-style: vancouver
+urlcolor: blue
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include = FALSE, results = 'hide', warning = FALSE, eval = T}
+
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(ggplot2))
+
+```
+
+# Introduction
+Here we describe the approach taken in STAPM to model the health harms that are wholly-attributable to level of acute alcohol intake on a single occasion. The health harms that we consider in this category are conditions associated with the effects of excessive blood level of alcohol, toxic effects of alcohol, alcohol poisoning, and acute intoxication. "Wholly-attributable acute" means that these conditions cannot occur without alcohol (i.e. all cases are due to alcohol consumption) and the risk of these conditions changes with acute exposure to alcohol.    
+
+# The SAPM method
+We build on the method used to model the acute health harms that are wholly-attributable to alcohol in the Sheffield Alcohol Policy Model (SAPM). The main issue to be overcome in the development of SAPM was that there was no available evidence on the relationship between the level of acute exposure to alcohol within a single drinking ocassion and the risk of acute harms that were wholly attributable to this acute exposure. Assumptions therefore needed to be made about the shape of the risk function that links the level of single ocassion drinking to the risk of acute harms (the approach taken is described in the Purshouse et al. modelling report for NICE [-@purshouse2009nice]). In addition, due to the harms being wholly-attributable to alcohol, no cases are expected in people who consume below a certain threshold of alcohol on a single ocassion, i.e. there are no cases in the non-exposed reference group. One of the consequences of this is that it is not possible to calculate relative risk; instead, the relationship between single ocassion drinking and acute harm must be represented by an absolute risk function, e.g. in terms of the expected number of deaths or hospitalisations if a certain number of people were to drink a certain number of units of alcohol on a single ocassion. Figure 1 shows the shape of the risk function currently used in SAPM.         
+
+```{r wa_acute_risk_function, eval = T, echo = F, fig.align="left", warning = F, out.extra='', fig.pos = "h", fig.width = 5, fig.height = 3, fig.cap = "**Figure 1.** Illustrative linear absolute risk function for a wholly-attributable acute harm. It is assumed that males are not at risk of acute harm unless they drink over 8 units on a single occassion, and that females are not at risk unless they drink over 6 units on a single ocassion. Above these thresholds, it is assumed that risk increases linearly with the amount drunk. SAPM uses data from the Health Survey for England on the amount drunk on the heaviest drinking day in the last 7 days."}
+
+threshold_male <- 8
+threshold_female <- 6
+
+data <- data.table(units = seq(0, 40, length.out = 1e4), risk = seq(0, 40, length.out = 1e4))
+data <- rbindlist(list(copy(data)[ , sex := "Male"], copy(data)[ , sex := "Female"]), use.names = T)
+
+data[sex == "Male", risk := risk - threshold_male]
+data[sex == "Female", risk := risk - threshold_female]
+
+data[risk < 0, risk := 0]
+
+ggplot(data) +
+  geom_line(aes(x = units, y = risk, colour = sex)) + 
+  theme_minimal() +
+  xlab("Units drunk on heaviest drinking day of the week") + ylab("Absolute risk") +
+  scale_colour_manual(name = "Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+# The STAPM method
+
+
+
+
+
+
+
+
+# References
+
+
+
+

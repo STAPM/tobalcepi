@@ -240,6 +240,8 @@ RRFunc <- function(
   message(paste0("\t\tCalculating risk for ", dn, " conditions"))
 
   for (i in 1:dn) {
+    
+    #i <- 1
 
     d <- as.character(diseases[i])
 
@@ -251,7 +253,7 @@ RRFunc <- function(
     if(d %in% alc_diseases & substance %in% c("alc", "tobalc")) {
 
       # Calculate the parameters of the binge model - based on average weekly consumption
-      data <- tobalcepi::AlcBinge(data)
+      #data <- tobalcepi::AlcBinge(data)
 
       # Convert units to grams of alcohol / truncate
       data[ , GPerDay := weekmean * (grams_ethanol_per_unit / 7)]

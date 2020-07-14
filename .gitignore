@@ -9,3 +9,5 @@ Archive/
 *.Rproj*
 dev/
 .DS_Store
+*.pdf
+

@@ -25,6 +25,7 @@ knitr::opts_chunk$set(
 
 suppressPackageStartupMessages(library(data.table))
 suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(VGAM))
 
 ```
 
@@ -55,14 +56,16 @@ ggplot(data) +
 
 ```
 
-# The STAPM method
+# Adaptation to suit STAPM
 
+*The problem*  
+The main difference between SAPM and STAPM is that STAPM simulates the individual lifecourse dynamics of the average weekly amount of alcohol consumed - STAPM does not simulate the dynamics of the amount drunk on the heaviest drinking day. This means that for STAPM, we need to develop a method to link the risk of acute harms that are wholly-attributable to alcohol consumption to average weekly alcohol consumption.      
 
+*The solution*  
+The solution is to draw on the methods described in `vignette("alc_partially_attrib_acute")`, which uses parameter values from Hill-McManus et al. [-@hill2014estimation] to infer the characteristics of single ocassion drinking from average weekly alcohol consumption and a range of individual-level covariates. Using the method in `tobalcepi::AlcBinge_stapm()` we can calculate the average parameter values by age, sex and IMD quintile. Using these parameter values, we can translate each individual's average weekly alcohol consumption to their expected number of weekly drinking ocasions, and the distribution of the amounts that each individual drinks on their drinking ocassions. For each individual, we can then calculate the total number of units per year that are drunk after each individual has already exceeded the single ocassion binge drinking thresholds of 8 units/day for men and 6 units/day for women.    
 
-
-
-
-
+*Implementing in the STAPM code*   
+A new function `tobalcepi::WArisk_acute()` has been created to calculate the total number of units that each individual is expected to drink above the single ocassion binge drinking thresholds. This function is called from within the function `tobalcepi::RRalc()` and uses the parameters outputs by `tobalcepi::AlcBinge_stapm()`.   
 
 # References
 

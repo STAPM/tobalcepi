@@ -15,14 +15,17 @@
 #'  using AlcBinge_stapm().     
 #'  
 #'  Relative risks for wholly attributable chronic and wholly attributable acute conditions are calculated
-#'  based on the extent to which either weekly or daily consumption exceeds a pre-specified threshold.
+#'  based on the extent to which either weekly or daily consumption exceeds a pre-specified threshold. The risk 
+#'  for wholly attributable acute conditions is calculated by the function WArisk_acute(). We developed a new 
+#'  method to model the absolute risk of wholly attributable acute conditions to suit the STAPM modelling. 
+#'  This new method is based on the method used to model the risk of partially attributable acute conditions - 
+#'  the shape of the risk function is determined by the individual variation in the total annual number of units that
+#'   are drunk above the male/female thresholds for single ocassion binge drinking.  
 #'
 #' @param data Data table of individual characteristics.
 #' @param disease Character - the name of the disease for which the relative risks will be computed.
 #' @param av_weekly_grams_per_day_var Character - the name of the variable containing each individual's
 #' average weekly consumption of alcohol in grams of ethanol per day.
-#' @param peak_grams_per_day_var Character - the name of the variable containing the amount of alcohol
-#' that each individual consumed on their heaviest drinking day of the week.
 #' @param sex_var Character - the name of the variable containing individual sex.
 #' @param age_var Character - the name of the variable containing individual age in single years.
 #' @param mort_or_morb Character - for alcohol related diseases that have separate
@@ -32,10 +35,10 @@
 #' alcohol in the risk function. Defaults to TRUE. If TRUE, then the part of the risk function < 1 is set to equal 1.
 #' @param alc_wholly_chronic_thresholds Numeric vector - the thresholds in grams of ethanol /week over
 #'  which individuals begin to experience an elevated risk
-#'  for chronic diseases that are wholly attributable to alcohol. Input in the form c(male, female).
-#' @param alc_wholly_acute_thresholds Numeric vector - the thresholds in grams of ethanol /day over
+#'  for chronic diseases that are wholly attributable to alcohol. Input in the form c(female, male).
+#' @param alc_wholly_acute_thresholds Numeric vector - the thresholds in units of alcohol /day over
 #'  which individuals begin to experience an elevated risk
-#'  for acute diseases that are wholly attributable to alcohol. Input in the form c(male, female).
+#'  for acute diseases that are wholly attributable to alcohol. Input in the form c(female, male). Defaults to c(6, 8).
 #' @param grams_ethanol_per_unit Numeric value giving the conversion factor for the number of grams of pure
 #' ethanol in one UK standard unit of alcohol.
 #'
@@ -52,7 +55,7 @@
 #' # Example data
 #' data <- data.table(
 #'   GPerDay = 0:100,
-#'   peakday_grams = 0:100,
+#'   #peakday_grams = 0:100,
 #'   sex = "Female",
 #'   age = 30
 #' )
@@ -89,7 +92,7 @@ RRalc <- function(
   data,
   disease = "Pharynx",
   av_weekly_grams_per_day_var = "GPerDay",
-  peak_grams_per_day_var = "peakday_grams",
+  #peak_grams_per_day_var = "peakday_grams",
   sex_var = "sex",
   age_var = "age",
   mort_or_morb = c("mort", "morb"),
@@ -102,7 +105,7 @@ RRalc <- function(
   n <- nrow(data)
 
   x <- data[ , get(av_weekly_grams_per_day_var)]
-  p <- data[ , get(peak_grams_per_day_var)]
+  #p <- data[ , get(peak_grams_per_day_var)]
   sex <- data[ , get(sex_var)]
   age <-  data[ , get(age_var)]
 
@@ -912,19 +915,45 @@ RRalc <- function(
     "Acute_intoxication")
   ) {
 
-    data[sex == "Female", threshold := alc_wholly_acute_thresholds[1]]
-    data[sex == "Male", threshold := alc_wholly_acute_thresholds[2]]
+    # Old method - replicating SAPM
+    
+    #data[sex == "Female", threshold := alc_wholly_acute_thresholds[1]]
+    #data[sex == "Male", threshold := alc_wholly_acute_thresholds[2]]
 
-    data[ , ar := 0]
-    data[ , diff := p - threshold]
-    #data[diff > 0, ar := diff / grams_ethanol_per_unit]
-    data[diff > 0, ar := diff]
+    #data[ , ar := 0]
+    #data[ , diff := p - threshold]
+    ##data[diff > 0, ar := diff / grams_ethanol_per_unit]
+    #data[diff > 0, ar := diff]
 
+    #risk_indiv <- 1 + data[ , ar] # add 1 to remove 0/0 = Not a number error later
+
+    #data[ , `:=`(ar = NULL, threshold = NULL, diff = NULL)]
+    
+    ###############################
+    
+    # New method for STAPM
+    # based on the method used for partially attributable chronic conditions
+    
+    data[ , ar := sapply(1:n, function(z) {
+      tobalcepi::WArisk_acute(
+        SODMean = mean_sod[z],
+        SODSDV = occ_sd[z],
+        SODFreq = drink_freq[z],
+        sex = sex[z],
+        grams_ethanol_per_unit = grams_ethanol_per_unit,
+        alc_wholly_acute_thresholds = alc_wholly_acute_thresholds
+      )
+    })]
+    
     risk_indiv <- 1 + data[ , ar] # add 1 to remove 0/0 = Not a number error later
-
-    data[ , `:=`(ar = NULL, threshold = NULL, diff = NULL)]
+    
+    data[ , ar := NULL]
 
   }
+  
+  
+  data[ , `:=`(mean_sod = NULL, occ_sd = NULL, drink_freq = NULL, weight = NULL, rwatson = NULL)]
+  
 
   ################################################################################
   # Wholly attributable chronic--------

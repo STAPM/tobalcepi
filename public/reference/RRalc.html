@@ -137,7 +137,6 @@
   <span class='no'>data</span>,
   <span class='kw'>disease</span> <span class='kw'>=</span> <span class='st'>"Pharynx"</span>,
   <span class='kw'>av_weekly_grams_per_day_var</span> <span class='kw'>=</span> <span class='st'>"GPerDay"</span>,
-  <span class='kw'>peak_grams_per_day_var</span> <span class='kw'>=</span> <span class='st'>"peakday_grams"</span>,
   <span class='kw'>sex_var</span> <span class='kw'>=</span> <span class='st'>"sex"</span>,
   <span class='kw'>age_var</span> <span class='kw'>=</span> <span class='st'>"age"</span>,
   <span class='kw'>mort_or_morb</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mort"</span>, <span class='st'>"morb"</span>),
@@ -164,11 +163,6 @@
 average weekly consumption of alcohol in grams of ethanol per day.</p></td>
     </tr>
     <tr>
-      <th>peak_grams_per_day_var</th>
-      <td><p>Character - the name of the variable containing the amount of alcohol
-that each individual consumed on their heaviest drinking day of the week.</p></td>
-    </tr>
-    <tr>
       <th>sex_var</th>
       <td><p>Character - the name of the variable containing individual sex.</p></td>
     </tr>
@@ -191,13 +185,13 @@ alcohol in the risk function. Defaults to TRUE. If TRUE, then the part of the ri
       <th>alc_wholly_chronic_thresholds</th>
       <td><p>Numeric vector - the thresholds in grams of ethanol /week over
 which individuals begin to experience an elevated risk
-for chronic diseases that are wholly attributable to alcohol. Input in the form c(male, female).</p></td>
+for chronic diseases that are wholly attributable to alcohol. Input in the form c(female, male).</p></td>
     </tr>
     <tr>
       <th>alc_wholly_acute_thresholds</th>
-      <td><p>Numeric vector - the thresholds in grams of ethanol /day over
+      <td><p>Numeric vector - the thresholds in units of alcohol /day over
 which individuals begin to experience an elevated risk
-for acute diseases that are wholly attributable to alcohol. Input in the form c(male, female).</p></td>
+for acute diseases that are wholly attributable to alcohol. Input in the form c(female, male). Defaults to c(6, 8).</p></td>
     </tr>
     <tr>
       <th>grams_ethanol_per_unit</th>
@@ -220,7 +214,12 @@ RR &lt; 1 = 1.</p>
  this function. The characteristics of individual single occassion drinking are also calculated within this function 
  using AlcBinge_stapm().</p> 
 <p>Relative risks for wholly attributable chronic and wholly attributable acute conditions are calculated
- based on the extent to which either weekly or daily consumption exceeds a pre-specified threshold.</p>
+ based on the extent to which either weekly or daily consumption exceeds a pre-specified threshold. The risk 
+ for wholly attributable acute conditions is calculated by the function WArisk_acute(). We developed a new 
+ method to model the absolute risk of wholly attributable acute conditions to suit the STAPM modelling. 
+ This new method is based on the method used to model the risk of partially attributable acute conditions - 
+ the shape of the risk function is determined by the individual variation in the total annual number of units that
+  are drunk above the male/female thresholds for single ocassion binge drinking.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -231,7 +230,7 @@ RR &lt; 1 = 1.</p>
 <span class='co'># Example data</span>
 <span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'>data.table</span>(
   <span class='kw'>GPerDay</span> <span class='kw'>=</span> <span class='fl'>0</span>:<span class='fl'>100</span>,
-  <span class='kw'>peakday_grams</span> <span class='kw'>=</span> <span class='fl'>0</span>:<span class='fl'>100</span>,
+  <span class='co'>#peakday_grams = 0:100,</span>
   <span class='kw'>sex</span> <span class='kw'>=</span> <span class='st'>"Female"</span>,
   <span class='kw'>age</span> <span class='kw'>=</span> <span class='fl'>30</span>
 )

@@ -103,6 +103,9 @@ to the alcohol only, tobacco only, or joint tobacco and alcohol contexts." />
       <a href="../articles/alc_wholly_attrib_acute.html">Risk of acute conditions wholly-attributable to alcohol</a>
     </li>
     <li>
+      <a href="../articles/alc_wholly_attrib_chronic.html">Risk of chronic conditions wholly-attributable to alcohol</a>
+    </li>
+    <li>
       <a href="../articles/attributable-fractions.html">Population attributable fractions of disease</a>
     </li>
     <li>
@@ -146,8 +149,8 @@ to the alcohol only, tobacco only, or joint tobacco and alcohol contexts.</p>
   <span class='kw'>alc_risk_lags</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>alc_indiv_risk_trajectories_store</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>alc_protective</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>alc_wholly_chronic_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>6</span>, <span class='fl'>8</span>),
-  <span class='kw'>alc_wholly_acute_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>6</span>, <span class='fl'>8</span>),
+  <span class='kw'>alc_wholly_chronic_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>),
+  <span class='kw'>alc_wholly_acute_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>4</span>),
   <span class='kw'>grams_ethanol_per_unit</span> <span class='kw'>=</span> <span class='fl'>8</span>,
   <span class='kw'>tob_diseases</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Pharynx"</span>, <span class='st'>"Oral_cavity"</span>),
   <span class='kw'>tob_include_risk_in_former_smokers</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -198,15 +201,17 @@ alcohol in the risk function. Defaults to TRUE. If TRUE, then the part of the ri
     </tr>
     <tr>
       <th>alc_wholly_chronic_thresholds</th>
-      <td><p>Numeric vector - the thresholds in units/week over
-which individuals begin to experience an elevated risk
-for chronic diseases that are wholly attributable to alcohol. Input in the form c(male, female).</p></td>
+      <td><p>Numeric vector - the thresholds in UK standard units of alcohol per day 
+over which individuals begin to experience an elevated risk
+ for chronic diseases that are wholly attributable to alcohol. Input in the order c(female, male). 
+ Defaults to the current UK healthy drinking threshold of 14 units/week for females and males, or 2 units/day.</p></td>
     </tr>
     <tr>
       <th>alc_wholly_acute_thresholds</th>
-      <td><p>Numeric vector - the thresholds in units/day over
+      <td><p>Numeric vector - the thresholds in UK standard units of alcohol /day over
 which individuals begin to experience an elevated risk
-for acute diseases that are wholly attributable to alcohol. Input in the form c(male, female).</p></td>
+for acute diseases that are wholly attributable to alcohol. Input in the form c(female, male). 
+Defaults to 3 units/day for females and 4 units/day for males.</p></td>
     </tr>
     <tr>
       <th>grams_ethanol_per_unit</th>
@@ -327,7 +332,7 @@ risk faced by people because they consume both tobacco and alcohol.</p>
   <span class='kw'>alc_diseases</span> <span class='kw'>=</span> <span class='no'>alc_disease_names</span>,
   <span class='kw'>alc_indiv_risk_trajectories_store</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>alc_wholly_chronic_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>),
-  <span class='kw'>alc_wholly_acute_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>3</span>),
+  <span class='kw'>alc_wholly_acute_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>4</span>),
   <span class='kw'>show_progress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )
 
@@ -343,7 +348,7 @@ risk faced by people because they consume both tobacco and alcohol.</p>
   <span class='kw'>alc_diseases</span> <span class='kw'>=</span> <span class='no'>alc_disease_names</span>,
   <span class='kw'>alc_indiv_risk_trajectories_store</span> <span class='kw'>=</span> <span class='no'>test_data1</span>$<span class='no'>new_alc_indiv_risk_trajectories_store</span>,
   <span class='kw'>alc_wholly_chronic_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>),
-  <span class='kw'>alc_wholly_acute_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>3</span>),
+  <span class='kw'>alc_wholly_acute_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>4</span>),
   <span class='kw'>show_progress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )
 

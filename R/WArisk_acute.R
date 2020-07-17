@@ -33,9 +33,10 @@
 #' @param sex Character - individual sex (Male or Female).
 #' @param grams_ethanol_per_unit Numeric value giving the conversion factor for the number of grams of pure
 #' ethanol in one UK standard unit of alcohol.
-#' @param alc_wholly_acute_thresholds Numeric vector - the thresholds in grams of ethanol /day over
+#' @param alc_wholly_acute_thresholds Numeric vector - the thresholds in UK standard units of alcohol /day over
 #'  which individuals begin to experience an elevated risk
-#'  for acute diseases that are wholly attributable to alcohol. Input in the form c(female, male).
+#'  for acute diseases that are wholly attributable to alcohol. Input in the form c(female, male). 
+#'  Defaults to 3 units/day for females and 4 units/day for males.   
 #'
 #' @return Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.
 #' @importFrom data.table := setDT setnames
@@ -92,14 +93,17 @@ WArisk_acute <- function(
   # Units consumed above the binge threshold
   
   if(sex == "Female") {
-    threshold <- alc_wholly_acute_thresholds[1]
+    threshold <- alc_wholly_acute_thresholds[1] # 6 units
   }
   
   if(sex == "Male") {
-    threshold <- alc_wholly_acute_thresholds[2]
+    threshold <- alc_wholly_acute_thresholds[2] # 8 units
   }
   
-  units_vec <- grams_ethanol * grams_ethanol_per_unit
+  # Convert grams of ethanol back to units
+  units_vec <- grams_ethanol / grams_ethanol_per_unit
+  
+  # Subtract the threshold and replace negative values with zero
   units_vec <- units_vec - theshold
   units_vec <- replace(units_vec, units_vec < 0, 0)
   

@@ -4,9 +4,10 @@ pkgdown_sha: ~
 articles:
   alc_partially_attrib_acute: alc_partially_attrib_acute.html
   alc_wholly_attrib_acute: alc_wholly_attrib_acute.html
+  alc_wholly_attrib_chronic: alc_wholly_attrib_chronic.html
   attributable-fractions: attributable-fractions.html
   smoking-disease-risks: smoking-disease-risks.html
-last_built: 2020-07-16T09:19Z
+last_built: 2020-07-17T08:49Z
 urls:
   reference: https://stapm.gitlab.io/tobalcepi/reference
   article: https://stapm.gitlab.io/tobalcepi/articles

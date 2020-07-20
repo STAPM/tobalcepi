@@ -94,7 +94,6 @@ RRalc <- function(
   data,
   disease = "Pharynx",
   av_weekly_grams_per_day_var = "GPerDay",
-  #peak_grams_per_day_var = "peakday_grams",
   sex_var = "sex",
   age_var = "age",
   mort_or_morb = c("mort", "morb"),
@@ -107,7 +106,7 @@ RRalc <- function(
   n <- nrow(data)
 
   x <- data[ , get(av_weekly_grams_per_day_var)]
-  #p <- data[ , get(peak_grams_per_day_var)]
+  #p <- data[ , get(peak_grams_per_day_var)] # old code when used peakday directly from HSE
   sex <- data[ , get(sex_var)]
   age <-  data[ , get(age_var)]
 
@@ -118,11 +117,18 @@ RRalc <- function(
   # Create the vector of relative risks to be returned
   # Initially set everyone's value to 1
   risk_indiv <- rep(1, n)
-
+  
+  # Estimate the characteristics of single occassion drinking
+  # based on the coefficients from Hill-McManus et al 2014
+  data <- tobalcepi::AlcBinge_stapm(data)
+  
 
   ################################################################################
   # Partial chronic--------
 
+  # Calculate average amount drunk per drinking occassion
+  p <- grams_ethanol_per_unit * data[ , mean_sod] / data[ , drink_freq]
+  
 
   ###########
   # Cancers #
@@ -301,7 +307,7 @@ RRalc <- function(
       rr.m3 <- ifelse(x <= 60, rr.ma3, ifelse(x > 60 & x < 100, rr.mb3, rr.mc3))
 
 
-      rr.m <- ifelse(age %in% c("16-17", "18-24", "25-34"), rr.m1,
+      rr.m <- ifelse(age %in% c("<16", "16-17", "18-24", "25-34"), rr.m1,
                      ifelse(age %in% c("35-49", "50-64"), rr.m2,
                             ifelse(age %in% c("65-74", "75-89"), rr.m3, NA)))
 
@@ -333,7 +339,7 @@ RRalc <- function(
       rr.f3 <- ifelse(x < f6, rr.fa3, rr.fb3)
 
 
-      rr.f <- ifelse(age %in% c("16-17", "18-24", "25-34"), rr.f1,
+      rr.f <- ifelse(age %in% c("<16", "16-17", "18-24", "25-34"), rr.f1,
                      ifelse(age %in% c("35-49", "50-64"), rr.f2,
                             ifelse(age %in% c("65-74", "75-89"), rr.f3, NA)))
 
@@ -519,7 +525,7 @@ RRalc <- function(
 
       rr.m3 <- ifelse(x <= 1, rr.ma3, rr.mb3)
 
-      rr.m <- ifelse(age %in% c("16-17", "18-24", "25-34"), rr.m1,
+      rr.m <- ifelse(age %in% c("<16", "16-17", "18-24", "25-34"), rr.m1,
                      ifelse(age %in% c("35-49", "50-64"), rr.m2,
                             ifelse(age %in% c("65-74", "75-89"), rr.m3, NA)))
 
@@ -543,7 +549,7 @@ RRalc <- function(
 
       rr.f3 <- ifelse(x <= 1, rr.fa3, rr.fb3)
 
-      rr.f <- ifelse(age %in% c("16-17", "18-24", "25-34"), rr.f1,
+      rr.f <- ifelse(age %in% c("<16", "16-17", "18-24", "25-34"), rr.f1,
                      ifelse(age %in% c("35-49", "50-64"), rr.f2,
                             ifelse(age %in% c("65-74", "75-89"), rr.f3, NA)))
 
@@ -805,11 +811,7 @@ RRalc <- function(
   risk_indiv[x == 0] <- 1
 
   ################################################################################
-  # Partial acute--------
-  
-  # Estimate the characteristics of single occassion drinking
-  # based on the coefficients from Hill-McManus et al 2014
-  data <- tobalcepi::AlcBinge_stapm(data)
+  # Partial acute-------
 
 
   # Transport injuries----
@@ -902,7 +904,7 @@ RRalc <- function(
 
   }
 
-  data[ , `:=`(mean_sod = NULL, occ_sd = NULL, drink_freq = NULL, weight = NULL, rwatson = NULL)]
+  #data[ , `:=`(mean_sod = NULL, occ_sd = NULL, drink_freq = NULL, weight = NULL, rwatson = NULL)]
 
   ################################################################################
   # Wholly attributable acute--------
@@ -936,6 +938,15 @@ RRalc <- function(
     # New method for STAPM
     # based on the method used for partially attributable chronic conditions
     
+    #test <- copy(data)
+    
+    #SODMean = test[1, mean_sod]
+    #SODSDV = test[1, occ_sd]
+    #SODFreq = test[1, drink_freq]
+    #sex = test[1 , sex]
+    #grams_ethanol_per_unit = grams_ethanol_per_unit
+    #alc_wholly_acute_thresholds = alc_wholly_acute_thresholds
+    
     data[ , ar := sapply(1:n, function(z) {
       tobalcepi::WArisk_acute(
         SODMean = mean_sod[z],
@@ -952,9 +963,6 @@ RRalc <- function(
     data[ , ar := NULL]
 
   }
-  
-  
-  data[ , `:=`(mean_sod = NULL, occ_sd = NULL, drink_freq = NULL, weight = NULL, rwatson = NULL)]
   
 
   ################################################################################
@@ -990,6 +998,9 @@ RRalc <- function(
     data[ , `:=`(ar = NULL, threshold = NULL, diff = NULL)]
 
   }
+  
+  
+  data[ , `:=`(mean_sod = NULL, occ_sd = NULL, drink_freq = NULL, weight = NULL, rwatson = NULL)]
 
 
 return(risk_indiv)

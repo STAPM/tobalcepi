@@ -1,7 +1,7 @@
 Package: tobalcepi
 Type: Package
 Title: Risk Functions and Attributable Fractions for Tobacco and Alcohol
-Version: 1.0.2
+Version: 1.1.0
 Authors@R: 
     c(
     person(given = "Duncan",

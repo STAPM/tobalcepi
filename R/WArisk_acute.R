@@ -104,7 +104,7 @@ WArisk_acute <- function(
   units_vec <- grams_ethanol / grams_ethanol_per_unit
   
   # Subtract the threshold and replace negative values with zero
-  units_vec <- units_vec - theshold
+  units_vec <- units_vec - threshold
   units_vec <- replace(units_vec, units_vec < 0, 0)
   
   

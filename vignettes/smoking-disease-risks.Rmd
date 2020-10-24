@@ -1,5 +1,5 @@
 ---
-title: "Smoking and the risks of adult diseases"
+title: "Smoking disease risks"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Smoking disease risks}
@@ -30,221 +30,10 @@ suppressPackageStartupMessages(library(tobalcepi))
 suppressPackageStartupMessages(library(readxl))
 ```
 
-# Summary
+## Summary
 In the Sheffield Tobacco Policy Model (STPM), we consider 52 adult diseases related to smoking and the corresponding relative risks of developing these diseases in current vs. never smokers, and in former smokers according to the time since they quit [@Webster2018]. For current smokers, we assume that the relative risks of disease are the same for all smokers regardless of the amount currently smoked and the length of time as a smoker. We limit ourselves to diseases that affect the consumer themselves e.g. excluding secondary effects of smoking.  
 
-# Disease list
-We arrived at our disease list and the corresponding International Classification of Diseases version 10 (ICD-10) definitions through an iterative process of reviewing the diseases considered by previous health economic models of smoking, and reviewing reports and papers that reviewed the disease risks of smoking. The main UK focused modelling of smoking is the NICE Tobacco Return on Investment Tool [@Pokhrel2013], and the national monitoring of the health costs of smoking [@Callum2004;@Digital2018]. In 2014, the US Surgeon General conducted a review of the diseases related to smoking, taking careful consideration of the strength of evidence for causality [@General2014]. In 2015, Carter et al [-@Carter2015] in the New England Journal of Medicine found statistical associations in the American Cancer Society's Cancer Prevention II study (ACS-CPS II) between smoking and a much wider range of diseases than were previously considered smoking related. In 2018, Chapter 2 of the Royal College of Physician’s (RCP) report "Hiding in plain sight: Treating tobacco dependency in the NHS" [@RCP2018] reviewed the current evidence for smoking–disease associations, focusing on recent meta-analyses, to produce an updated list of diseases that are caused by smoking. Subsequently, Cancer Research UK (CRUK) produced their own disease list and published sources for estimates of the relative risk of current vs. never smoking for developing cancers (in a study that considered smoking as one of a range of modifiable risk factors related to cancer) [@Brown2018].  
-
-We began to develop our list of diseases in 2015. The list was influence heavily by our involvement in Chapter 2 of the RCP report. We were then further influenced by discussions within our research group relating to updates to the list of diseases related to alcohol, their ICD-10 code definitions and the published sources of relative risk estimates. As part of these discussions for alcohol we made contact with the lead author of the CRUK paper, Dr Katrina Brown. Discussions focused particularly on the ICD-10 definitions of head and neck cancers, and oesophageal cancers. The result of these discussions was an updated list of alcohol related diseases for the Sheffield Alcohol Policy Model (SAPM) v4.0 [@Angus2018]. In producing our list of smoking related diseases we sought to harmonise our ICD-10 definitions with those used in our alcohol modelling (particularly important since we will conduct joint modelling of tobacco and alcohol). Our list is mainly consistent with the RCP report, with most deviations being for cancers, where we have been influenced by CRUK's work and our alcohol modelling. We explain the choices we made in the report where we initially presented our disease list [@Webster2018].  
-
-The notable omissions from our list are: Breast cancer - due to a small and statistially uncertain effect of smoking; Prostate cancer - due to a lack of published evidence for current smokers; Ovarian cancer - for which smoking only carries a risk for fully malignant mucinous ovarian cancers (13\% of ovarian cancers are mucinous, and of these 57\% are fully malignant) - that created  large uncertainty in identifying the cases attributable to smoking using the ICD-10 definitions recorded in our mortality data and hospital episode statistics.  
-
-## Oesophageal cancer
-For oesophageal cancer, our discussions with CRUK concluded that we should distinguish between adenocarcinoma (AC) and squamous cell carcinoma (SCC). However, it is not possible to distinguish these subtypes from the routinely recorded ICD-10 codes. We therefore settled on the following approach:  
-
-We apportion overall oesophageal cancer prevalence between AC and SCC using data on percentage prevalence by age and sex, which we were sent by Katrina Brown at CRUK. CRUK requested data direct from the UK cancer registries on the number of oesophageal SCCs. That data isn't routinely available because it is morphology (cell type) data, whereas what is published as standard is topography (body part). Alternatively, we could distinguish SCC using the body sites 'upper third of oesophagus' and 'middle third of oesophagus' (ICD-10 codes C15.3 and C15.4) as a fairly good proxy for SCC [@Coupland2012]. Arnold et al [-@Arnold2015] also provide splits of Oesophageal cancer by subtype for Northern and Western Europe, which could be an alternative source of data (and might be the approach used in the Global Burden of Disease Study).  
-
-The percentages provided to us by CRUK are for 2014 for England. We therefore need to be aware that in modelling periods that are substantially earlier or later, the percentages might not hold true. Specifically, AC incidence in males has risen over time while AC incidence in females, and SCC incidence in both sexes, has remained fairly stable – so the relative proportions of AC and SCC in males have varied over time. We should also consider whether it is sensible to assume the distribution of AC and SCC in oesophageal cancer will be the same for deaths as it is for cases. Coupland et al [-@Coupland2012] show that 1 year and 5 year overall survival is significantly lower in SCC (1yr 30.3\%, 5yr 8.3\%) than in AC (5yr 36.4%, 5yr 9.4%) – though the absolute differences are quite small. So arguably there would be a slightly higher ratio of SCC:AC in deaths than in cases. 
-
-
-
-| Category            | Disease                                 | ICD 10                               | Source                    |
-|---------------------|-----------------------------------------|--------------------------------------|---------------------------|
-| Malignant neoplasms | Oral cavity                             | C00-C06                              | [@Maasland2014]           |
-|                     | Pharynx                                 | C09, C10, C12-C14                    | [@Gandini2008]            |
-|                     | Lung                                    | C33, C34                             | [@Jayes2016]              |
-|                     | Nasopharynx sinonasal                   | C11, C30, C31                        | [@Gandini2008]            |
-|                     | Larynx                                  | C32                                  | [@Zuo2017]                |
-|                     | Oesophageal (Adenocarcinoma)            | C15                                  | [@Tramacere2011]          |
-|                     | Oesophageal (Squamous cell carcinoma)   | C15                                  | [@Prabhu2013]             |
-|                     | Stomach                                 | C16                                  | [@Ordonez-Mena2016]       |
-|                     | Pancreas                                | C25                                  | [@Ordonez-Mena2016]       |
-|                     | Liver                                   | C22                                  | [@Lee2009]                |
-|                     | Colorectal                              | C18-C20                              | [@Ordonez-Mena2016]       |
-|                     | Kidney                                  | C64                                  | [@Cumberbatch2016]        |
-|                     | Lower urinary tract                     | C65, C66                             | [@Gandini2008]            |
-|                     | Bladder                                 | C67                                  | [@Osch2016]               |
-|                     | Cervical                                | C53                                  | [@Gandini2008]            |
-|                     | Acute myeloid leukaemia                 | C92                                  | [@Colamesta2016]          |
-| Circulatory system  | Ischaemic heart disease                 | I20-I25                              | [@Rostron2012]            |
-|                     | Haemorrhagic stroke                     | I60-I62                              | [@Peters2013]             |
-|                     | Ischaemic stroke                        | I63-I67                              | [@Peters2013]             |
-|                     | Peripheral arterial disease             | I73.9                                | [@Lu2014]                 |
-|                     | Abdominal aortic aneurysm               | I71                                  | [@Cornuz2004]             |
-|                     | Venous thromboembolism                  | I26,I80-I82                          | [@Cheng2013]              |
-| Respiratory system  | Chronic obstructive pulmonary disease   | J40-J44,J47                          | [@Jayes2016]              |
-|                     | Asthma                                  | J45-J46                              | [@Jayes2016]              |
-|                     | Tuberculosis                            | A15-A19                              | [@Jayes2016]              |
-|                     | Obstructive sleep apnoea                | G47.3                                | [@Jayes2016]              |
-|                     | Pneumonia                               | J12-J18                              | [@RCP2018]                |
-|                     | Influenza (clinically diagnosed)        | J11                                  | [@RCP2018]                |
-|                     | Influenza (microbiologically confirmed) | J09, J10                             | [@RCP2018]                |
-|                     | Idiopathic pulmonary fibrosis           | J84.1                                | [@Taskar2006]             |
-| Other               | Diabetes                                | E11                                  | [@Pan2015]                |
-|                     | Alzheimers disease                      | G30                                  | [@Zhong2015]              |
-|                     | Multiple sclerosis                      | G35                                  | [@Zhang2016]              |
-|                     | Parkinson                               | G20                                  | [@Breckenridge2016]       |
-|                     | Vascular dementia                       | F01                                  | [@Zhong2015]              |
-|                     | All cause dementia                      | F02,F03                              | [@Zhong2015]              |
-|                     | Depression                              | F32,F33                              | [@Luger2014]              |
-|                     | Schizophrenia                           | F20-F25                              | [@RCP2018]                |
-|                     | Psychosis                               | F28,F29                              | [@Gurillo2015]            |
-|                     | Bulimia                                 | F50.2                                | [@Solmi2016]              |
-|                     | Systematic lupus erythematosis          | M32                                  | [@Jiang2015]              |
-|                     | Low back pain                           | M54                                  | [@Shiri2010]              |
-|                     | Rheumatoid arthritis                    | M05,M06                              | [@DiGiuseppe2014]           |
-|                     | Psoriasis                               | L40                                  | [@Armstrong2014]          |
-|                     | Age related macular degeneration        | H35.3-H52.4                          | [@Chakravarthy2010]       |
-|                     | Senile cataract                         | H25                                  | [@Ye2012]                 |
-|                     | Crohns disease                          | K50                                  | [@Mahid]                  |
-|                     | Ulcerative colitis                      | K51                                  | [@Dias2015]               |
-|                     | Hip fracture                            | S72.0-S72.2                          | [@Shen2015]               |
-|                     | Chronic kidney disease                  | N18.1,N18.2,N18.3, N18.4,N18.8,N18.9 | [@Xia2017]                |
-|                     | End-stage renal disease                 | N18.5,N18.0                          | [@Xia2017]                |
-|                     | Hearing loss                            | H90,H91                              | [@Nomura2005]             |
-Table: Our list of adult diseases related to smoking.
-
-
-
-# Relative risks of disease
-From the sources given in Table 1, we extracted the relative risks of current vs. never smoking and their 95\% confidence intervals. We illustrate these in Figure 1, ordered by the strength of relationship to smoking. We do not incorporate the uncertainty around these relative risks in our modelling, but this is an obvious area for improvement. We assume the equivalence of relative risks and odds ratios.  
-
-## Dose-response effects of smoking
-The extent to which someone is at risk of a smoking related disease also depends on how much they smoke, and for how long they have smoked, i.e. the accumulated dose-response effects of smoking. However, we do not currently incorporate these dose-response effects. Instead we use the average differences in disease risk between people who currently smoke (to any level or history) and never smokers.   
-
-Not incorporating these dose-response effects of smoking into our model has two potential disadvantages for assessing the impact of tobacco control policy. First, the effects of reductions in smoking initiation cannot properly be assessed, because without tracking the accumulation of disease risk over the life course, the reduction in lifetime risk is not estimable. Second, the effects on disease risk of quitting smoking cannot be estimated accurately. This is because – when we operationalise the theory that disease risk declines gradually after quitting smoking [@Doll2004] – we cannot accurately know the current risk faced by each newly quit individual i.e. we don’t know from what level the risk will decline. Furthermore, both these considerations have implications for our estimates of how changes to smoking initiation and quitting affect socioeconomic inequalities in disease risk – due to socioeconomic differences in the lifetime accumulation of disease risk not currently featuring in population models.  
-
-From our pilot searches for evidence on dose-response effects, we selected 12 illustrative studies, each for a different type of cancer [@Tredaniel;@Macacu2015;@Zou2014;@Xu2012;@Liang2009;@Maasland2014;@Fircanis2014;@Osch2016;@Pang2015;@Gandini2008;@Liang2009]. They show the inconsistency in reporting of exposure (current smoking intensity, duration, pack-years), level of exposure (e.g. categorical vs. continuous) and in the format that the risk relationships are reported (in one study, the information we would want to extract is not reported, so we would need to contact the authors). For cancer of the oral cavity, we did not find a meta-analysis but did find a recent and cohort study [@Maasland2014], suggesting that we might have to relax our criteria to look only at meta-analyses. 
-
-
-
-```{r rel risks, eval = T, echo=F, warning=F, out.extra='', fig.width = 7.5, fig.height = 8.5, fig.cap = "Relative risks of disease in current vs. never smokers."}
-
-data <- read_xlsx("16102018tobaccoandalcoholDiseaseListandRiskFunctions.xlsx", sheet = "TobaccoCI")
-
-data.table::setDT(data)
-
-data <- data[order(RR),]
-data$index <- c(1:55)
-data$group <- factor(data$group, levels=c("Cancer", "Respiratory", "Cardiovascular", "Mental health", "Other", "Protective"))
-
-p1 <- ggplot(data, aes(y=index, x=RR, colour=group))+
-  geom_segment(aes(x=1, y=0, xend=1, yend=56), colour="Grey")+
-  geom_errorbarh(aes(xmax=upper, xmin=lower), colour="Grey30", height=0.5)+
-  geom_point(size=3)+
-  theme_classic()+
-  scale_y_continuous(breaks=c(1:55), labels=data$condition, name="", limits=c(0,56))+
-  scale_x_continuous(name="Relative risk for smokers", breaks=c(0,1,5,10,15), labels=c(0,1,5,10,15))+
-  scale_colour_manual(name="Condition type", values=c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c"))
-
-#png("Relative_risks_description/Output/tobacco_riskplot.png", width = 600, height = 850)
-p1 + theme(legend.position = "bottom")
-#dev.off()
-
-```  
-
-## Decline in risk over time after quitting smoking
-To estimate the risk of disease for former smokers we used the findings of Kontis et al. [-@Kontis2014], who re-analysed the change in risk after smoking in the ACS-CPS II study from Oza et al.[-@Oza2011], producing three functions to describe the decline in risk after quitting for each of cancers, cardiovascular disease (CVD) and chronic obstructive pulmonary disease (COPD) (Figure 2). The estimates were informed by data on former smokers with known quit dates who were disease-free at baseline. The results show the proportion of excess relative risk remaining at each time-point since cessation.  
-
-In an effort to validate these estimates, we checked them against the range of estimates for laryngeal cancer, oropharyngeal cancer and oesophageal cancer found by the International Agency for Research on Cancer's (IARC) 2007 review of the decline in risk after quitting smoking [@IARCWHO2007]. The results are shown in Figures 3-5. Most past studies do not treat the decline in risk after quitting as a continuous function of time, rather estimating the effect for variously defined categories of time. In some cases, risk is observed to be higher shortly after quitting for former smokers, which might indicate that the condition takes time to emerge after the damage is done by past smoking, or that these studies could have controlled better for individual heterogeneity. In general, the estimates of Kontis et al. [-@Kontis2014] fall within the cloud of estimates.  
-
-Thus, even though there is potential to improve on the ACS-CPS II evidence used by Kontis et al. [-@Kontis2014] (e.g. using the results of meta-analyses found through searching for the dose-response evidence), we adopt the approach of Kontis et al. [-@Kontis2014].  
-
-However, since Kontis et al. [-@Kontis2014] only provide estimates for cancers, CVD or COPD, we must decide how to specify the rates of decline in the risks due to smoking after quitting for other diseases. Kontis et al. [-@Kontis2014] consider this issue for type II diabetes, stating that "Randomised trials also indicate that the benefits of behaviour change and pharmacological treatment on diabetes risk occur within a few years, more similar to the CVDs than cancers [@Knowler2002]. Therefore, we used the CVD curve for diabetes." In-line with Kontis et al. [-@Kontis2014], we apply the rate of decline in risk of CVD after quitting smoking to type 2 diabetes.  
-
-We have begun to develop our own further assumptions: We assume that the decline in risk for all respiratory conditions follows Kontis et al.'s [-@Kontis2014] estimates for COPD. For other diseases, we might assume that the decline in relative risk follows the cancer curve (the most conservative option), that the additional risk from smoking disappears immediately following quitting (the least conservative option), or that the risk immediately falls to the average risk in former smokers identified from meta-analyses (potentially a middle-ground option?). However, these assumptions are based on no or limited evidence and will need revisiting to see what use might be made of existing evidence and expert opinion to develop a credible approach.  
-
-
-```{r tob lags, eval = T, echo=F, warning=F, out.extra='', fig.width = 4.55, fig.height = 8.5, fig.cap = "Rate at which the excess risk of disease due to smoking declines over time after quitting."}
-
-data_Kontis <- fread("excess_risk_decline_from_KontisLancet.csv")
-
-# These data give lag times for one of 3 groups
-#unique(data$cause_group)
-# [1] "CVD"     "COPD"    "Cancers"
-
-# plot the data
-p <- ggplot(data_Kontis) +
-  geom_ribbon(aes(x = years_since_cessation, ymin = excess_risk_percent_lb, ymax = excess_risk_percent_ub), alpha = .3) +
-  geom_line(aes(x = years_since_cessation, y = excess_risk_percent)) +
-  facet_wrap(~ cause_group, ncol = 1) +  theme_minimal()+
-  ylab("proportion of remaining effect") + xlab("years since cessation")
-p
-
-```  
-
-```{r tob lags IARC comparison laryngeal, eval = T, echo=F, warning=F, out.extra='', fig.width = 7.5, fig.height = 6.5, fig.cap = "Comparison of decline in cancer risk after quitting to results of IARC review for Laryngeal cancers."}
-
-# Laryngeal
-
-data_laryngeal <- read_xlsx("2015-09-06_Risk_changes_after_cessation.xlsx", sheet = "Laryngeal_comparison")
-
-setDT(data_laryngeal)
-
-data_laryngeal[ , `:=`(Estimate = NULL, `Lower CI` = NULL, `Upper CI` = NULL)]
-
-data_laryngeal <- melt(data_laryngeal, id.vars = "years", variable.name = "study", value.name = "estimate")
-
-p1 <- ggplot() +
-  geom_ribbon(data = data_Kontis[cause_group == "Cancers"], aes(x = years_since_cessation, ymin = excess_risk_percent_lb, ymax = excess_risk_percent_ub), alpha = .3) +
-  geom_line(data = data_Kontis[cause_group == "Cancers"], aes(x = years_since_cessation, y = excess_risk_percent)) +
-  geom_point(data = data_laryngeal, aes(x = years, y = estimate, color = study)) +
-  theme_minimal() +
-  ylab("proportion of remaining effect") + xlab("years since cessation") +
-  ggtitle("Laryngeal cancer")
-p1
-
-
-```
-
-```{r tob lags IARC comparison Oropharyngeal, eval = T, echo=F, warning=F, out.extra='', fig.width = 7.5, fig.height = 6.5, fig.cap = "Comparison of decline in cancer risk after quitting to results of IARC review for Oropharyngeal."}
-
-# Oropharyngeal
-
-data_oropharyngeal <- read_xlsx("2015-09-06_Risk_changes_after_cessation.xlsx", sheet = "OralPharyngeal_comparison")
-
-setDT(data_oropharyngeal)
-
-data_oropharyngeal[ , `:=`(Estimate = NULL, `Lower CI` = NULL, `Upper CI` = NULL)]
-
-data_oropharyngeal <- melt(data_oropharyngeal, id.vars = "years", variable.name = "study", value.name = "estimate")
-
-p2 <- ggplot() +
-  geom_ribbon(data = data_Kontis[cause_group == "Cancers"], aes(x = years_since_cessation, ymin = excess_risk_percent_lb, ymax = excess_risk_percent_ub), alpha = .3) +
-  geom_line(data = data_Kontis[cause_group == "Cancers"], aes(x = years_since_cessation, y = excess_risk_percent)) +
-  geom_point(data = data_oropharyngeal, aes(x = years, y = estimate, color = study)) +
-  theme_minimal() +
-  ylab("proportion of remaining effect") + xlab("years since cessation") +
-  ggtitle("Oropharyngeal cancer")
-p2
-
-```
-
-```{r tob lags IARC comparison oesophageal, eval = T, results = 'hide', echo = F, warning = F, out.extra = '', fig.width = 7.5, fig.height = 6.5, fig.cap = "Comparison of decline in cancer risk after quitting to results of IARC review for Oesophageal cancers."}
-
-# oesophageal
-
-data_oesophageal <- readxl::read_xlsx("2015-09-06_Risk_changes_after_cessation.xlsx", sheet = "Oesophargeal_comparison")
-
-setDT(data_oesophageal)
-
-data_oesophageal[ , `:=`(Estimate = NULL, `Lower CI` = NULL, `Upper CI` = NULL)]
-
-data_oesophageal <- melt(data_oesophageal, id.vars = "years", variable.name = "study", value.name = "estimate")
-
-p3 <- ggplot() +
-  geom_ribbon(data = data_Kontis[cause_group == "Cancers"], aes(x = years_since_cessation, ymin = excess_risk_percent_lb, ymax = excess_risk_percent_ub), alpha = .3) +
-  geom_line(data = data_Kontis[cause_group == "Cancers"], aes(x = years_since_cessation, y = excess_risk_percent)) +
-  geom_point(data = data_oesophageal, aes(x = years, y = estimate, color = study)) +
-  theme_minimal() +
-  ylab("proportion of remaining effect") + xlab("years since cessation") +
-  ggtitle("Oesophageal cancer")
-p3
-
-```
-
-# Use of relative risks in STPM
+## Use of relative risks in STPM
 The functions to assign relative risks to each individual based on their current or former smoking status are in the `tobalcepi` R package, which is part of the set of R packages containing the code that underlies STPM.  
 
 The function `RRFunc()` does the job of assigning the relative risks of each disease to a sample of individuals according to their current tobacco consumption status. Since STPM is a part of our joint programme of modelling across tobacco and alcohol, `RRFunc()` has options that can tailor it to assign risks based on tobacco consumption only, alcohol consumption only, or both tobacco and alcohol consumption.  
@@ -274,15 +63,11 @@ This average risk is calculated by the function `subgroupRisk()`. The functon `U
 The `tobalcepi` package contains data on smoking from the Health Survey for England, 2001-2016 in `hse_data_smoking`. To illustrate, we take a subset of 10,000 individuals from these data, assign them their smoking attributable relative risks for laryngeal cancer, and calculate the average risk for males and females.  
 
 
-# Code developments
-To integrate dose-response risk functions into our modelling, we have started to develop a new function to replace `RRtob()`. The function `RRTobDR` estimates each individual in the data their dose-response relative risk based on the number of cigarettes they consume per day. This function has not yet been integrated into the function `RRFunc()`. 
-
-In order to this this we need to work out if and how we assign risk to former smokers, as there is no cigs per day information for former smokers. 
+## Code development
+To integrate dose-response risk functions into our modelling, we have started to develop a new function to replace `RRtob()`. The function `RRTobDR` estimates each individual in the data their dose-response relative risk based on the number of cigarettes they consume per day. This function has not yet been integrated into the function `RRFunc()`.    
 
 
-
-
-# References
+## References
 
 
 

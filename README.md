@@ -18,11 +18,11 @@ analyst team.
 `tobalcepi` was created as part of a programme of work on the health
 economics of tobacco and alcohol at the School of Health and Related
 Research (ScHARR), The University of Sheffield. This programme is based
-around the construction of the Sheffield Tobacco and Alcohol Policy
-Model (STAPM), which aims to use comparable methodologies to evaluate
-the impacts of tobacco and alcohol policies, and investigate the
-consequences of clustering and interactions between tobacco and alcohol
-consumption behaviours.
+around the development of the Sheffield Tobacco and Alcohol Policy
+Modelling (STAPM), which aims to use comparable methodologies to
+evaluate the impacts of tobacco and alcohol policies, and investigate
+the consequences of clustering and interactions between tobacco and
+alcohol consumption behaviours.
 
 The motivation for `tobalcepi` was to organise the information on the
 relative risks of diseases in adults related to their own tobacco and

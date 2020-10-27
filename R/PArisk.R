@@ -23,12 +23,15 @@
 #' @param Widmark_r Numeric vector - the fraction of the body mass in which alcohol would be present
 #'  if it were distributed at concentrations equal to that in blood.
 #'  See examples of use of the Widmark equation in Watson (1981) and Posey and Mozayani (2007).
-#' @param cause Charcter - the acute cause being considered.
+#' @param cause Character - the acute cause being considered.
+#' @param grams_ethanol Numeric vector - the range of grams of ethanol over which to compute relative risk. 
+#' Defaults to 1:100.
 #' @param grams_ethanol_per_unit Numeric value giving the conversion factor for the number of grams of pure
 #' ethanol in one UK standard unit of alcohol.
 #' @param grams_ethanol_per_std_drink Numeric value giving the conversion factor for
 #' the number of grams of ethanol in one standard drink.
 #' @param liver_clearance_rate_h The rate at which blood alcohol concentration declines (percent / hour).
+#' @param getcurve Logical - do you just want to look at the risk function curve?
 #'
 #' @return Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.
 #' @importFrom data.table := setDT setnames
@@ -133,148 +136,162 @@
 #' }
 #'
 PArisk <- function(
-  SODMean,
-  SODSDV,
-  SODFreq,
-  Weight,
-  Widmark_r,
+  SODMean = NULL,
+  SODSDV = NULL,
+  SODFreq = NULL,
+  Weight = NULL,
+  Widmark_r = NULL,
   cause = "Transport",
+  grams_ethanol = 1:100,
   grams_ethanol_per_unit = 8,
   grams_ethanol_per_std_drink = 12.8,
-  liver_clearance_rate_h = 0.017
-  ) {
-
+  liver_clearance_rate_h = 0.017,
+  getcurve = FALSE
+) {
+  
   # The amounts of alcohol (g ethanol) that could be consumed on an occasion
   # i.e. the mass of alcohol ingested
-  grams_ethanol <- 1:100 # units * ConvertToGramOfAlcohol#1:100
-
-  # Duration is calculated in minutes
-
-  # Convert liver clearance rate from per hour to per minute
-  liver_clearance_rate_m <- liver_clearance_rate_h / 60
-
-  Duration_m <- 100 * grams_ethanol / (Widmark_r * Weight * 1000 * liver_clearance_rate_m)
-
-  # Convert to hours
-  Duration_h <- Duration_m / 60
-
-  #######################
-  # Calculate the cumulative probability distribution of each amount of alcohol (1 to 100 g) being drunk on an occassion
-  x <- stats::pnorm(
-    grams_ethanol,
-    SODMean * grams_ethanol_per_unit, # mean
-    SODSDV * grams_ethanol_per_unit # variance
-  )
-
-  #######################
-  # Convert from the cumulative distribution to the
-  # probability that each level of alcohol is consumed on a drinking occasion
-  interval_prob <- x - c(0, x[1:(length(x) - 1)])
-
-  #######################
-  # Calculate the total annual time spent intoxicated
-  # here we use 'intoxicated' to mean having a bac > 0
-  # freq_drinks * 52 * interval_prob * duration
-
-  Time_intox <-
-    SODFreq * # expected number of weekly drinking occasions [number]
-    52 * # multiply by the number of weeks in a year [number]
-    interval_prob * # the probability that each level of alcohol is consumed on a drinking occassion [vector]
-    Duration_h # the duration of intoxication (1 to 100g) for each amount of alcohol that could be drunk [vector]
-
-  # Total annual time spent intoxicated over all levels of conusumption
-  Time_intox_sum <- sum(Time_intox)
-
+  #grams_ethanol <- 1:100 # units * ConvertToGramOfAlcohol#1:100
+  
+  if(!isTRUE(getcurve)) {
+    
+    # Duration is calculated in minutes
+    
+    # Convert liver clearance rate from per hour to per minute
+    liver_clearance_rate_m <- liver_clearance_rate_h / 60
+    
+    Duration_m <- 100 * grams_ethanol / (Widmark_r * Weight * 1000 * liver_clearance_rate_m)
+    
+    # Convert to hours
+    Duration_h <- Duration_m / 60
+    
+    #######################
+    # Calculate the cumulative probability distribution of each amount of alcohol (1 to 100 g) being drunk on an occasion
+    x <- stats::pnorm(
+      grams_ethanol,
+      SODMean * grams_ethanol_per_unit, # mean
+      SODSDV * grams_ethanol_per_unit # variance
+    )
+    
+    #######################
+    # Convert from the cumulative distribution to the
+    # probability that each level of alcohol is consumed on a drinking occasion
+    interval_prob <- x - c(0, x[1:(length(x) - 1)])
+    
+    #######################
+    # Calculate the total annual time spent intoxicated
+    # here we use 'intoxicated' to mean having a bac > 0
+    # freq_drinks * 52 * interval_prob * duration
+    
+    Time_intox <-
+      SODFreq * # expected number of weekly drinking occasions [number]
+      52 * # multiply by the number of weeks in a year [number]
+      interval_prob * # the probability that each level of alcohol is consumed on a drinking occasion [vector]
+      Duration_h # the duration of intoxication (1 to 100g) for each amount of alcohol that could be drunk [vector]
+    
+    # Total annual time spent intoxicated over all levels of consumption
+    Time_intox_sum <- sum(Time_intox)
+    
+  }
+  
   #######################
   # Apply risk function
-
+  
   # all risk functions from Cherpitel et al 2015
-
+  
   # NOTE THAT VOLUME IS IN STANDARD DRINKS, NOT GRAMS, PER OCCASION. 1 STD. DRINK = 16ml (12.8g) OF ETHANOL
-
+  
   v <- grams_ethanol / grams_ethanol_per_std_drink
-
+  
   v1 <- (v + 1) / 100
-
+  
   # Traffic
   if(cause == "Transport") {
-
+    
     b1 <- 3.973538882
     b2 <- 6.65184e-6
     b3 <- 0.837637
     b4 <- 1.018824
-
+    
     lvold_1 <- log(v1) + b1
     lvold_2 <- (v1^3) - b2
     logitp <- lvold_1 * b3 + lvold_2 * b4
     p <- boot::inv.logit(logitp)
     #or <- (p / (1 - p)) / (p[1] / (1 - p[1]))
     rr <- p / p[1]
-
+    
   }
-
+  
   # Violence
   if(cause == "Violence") {
-
+    
     b1 <- 5.084489629
     b2 <- 0.0000578783
     b3 <- 0.42362
     b4 <- 0.562549
-
+    
     lvold_1 <- (v1^-0.5) - b1
     lvold_2 <- (v1^3) - b2
     logitp <- lvold_1 * -b3 + lvold_2 * b4
     p <- boot::inv.logit(logitp)
     #or <- (p / (1 - p)) / (p[1] / (1 - p[1]))
     rr <- p / p[1]
-
+    
   }
-
+  
   # Fall
   if(cause == "Fall") {
-
+    
     b1 <- 0.1398910338
     b2 <- 0.0195695013
     b3 <- 17.84434
     b4 <- 17.6229
-
+    
     lvold_1 <- (v1^0.5) - b1
     lvold_2 <- v1 - b2
     logitp <- lvold_1 * b3 + lvold_2 * -b4
     p <- boot::inv.logit(logitp)
     #or <- (p / (1 - p)) / (p[1] / (1 - p[1]))
     rr <- p / p[1]
-
+    
   }
-
+  
   # Other
   if(cause == "Other") {
-
+    
     b1 <- 7.965292902
     b2 <- 0.015761462
     b3 <- 0.28148
     b4 <- 2.00946
-
+    
     lvold_1 <- (v1^-0.5) - b1
     lvold_2 <- v1 - b2
     logitp <- lvold_1 * -b3 + lvold_2 * -b4
     p <- boot::inv.logit(logitp)
     #or <- (p / (1 - p)) / (p[1] / (1 - p[1]))
     rr <- p / p[1]
-
+    
   }
-
-  # Risk at that level of grams
-  Current_risk <- rr * Time_intox
-
-  # Total risk
-  Risk_sum <- sum(Current_risk)
-
-  # Annual risk
-  Annual_risk <- min((Risk_sum + 1 * (365 * 24 - Time_intox_sum)) / (365 * 24), (365 * 24), na.rm = T)
-
   
-return(Annual_risk)
+  if(!isTRUE(getcurve)) {
+    
+    # Risk at that level of grams
+    Current_risk <- rr * Time_intox
+    
+    # Total risk
+    Risk_sum <- sum(Current_risk)
+    
+    # Annual risk
+    Annual_risk <- min((Risk_sum + 1 * (365 * 24 - Time_intox_sum)) / (365 * 24), (365 * 24), na.rm = T)
+    
+    return(Annual_risk)
+    
+  } else {
+    
+    # Relative risk curve
+    return(rr)
+    
+  }
 }
 
 

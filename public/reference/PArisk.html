@@ -73,7 +73,7 @@ for each individual for experiencing each cause during one year." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -136,15 +136,17 @@ for each individual for experiencing each cause during one year.</p>
     </div>
 
     <pre class="usage"><span class='fu'>PArisk</span>(
-  <span class='no'>SODMean</span>,
-  <span class='no'>SODSDV</span>,
-  <span class='no'>SODFreq</span>,
-  <span class='no'>Weight</span>,
-  <span class='no'>Widmark_r</span>,
+  <span class='kw'>SODMean</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>SODSDV</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>SODFreq</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>Weight</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>Widmark_r</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>cause</span> <span class='kw'>=</span> <span class='st'>"Transport"</span>,
+  <span class='kw'>grams_ethanol</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>100</span>,
   <span class='kw'>grams_ethanol_per_unit</span> <span class='kw'>=</span> <span class='fl'>8</span>,
   <span class='kw'>grams_ethanol_per_std_drink</span> <span class='kw'>=</span> <span class='fl'>12.8</span>,
-  <span class='kw'>liver_clearance_rate_h</span> <span class='kw'>=</span> <span class='fl'>0.017</span>
+  <span class='kw'>liver_clearance_rate_h</span> <span class='kw'>=</span> <span class='fl'>0.017</span>,
+  <span class='kw'>getcurve</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -177,7 +179,12 @@ See examples of use of the Widmark equation in Watson (1981) and Posey and Mozay
     </tr>
     <tr>
       <th>cause</th>
-      <td><p>Charcter - the acute cause being considered.</p></td>
+      <td><p>Character - the acute cause being considered.</p></td>
+    </tr>
+    <tr>
+      <th>grams_ethanol</th>
+      <td><p>Numeric vector - the range of grams of ethanol over which to compute relative risk. 
+Defaults to 1:100.</p></td>
     </tr>
     <tr>
       <th>grams_ethanol_per_unit</th>
@@ -192,6 +199,10 @@ the number of grams of ethanol in one standard drink.</p></td>
     <tr>
       <th>liver_clearance_rate_h</th>
       <td><p>The rate at which blood alcohol concentration declines (percent / hour).</p></td>
+    </tr>
+    <tr>
+      <th>getcurve</th>
+      <td><p>Logical - do you just want to look at the risk function curve?</p></td>
     </tr>
     </table>
 

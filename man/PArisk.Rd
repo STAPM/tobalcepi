@@ -5,15 +5,17 @@
 \title{Relative risks for alcohol-related injuries}
 \usage{
 PArisk(
-  SODMean,
-  SODSDV,
-  SODFreq,
-  Weight,
-  Widmark_r,
+  SODMean = NULL,
+  SODSDV = NULL,
+  SODFreq = NULL,
+  Weight = NULL,
+  Widmark_r = NULL,
   cause = "Transport",
+  grams_ethanol = 1:100,
   grams_ethanol_per_unit = 8,
   grams_ethanol_per_std_drink = 12.8,
-  liver_clearance_rate_h = 0.017
+  liver_clearance_rate_h = 0.017,
+  getcurve = FALSE
 )
 }
 \arguments{
@@ -32,7 +34,10 @@ each individual has each week.}
 if it were distributed at concentrations equal to that in blood.
 See examples of use of the Widmark equation in Watson (1981) and Posey and Mozayani (2007).}
 
-\item{cause}{Charcter - the acute cause being considered.}
+\item{cause}{Character - the acute cause being considered.}
+
+\item{grams_ethanol}{Numeric vector - the range of grams of ethanol over which to compute relative risk. 
+Defaults to 1:100.}
 
 \item{grams_ethanol_per_unit}{Numeric value giving the conversion factor for the number of grams of pure
 ethanol in one UK standard unit of alcohol.}
@@ -41,6 +46,8 @@ ethanol in one UK standard unit of alcohol.}
 the number of grams of ethanol in one standard drink.}
 
 \item{liver_clearance_rate_h}{The rate at which blood alcohol concentration declines (percent / hour).}
+
+\item{getcurve}{Logical - do you just want to look at the risk function curve?}
 }
 \value{
 Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.

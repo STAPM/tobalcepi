@@ -14,7 +14,8 @@ RRalc(
   protective = TRUE,
   alc_wholly_chronic_thresholds = c(2, 2),
   alc_wholly_acute_thresholds = c(3, 4),
-  grams_ethanol_per_unit = 8
+  grams_ethanol_per_unit = 8,
+  getcurve = F
 )
 }
 \arguments{
@@ -48,6 +49,8 @@ Defaults to 3 units/day for females and 4 units/day for males.}
 
 \item{grams_ethanol_per_unit}{Numeric value giving the conversion factor for the number of grams of pure
 ethanol in one UK standard unit of alcohol.}
+
+\item{getcurve}{Logical - do you just want to look at the risk function curve?}
 }
 \value{
 Returns a numeric vector of each individual's relative risks for the alcohol related disease specified by "disease".

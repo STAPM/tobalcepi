@@ -1,5 +1,0 @@
-Version,Disease,oddsratio_or_relrisk,alc1_tob0,alc1_tob0_lower95,alc1_tob0_upper95,alc0_tob1,alc0_tob1_lower95,alc0_tob1_upper95,alc1_tob1,alc1_tob1_lower95,alc1_tob1_upper95,Source
-Current,Oral_cavity,OR,1.06,0.88,1.28,2.37,1.66,3.39,5.73,3.62,9.06,Hashibe_CancerEpiBioPrev2009
-Current,Pharynx,OR,1.06,0.88,1.28,2.37,1.66,3.39,5.73,3.62,9.06,Hashibe_CancerEpiBioPrev2009
-Current,Larynx,OR,1.06,0.88,1.28,2.37,1.66,3.39,5.73,3.62,9.06,Hashibe_CancerEpiBioPrev2009
-Current,Oesophageal_SCC,OR,1.21,0.81,1.81,1.36,1.14,1.61,3.28,2.11,5.08,Prabhu_AJGastroEnt2014

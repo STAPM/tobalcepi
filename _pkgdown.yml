@@ -17,3 +17,56 @@ authors:
     href: https://www.sheffield.ac.uk/scharr/sections/heds/staff/angus_c
   Alan Brennan:
     href: https://www.sheffield.ac.uk/scharr/sections/heds/staff/brennan_a
+    
+reference:
+- title: Tobacco relative risks
+- subtitle: Disease definitions and relative risks
+  contents:
+  - tob_disease_names
+  - tobacco_relative_risks
+  - RRtob
+  - RRTobDR
+- subtitle: Tobacco lag times
+  contents:
+  - TobLags
+  - tobacco_lag_times
+  
+- title: Alcohol relative risks
+- subtitle: Disease definitions and relative risks
+  contents:
+  - alc_disease_names
+  - RRalc
+- subtitle: Disease risk linked to intoxication
+  contents:  
+  - AlcBinge
+  - AlcBinge_stapm
+  - PArisk
+  - WArisk_acute
+  - binge_params
+  - binge_params_stapm
+- subtitle: Alcohol lag times
+  contents:
+  - AlcLags
+  
+- title: Joint tobacco and alcohol risk
+  contents:
+  - TobAlcInt
+  - tob_alc_risk_int
+  
+- title: Use of risk functions
+  contents:
+  - RRFunc
+  - subgroupRisk
+  
+- title: Misc
+  contents:
+  - ExpandCodes
+  - disease_groups
+
+  
+  
+  
+  
+  
+  
+  

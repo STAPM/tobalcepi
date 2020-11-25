@@ -2,7 +2,7 @@
 title: "Risk of chronic conditions wholly-attributable to alcohol"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Alcohol wholly-attributable chronic risk}
+  %\VignetteIndexEntry{alc_wa_ch_risk}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 bibliography: disease-risks.bib

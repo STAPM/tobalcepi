@@ -7,13 +7,16 @@
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
-**DRAFT WORKING VERSION** - The package is usable but there are still
-bugs and further developments that are being worked through i.e. some
-code and documentation is still incomplete or in need of being refined.
-The code and documentation are still undergoing internal review by the
-analyst team.
+**DRAFT WORKING VERSION** - Some code and documentation is still
+incomplete or in need of being refined. The code and documentation are
+still undergoing internal review by the analyst team.
 
 ## Motivation
+
+The motivation for `tobalcepi` was to organise how we store, process and
+use the information on the risks of disease that stem from tobacco
+and/or alcohol consumption, including to provide functions to easily use
+these risk estimates in modelling.
 
 `tobalcepi` was created as part of a programme of work on the health
 economics of tobacco and alcohol at the School of Health and Related
@@ -24,27 +27,110 @@ evaluate the impacts of tobacco and alcohol policies, and investigate
 the consequences of clustering and interactions between tobacco and
 alcohol consumption behaviours.
 
-The motivation for `tobalcepi` was to organise the information on the
-relative risks of diseases in adults related to their own tobacco and
-alcohol consumption and to provide functions to easily work with these
-data in modelling. The suite of functions within `tobalcepi` processes
-the published data on disease risks that stem from chronic and acute
-alcohol consumption, from smoking, and on the decline in risk after
-ceasing or reducing consumption. The package also includes functions to
-estimate population attributable fractions, and to explore the
-interaction between the disease risks that stem from tobacco and alcohol
-consumption.
+## Relative risk data
 
-> The disease lists and risk functions in this package all have
-> published sources, which we have referenced. In order to obtain
-> mathematical descriptions of the risk functions for use in modelling,
-> we needed to contact some authors to ask for additional information.
+The disease lists and risk functions in this package all have published
+sources, which we have referenced. We store the master files for our
+tobacco and alcohol disease lists and risk functions sources in the
+University of Sheffield folder
+`X:/ScHARR/PR_Disease_Risk_TA/Disease_Lists`. In order to obtain
+mathematical descriptions of the risk functions for use in modelling, we
+needed to contact some authors to ask for additional information.
+
+### Alcohol
+
+The high-level function for alcohol is `tobalcepi::RRalc()`, which
+calculates individual risks of diseases as follows:
+
+1.  **Alcohol - partially-attributable chronic conditions**:
+    dose-response effects of current alcohol consumption on disease risk
+    (Angus et al. [2018](#ref-Angus2018)) are hard-coded into the
+    function `tobalcepi::RRalc()`. Updates to these risk functions must
+    therefore be made by changing the function code.  
+2.  **Alcohol - partially-attributable acute conditions**: dose-response
+    effects of single-occasion alcohol consumption are hard coded into
+    the function `tobalcepi::PArisk()`, which is called by
+    `tobalcepi::RRalc()`. See `vignette("alc_pa_risk")`.  
+3.  **Alcohol - wholly-attributable acute conditions**: these are not
+    based on published risk functions but are based on thresholds, in UK
+    standard units of alcohol drunk on a single occasion, over which
+    individuals begin to experience an elevated risk for acute diseases
+    that are wholly attributable to alcohol. This is applied by the
+    function `tobalcepi::WArisk_acute()`, which is called by
+    `tobalcepi::RRalc()`. See `vignette("alc_wa_ac_risk")`.  
+4.  **Alcohol - wholly-attributable chronic conditions**: these are also
+    based on thresholds in UK standard units of alcohol drunk on average
+    in a week, over which individuals begin to experience an elevated
+    risk for chronic diseases that are wholly attributable to alcohol.
+    This is applied by code within the function `tobalcepi::RRalc()`.
+    See `vignette("alc_wa_ch_risk")`.
+
+### Tobacco
+
+1.  `RRtob()` takes a lookup table of the risks associated with current
+    vs. never smoking and assigns these to individuals based on their
+    smoking state, age and sex (Webster et al.
+    [2018](#ref-webster2018risk)).  
+2.  We are in the process of developing the function `RRTobDR()` to
+    stratify the risks of some cancers according to the amount smoked
+    per day by current smokers. There is limited info on these
+    dose-reponse effects, so we are gradually building up the
+    epidemiological detail in this area as we review, critically
+    appraise and integrate new risk data into our modelling.
+
+### Lag times
+
+Lag times are the information on the delay between a change to tobacco
+or alcohol consumption and the decline in the risk of disease associated
+with that consumption. The relevant functions are `tobalcepi::TobLags()`
+(which uses lags stored in `tobalcepi::tobacco_lag_times`) and
+`tobalcepi::AlcLags()` (which contains lags hard-coded into the
+function).
+
+### Tobacco - Alcohol risk interactions
+
+We use estimates of potential tobacco - alcohol risk interactions for:
+
+  - Oral cavity cancer  
+  - Pharyngeal cancer  
+  - Laryngeal cancer  
+  - Oesophageal SCC cancer
+
+These estimates are stored in `tobalcepi::tob_alc_risk_int`.
+
+## Package data
+
+Some useful, not risk-bearing, data is stored within the package and is
+installed onto your computer when you download and load the package. We
+use package data for data that is likely to be used across several
+projects, that it is important to keep standardised across projects, and
+is only likely to need updating after a long interval e.g. at least
+annually.
+
+The types of data included in tobalcepi are:
+
+  - Lists of the names of the diseases that are related to tobacco
+    and/or alcohol.  
+  - Parameters used in the modelling of single occasion drinking.  
+  - Tobacco relative risks of current vs. never smokers.
+  - Tobacco lag times.  
+  - Tobacco - alcohol risk interactions.
+
+When these data need to be updated, the inputs and code in the package
+folder `data-raw` will need to be changed, and the package rebuild with
+a new version.
 
 ## Usage
 
 `tobalcepi` is a package for predicting individual risk of disease due
 to tobacco and alcohol consumption based on published sources, and
-summarising that risk.
+summarising that risk. The suite of functions within `tobalcepi`
+processes the published data on the relative risks of disease that stem
+from chronic and acute alcohol consumption, from smoking, and on the
+decline in risk after ceasing or reducing consumption. The package also
+includes functions to estimate population attributable fractions, and to
+explore the interaction between the disease risks that stem from tobacco
+and alcohol consumption.
 
 The **inputs** are the published estimates of relative risk for each
 disease (sometimes stratified by population subgroup).
@@ -84,7 +170,7 @@ GitLab with:
 #install.packages("getPass")
 
 devtools::install_git(
-  "https://gitlab.com/stapm/tobalcepi.git", 
+  "https://gitlab.com/stapm/r-packages/tobalcepi.git", 
   credentials = git2r::cred_user_pass("uname", getPass::getPass()),
   ref = "x.x.x",
   build_vignettes = TRUE
@@ -115,4 +201,27 @@ Please cite the latest version of the package using:
 “Duncan Gillespie, Laura Webster, Maddy Henney, Colin Angus and Alan
 Brennan (2020). tobalcepi: Risk Functions and Attributable Fractions for
 Tobacco and Alcohol. R package version x.x.x.
-<https://stapm.gitlab.io/tobalcepi>”
+<https://stapm.gitlab.io/r-packages/tobalcepi>”
+
+## References
+
+<div id="refs" class="references hanging-indent">
+
+<div id="ref-Angus2018">
+
+Angus, Colin, M Henney, L Webster, and Duncan Gillespie. 2018.
+“Alcohol-Attributable Diseases and Dose-Response Curves for the
+Sheffield Alcohol Policy Model Version 4.0.”
+<https://doi.org/10.15131/shef.data.6819689.v1>.
+
+</div>
+
+<div id="ref-webster2018risk">
+
+Webster, Laura, Colin Angus, Alan Brennan, and Duncan Gillespie. 2018.
+“Smoking and the Risks of Adult Diseases.” The University of
+Sheffield. <https://doi.org/10.15131/shef.data.7411451.v1>.
+
+</div>
+
+</div>

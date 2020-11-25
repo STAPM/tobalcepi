@@ -24,23 +24,30 @@ RRFunc(
 )
 }
 \arguments{
-\item{data}{Data table of individual characteristics - this function uses current smoking and drinking status/amount.}
+\item{data}{Data table of individual characteristics - 
+this function uses current smoking and drinking status/amount.}
 
 \item{substance}{Whether to compute relative risks for just alcohol ("alc"),
 just tobacco ("tob") or joint risks for tobacco and alcohol ("tobalc").}
 
-\item{k_year}{Integer giving the current year of the simulation.}
+\item{k_year}{Integer giving the current year of the simulation. Defaults to NULL.}
 
 \item{alc_diseases}{Character vector of alcohol related diseases.}
 
-\item{alc_mort_and_morb}{Character vector of alcohol related diseases that have separate risk functions for
+\item{alc_mort_and_morb}{Character vector of the names of the 
+alcohol related diseases that have separate risk functions for
 mortality and morbidity.}
 
-\item{alc_risk_lags}{Logical - should each individual's relative risks for alcohol be lagged according to
-their past trajectory of relative risks. Defaults to FALSE. This should only be set to TRUE for a model run that simulates individual trajctories,
-and should be FALSE if used as part of the current method for calculating attributable fractions.}
+\item{alc_risk_lags}{Logical - should each individual's relative risks 
+for alcohol be lagged according to
+their past individual life-course trajectory of relative risks. 
+Defaults to FALSE. 
+This should only be set to TRUE for a model run that simulates individual trajectories,
+and should be FALSE if this function is being used 
+as part of the calculation of population attributable fractions.}
 
-\item{alc_indiv_risk_trajectories_store}{Data table that stores the individual history of relative risks for alcohol related diseases.}
+\item{alc_indiv_risk_trajectories_store}{Data table that stores 
+each individual's life-course history of relative risks for alcohol related diseases.}
 
 \item{alc_protective}{Logical - whether to include the protective effects of
 alcohol in the risk function. Defaults to TRUE. If TRUE, then the part of the risk function < 1 is set to equal 1.}
@@ -83,44 +90,76 @@ the relative risks for the current year added to the store.
 }
 \description{
 This function takes a sample of individuals and computes each individual's relative risk
-for each disease according to their current tobacco and alcohol consumption. There is an option to tailor this
+for each disease according to their current tobacco and alcohol consumption. 
+There is an option to tailor this
 to the alcohol only, tobacco only, or joint tobacco and alcohol contexts.
 }
-\details{
-ALCOHOL
+\section{Alcohol risk}{
 
-For alcohol, the relative risk for each individual for each disease is calculated based on their average weekly alcohol consumption.
- For diseases that have separate mortality and morbidity risk functions, separate variables are created containing
+For alcohol, the relative risk for each individual for each disease is calculated based on 
+their average weekly alcohol consumption (using [RRalc()]).
+ For diseases that have separate mortality and morbidity risk functions, 
+ separate variables are created containing
  the relative risks for each for the same disease.
-Individuals are not recorded as being former drinkers -- instead their alcohol consumption just falls to zero and their
+Unlike tobacco, there is no "former drinker" state in our alcohol modelling, meaning that 
+individuals are not recorded as being former drinkers -- 
+instead their alcohol consumption just falls to zero and their
 relative risk for disease changes accordingly.
+}
 
-Alcohol lags:
+\section{Alcohol lags}{
 
-To account for the lagged effects of individual drinking history on their
-current risk of disease, we add memory by storing each individual's past trajectory of their relative risk for each disease.
-In the model, the current relative risk is then adjusted to take account of each individual's stored drinking histories -
-this adjustment takes the form of a weighted average of current and past relative risk where the weights are proportional to
-the disease specific lag function that describes the gradual emergence of an effect of changed consumption on risk over time.
-This uses a slightly different method to SAPM.
+To account for the lagged effects of changes to the amount that individuals drink on their
+current risk of disease, 
+it is necessary to add memory to our modelling, 
+which we do in this function by storing each individual's 
+past trajectory of the relative risk that they were assigned 
+for each disease. Doing so adds extra computations and makes the model run a bit slower. 
+In each year of the simulation, the current relative risk of an individual is 
+adjusted to take account of 
+each individual's stored drinking histories. 
+This adjustment takes the form of a weighted average of current and past relative risk, 
+where the weights are proportional to
+the disease-specific lag function (which comes from [AlcLags()]). 
+This method is slightly different to the method that was developed for SAPM, 
+as it needed to be adapted to suit the modelling of individual life-course 
+trajectories of alcohol consumption.
+}
 
-TOBACCO
+\section{Tobacco risk}{
 
-For tobacco, the relative risk for each individual is calculated based on whether they are a current, former or never smoker.
-Currently, all current smokers have the same relative risk regardless of the amount they currently smoke or have smoked in the past.
+For tobacco, the relative risk for each individual is calculated based on whether 
+they are a current, former or never smoker (using [RRtob()]).
+Currently, all current smokers have the same relative risk regardless of 
+the amount they currently smoke or have smoked in the past (but we are in the process 
+of developing inputs and a function to take account of dose-response effects of 
+the amount currently smoked using [RRTobDR()]).
+}
 
-Tobacco lags:
+\section{Tobacco lags}{
 
-Former smokers are initially given the relative risk associated with current smokers, which we then scale according to a disease-specific
-function that describes how risk declines after quitting smoking.
+Former smokers are initially given the relative risk associated with current smokers (using [RRtob()]), 
+which we then scale according to a disease-specific
+function that describes how risk declines after quitting smoking (which comes from [TobLags()]).
+}
 
-ALCOHOL AND TOBACCO
+\section{Joint alcohol and tobacco risk}{
 
 If both tobacco and alcohol are being considered in a joint model,
-we combine the relative risks for current drinkers and smokers. For oral, pharyngeal, laryngeal and oesophageal cancers we also
-have the option of scaling the joint risks by a 'synergy index', which takes the result of a meta-analysis of the additional
+we combine the relative risks for current drinkers and smokers. 
+In implementing this combination of risks, we have built-in the option 
+to take account of synergistic effects (i.e. when the combined 
+risk from tobacco and alcohol consumption is more that would be expected 
+from the additive combination of risks, because for some conditions that 
+tobacco and alcohol consumption interact physiologically, and that interaction 
+further increases disease risk). 
+We currently include estimates of synergistic effects for 
+oral, pharyngeal, laryngeal and oesophageal cancers. 
+We apply these effects using [TobAlcInt()] by scaling the joint risks by a 'synergy index', 
+which takes the result of a meta-analysis of the additional
 risk faced by people because they consume both tobacco and alcohol.
 }
+
 \examples{
 \dontrun{
 #############################
@@ -233,4 +272,8 @@ RRFunc(
 ## TOBACCO AND ALCOHOL
 
 }
+}
+\seealso{
+[RRalc()] for alcohol-specific risks, [RRtob()] for tobacco-specific risks, 
+[AlcLags()] for alcohol-specific lag times, and [TobLags()] for tobacco-specific lag times.
 }

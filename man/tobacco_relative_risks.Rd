@@ -5,15 +5,16 @@
 \alias{tobacco_relative_risks}
 \title{Tobacco relative risks}
 \format{
-A data table
-}
-\source{
-
+A data table containing the relative risks of 52 disease categories 
+for current vs. never smokers \insertCite{webster2018risk;textual}{tobalcepi}.
 }
 \usage{
 tobacco_relative_risks
 }
 \description{
 Tobacco relative risks
+}
+\references{
+\insertRef{webster2018risk}{tobalcepi}
 }
 \keyword{datasets}

@@ -1,7 +1,7 @@
 Package: tobalcepi
 Type: Package
 Title: Risk Functions and Attributable Fractions for Tobacco and Alcohol
-Version: 1.2.0
+Version: 1.2.1
 Authors@R: 
     c(
     person(given = "Duncan",
@@ -41,7 +41,9 @@ Imports:
     readxl,
     testthat,
     dplyr,
-    data.table
+    data.table,
+    Rdpack
+RdMacros: Rdpack
 VignetteBuilder: knitr
 RoxygenNote: 7.1.0
 Depends: 

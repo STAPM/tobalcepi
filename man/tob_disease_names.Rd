@@ -5,15 +5,16 @@
 \alias{tob_disease_names}
 \title{Names of tobacco-related diseases}
 \format{
-A data table
-}
-\source{
-
+A character vector containing the names of the 52 disease categories 
+of smoking related diseases \insertCite{webster2018risk;textual}{tobalcepi}.
 }
 \usage{
 tob_disease_names
 }
 \description{
 Names of tobacco-related diseases
+}
+\references{
+\insertRef{webster2018risk}{tobalcepi}
 }
 \keyword{datasets}

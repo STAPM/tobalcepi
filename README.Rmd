@@ -1,6 +1,6 @@
 ---
 output: github_document
-bibliography: disease-risks.bib
+bibliography: inst/REFERENCES.bib
 link-citations: yes
 citation_package: natbib
 biblio-style: vancouver
@@ -29,7 +29,7 @@ The motivation for `tobalcepi` was to organise how we store, process and use the
 `tobalcepi` was created as part of a programme of work on the health economics of tobacco and alcohol at the School of Health and Related Research (ScHARR), The University of Sheffield. This programme is based around the development of the Sheffield Tobacco and Alcohol Policy Modelling (STAPM), which aims to use comparable methodologies to evaluate the impacts of tobacco and alcohol policies, and investigate the consequences of clustering and interactions between tobacco and alcohol consumption behaviours.    
 
 ## Relative risk data
-The disease lists and risk functions in this package all have published sources, which we have referenced. We store the master files for our tobacco and alcohol disease lists and risk functions sources in the University of Sheffield folder `X:/ScHARR/PR_Disease_Risk_TA/Disease_Lists`. In order to obtain mathematical descriptions of the risk functions for use in modelling, we needed to contact some authors to ask for additional information.     
+The disease lists and risk functions in this package all have published sources, which we have referenced. We store the master files for our tobacco and alcohol disease lists and risk functions sources in the University of Sheffield folder `X:/ScHARR/PR_Disease_Risk_TA/Code/tables`. In order to obtain mathematical descriptions of the risk functions for use in modelling, we needed to contact some authors to ask for additional information.     
 
 ### Alcohol
 The high-level function for alcohol is `tobalcepi::RRalc()`, which calculates individual risks of diseases as follows:  

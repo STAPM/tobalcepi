@@ -18,7 +18,7 @@ Returns data plus the estimated variables.
 \description{
 Designed to work with cross-sectional survey data with a wide range of individual-level covariates. 
 Uses survey data and previously estimated coefficients to describe
-the patterns of single occassion drinking.
+the patterns of single occasion drinking.
 }
 \details{
 This is based on a study by Hill-McManus 2014,

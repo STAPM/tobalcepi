@@ -33,7 +33,7 @@ The disease lists and risk functions in this package all have published
 sources, which we have referenced. We store the master files for our
 tobacco and alcohol disease lists and risk functions sources in the
 University of Sheffield folder
-`X:/ScHARR/PR_Disease_Risk_TA/Disease_Lists`. In order to obtain
+`X:/ScHARR/PR_Disease_Risk_TA/Code/tables`. In order to obtain
 mathematical descriptions of the risk functions for use in modelling, we
 needed to contact some authors to ask for additional information.
 

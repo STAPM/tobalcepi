@@ -3,7 +3,7 @@
 #'
 #' Designed to work with cross-sectional survey data with a wide range of individual-level covariates. 
 #' Uses survey data and previously estimated coefficients to describe
-#' the patterns of single occassion drinking.
+#' the patterns of single occasion drinking.
 #'
 #' This is based on a study by Hill-McManus 2014,
 #' who analysed drinking occasions using data from detailed diaries in the National Diet and Nutrition Survey 2000/2001.

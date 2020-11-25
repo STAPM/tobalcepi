@@ -5,15 +5,16 @@
 \alias{alc_disease_names}
 \title{Names of alcohol-related diseases}
 \format{
-A data table
-}
-\source{
-
+A character vector containing the names of the 48 disease categories 
+of alcohol related diseases \insertCite{Angus2018;textual}{tobalcepi}.
 }
 \usage{
 alc_disease_names
 }
 \description{
 Names of alcohol-related diseases
+}
+\references{
+\insertRef{Angus2018}{tobalcepi}
 }
 \keyword{datasets}

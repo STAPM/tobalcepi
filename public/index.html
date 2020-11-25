@@ -85,20 +85,87 @@
 <a href="#tobalcepi-" class="anchor"></a>tobalcepi <img src="tools/tobalcepi_hex.png" align="right" style="padding-left:10px;background-color:white;" width="100" height="100">
 </h1></div>
 
-<p><strong>DRAFT WORKING VERSION</strong> - The package is usable but there are still bugs and further developments that are being worked through i.e. some code and documentation is still incomplete or in need of being refined. The code and documentation are still undergoing internal review by the analyst team.</p>
+<p><strong>DRAFT WORKING VERSION</strong> - Some code and documentation is still incomplete or in need of being refined. The code and documentation are still undergoing internal review by the analyst team.</p>
 <div id="motivation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#motivation" class="anchor"></a>Motivation</h2>
+<p>The motivation for <code>tobalcepi</code> was to organise how we store, process and use the information on the risks of disease that stem from tobacco and/or alcohol consumption, including to provide functions to easily use these risk estimates in modelling.</p>
 <p><code>tobalcepi</code> was created as part of a programme of work on the health economics of tobacco and alcohol at the School of Health and Related Research (ScHARR), The University of Sheffield. This programme is based around the development of the Sheffield Tobacco and Alcohol Policy Modelling (STAPM), which aims to use comparable methodologies to evaluate the impacts of tobacco and alcohol policies, and investigate the consequences of clustering and interactions between tobacco and alcohol consumption behaviours.</p>
-<p>The motivation for <code>tobalcepi</code> was to organise the information on the relative risks of diseases in adults related to their own tobacco and alcohol consumption and to provide functions to easily work with these data in modelling. The suite of functions within <code>tobalcepi</code> processes the published data on disease risks that stem from chronic and acute alcohol consumption, from smoking, and on the decline in risk after ceasing or reducing consumption. The package also includes functions to estimate population attributable fractions, and to explore the interaction between the disease risks that stem from tobacco and alcohol consumption.</p>
-<blockquote>
-<p>The disease lists and risk functions in this package all have published sources, which we have referenced. In order to obtain mathematical descriptions of the risk functions for use in modelling, we needed to contact some authors to ask for additional information.</p>
-</blockquote>
+</div>
+<div id="relative-risk-data" class="section level2">
+<h2 class="hasAnchor">
+<a href="#relative-risk-data" class="anchor"></a>Relative risk data</h2>
+<p>The disease lists and risk functions in this package all have published sources, which we have referenced. We store the master files for our tobacco and alcohol disease lists and risk functions sources in the University of Sheffield folder <code>X:/ScHARR/PR_Disease_Risk_TA/Disease_Lists</code>. In order to obtain mathematical descriptions of the risk functions for use in modelling, we needed to contact some authors to ask for additional information.</p>
+<div id="alcohol" class="section level3">
+<h3 class="hasAnchor">
+<a href="#alcohol" class="anchor"></a>Alcohol</h3>
+<p>The high-level function for alcohol is <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>, which calculates individual risks of diseases as follows:</p>
+<ol>
+<li>
+<strong>Alcohol - partially-attributable chronic conditions</strong>: dose-response effects of current alcohol consumption on disease risk (Angus et al. <a href="#ref-Angus2018">2018</a>) are hard-coded into the function <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>. Updates to these risk functions must therefore be made by changing the function code.<br>
+</li>
+<li>
+<strong>Alcohol - partially-attributable acute conditions</strong>: dose-response effects of single-occasion alcohol consumption are hard coded into the function <code><a href="reference/PArisk.html">tobalcepi::PArisk()</a></code>, which is called by <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>. See <code>vignette("alc_pa_risk")</code>.<br>
+</li>
+<li>
+<strong>Alcohol - wholly-attributable acute conditions</strong>: these are not based on published risk functions but are based on thresholds, in UK standard units of alcohol drunk on a single occasion, over which individuals begin to experience an elevated risk for acute diseases that are wholly attributable to alcohol. This is applied by the function <code><a href="reference/WArisk_acute.html">tobalcepi::WArisk_acute()</a></code>, which is called by <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>. See <code>vignette("alc_wa_ac_risk")</code>.<br>
+</li>
+<li>
+<strong>Alcohol - wholly-attributable chronic conditions</strong>: these are also based on thresholds in UK standard units of alcohol drunk on average in a week, over which individuals begin to experience an elevated risk for chronic diseases that are wholly attributable to alcohol. This is applied by code within the function <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>. See <code>vignette("alc_wa_ch_risk")</code>.</li>
+</ol>
+</div>
+<div id="tobacco" class="section level3">
+<h3 class="hasAnchor">
+<a href="#tobacco" class="anchor"></a>Tobacco</h3>
+<ol>
+<li>
+<code><a href="reference/RRtob.html">RRtob()</a></code> takes a lookup table of the risks associated with current vs. never smoking and assigns these to individuals based on their smoking state, age and sex (Webster et al. <a href="#ref-webster2018risk">2018</a>).<br>
+</li>
+<li>We are in the process of developing the function <code><a href="reference/RRTobDR.html">RRTobDR()</a></code> to stratify the risks of some cancers according to the amount smoked per day by current smokers. There is limited info on these dose-reponse effects, so we are gradually building up the epidemiological detail in this area as we review, critically appraise and integrate new risk data into our modelling.</li>
+</ol>
+</div>
+<div id="lag-times" class="section level3">
+<h3 class="hasAnchor">
+<a href="#lag-times" class="anchor"></a>Lag times</h3>
+<p>Lag times are the information on the delay between a change to tobacco or alcohol consumption and the decline in the risk of disease associated with that consumption. The relevant functions are <code><a href="reference/TobLags.html">tobalcepi::TobLags()</a></code> (which uses lags stored in <code><a href="reference/tobacco_lag_times.html">tobalcepi::tobacco_lag_times</a></code>) and <code><a href="reference/AlcLags.html">tobalcepi::AlcLags()</a></code> (which contains lags hard-coded into the function).</p>
+</div>
+<div id="tobacco---alcohol-risk-interactions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#tobacco---alcohol-risk-interactions" class="anchor"></a>Tobacco - Alcohol risk interactions</h3>
+<p>We use estimates of potential tobacco - alcohol risk interactions for:</p>
+<ul>
+<li>Oral cavity cancer<br>
+</li>
+<li>Pharyngeal cancer<br>
+</li>
+<li>Laryngeal cancer<br>
+</li>
+<li>Oesophageal SCC cancer</li>
+</ul>
+<p>These estimates are stored in <code><a href="reference/tob_alc_risk_int.html">tobalcepi::tob_alc_risk_int</a></code>.</p>
+</div>
+</div>
+<div id="package-data" class="section level2">
+<h2 class="hasAnchor">
+<a href="#package-data" class="anchor"></a>Package data</h2>
+<p>Some useful, not risk-bearing, data is stored within the package and is installed onto your computer when you download and load the package. We use package data for data that is likely to be used across several projects, that it is important to keep standardised across projects, and is only likely to need updating after a long interval e.g. at least annually.</p>
+<p>The types of data included in tobalcepi are:</p>
+<ul>
+<li>Lists of the names of the diseases that are related to tobacco and/or alcohol.<br>
+</li>
+<li>Parameters used in the modelling of single occasion drinking.<br>
+</li>
+<li>Tobacco relative risks of current vs. never smokers.</li>
+<li>Tobacco lag times.<br>
+</li>
+<li>Tobacco - alcohol risk interactions.</li>
+</ul>
+<p>When these data need to be updated, the inputs and code in the package folder <code>data-raw</code> will need to be changed, and the package rebuild with a new version.</p>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p><code>tobalcepi</code> is a package for predicting individual risk of disease due to tobacco and alcohol consumption based on published sources, and summarising that risk.</p>
+<p><code>tobalcepi</code> is a package for predicting individual risk of disease due to tobacco and alcohol consumption based on published sources, and summarising that risk. The suite of functions within <code>tobalcepi</code> processes the published data on the relative risks of disease that stem from chronic and acute alcohol consumption, from smoking, and on the decline in risk after ceasing or reducing consumption. The package also includes functions to estimate population attributable fractions, and to explore the interaction between the disease risks that stem from tobacco and alcohol consumption.</p>
 <p>The <strong>inputs</strong> are the published estimates of relative risk for each disease (sometimes stratified by population subgroup).</p>
 <p>The <strong>processes</strong> applied by the functions in <code>tobalcepi</code> give options to estimate:</p>
 <ol>
@@ -125,7 +192,7 @@
 <span class="co">#install.packages("getPass")</span>
 
 <span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_git</a></span>(
-  <span class="st">"https://gitlab.com/stapm/tobalcepi.git"</span>,
+  <span class="st">"https://gitlab.com/stapm/r-packages/tobalcepi.git"</span>,
   <span class="kw">credentials</span> <span class="kw">=</span> <span class="kw pkg">git2r</span><span class="kw ns">::</span><span class="fu"><a href="https://docs.ropensci.org/git2r/reference/cred_user_pass.html">cred_user_pass</a></span>(<span class="st">"uname"</span>, <span class="kw pkg">getPass</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/getPass/man/getPass.html">getPass</a></span>()),
   <span class="kw">ref</span> <span class="kw">=</span> <span class="st">"x.x.x"</span>,
   <span class="kw">build_vignettes</span> <span class="kw">=</span> <span class="fl">TRUE</span>
@@ -147,7 +214,19 @@
 <h2 class="hasAnchor">
 <a href="#citation" class="anchor"></a>Citation</h2>
 <p>Please cite the latest version of the package using:<br>
-“Duncan Gillespie, Laura Webster, Maddy Henney, Colin Angus and Alan Brennan (2020). tobalcepi: Risk Functions and Attributable Fractions for Tobacco and Alcohol. R package version x.x.x. <a href="https://stapm.gitlab.io/tobalcepi" class="uri">https://stapm.gitlab.io/tobalcepi</a>”</p>
+“Duncan Gillespie, Laura Webster, Maddy Henney, Colin Angus and Alan Brennan (2020). tobalcepi: Risk Functions and Attributable Fractions for Tobacco and Alcohol. R package version x.x.x. <a href="https://stapm.gitlab.io/r-packages/tobalcepi" class="uri">https://stapm.gitlab.io/r-packages/tobalcepi</a>”</p>
+</div>
+<div id="references" class="section level2">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
+<div id="refs" class="references hanging-indent">
+<div id="ref-Angus2018">
+<p>Angus, Colin, M Henney, L Webster, and Duncan Gillespie. 2018. “Alcohol-Attributable Diseases and Dose-Response Curves for the Sheffield Alcohol Policy Model Version 4.0.” <a href="https://doi.org/10.15131/shef.data.6819689.v1" class="uri">https://doi.org/10.15131/shef.data.6819689.v1</a>.</p>
+</div>
+<div id="ref-webster2018risk">
+<p>Webster, Laura, Colin Angus, Alan Brennan, and Duncan Gillespie. 2018. “Smoking and the Risks of Adult Diseases.” The University of Sheffield. <a href="https://doi.org/10.15131/shef.data.7411451.v1" class="uri">https://doi.org/10.15131/shef.data.7411451.v1</a>.</p>
+</div>
+</div>
 </div>
 </div>
   </div>

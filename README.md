@@ -50,22 +50,28 @@ calculates individual risks of diseases as follows:
 2.  **Alcohol - partially-attributable acute conditions**: dose-response
     effects of single-occasion alcohol consumption are hard coded into
     the function `tobalcepi::PArisk()`, which is called by
-    `tobalcepi::RRalc()`. See `vignette("alc_pa_risk")`.  
+    `tobalcepi::RRalc()`. See
+    [vignette(“alc\_pa\_risk”)](https://stapm.gitlab.io/r-packages/tobalcepi/articles/alc_partially_attrib_acute.html).  
 3.  **Alcohol - wholly-attributable acute conditions**: these are not
     based on published risk functions but are based on thresholds, in UK
     standard units of alcohol drunk on a single occasion, over which
     individuals begin to experience an elevated risk for acute diseases
     that are wholly attributable to alcohol. This is applied by the
     function `tobalcepi::WArisk_acute()`, which is called by
-    `tobalcepi::RRalc()`. See `vignette("alc_wa_ac_risk")`.  
+    `tobalcepi::RRalc()`. See
+    [vignette(“alc\_wa\_ac\_risk”)](https://stapm.gitlab.io/r-packages/tobalcepi/articles/alc_wholly_attrib_acute.html).  
 4.  **Alcohol - wholly-attributable chronic conditions**: these are also
     based on thresholds in UK standard units of alcohol drunk on average
     in a week, over which individuals begin to experience an elevated
     risk for chronic diseases that are wholly attributable to alcohol.
     This is applied by code within the function `tobalcepi::RRalc()`.
-    See `vignette("alc_wa_ch_risk")`.
+    See
+    [vignette(“alc\_wa\_ch\_risk”)](https://stapm.gitlab.io/r-packages/tobalcepi/articles/alc_wholly_attrib_chronic.html).
 
 ### Tobacco
+
+See
+[vignette(“smoke\_risks”)](https://stapm.gitlab.io/r-packages/tobalcepi/articles/smoking-disease-risks.html)
 
 1.  `RRtob()` takes a lookup table of the risks associated with current
     vs. never smoking and assigns these to individuals based on their

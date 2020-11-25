@@ -105,18 +105,19 @@
 <strong>Alcohol - partially-attributable chronic conditions</strong>: dose-response effects of current alcohol consumption on disease risk (Angus et al. <a href="#ref-Angus2018">2018</a>) are hard-coded into the function <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>. Updates to these risk functions must therefore be made by changing the function code.<br>
 </li>
 <li>
-<strong>Alcohol - partially-attributable acute conditions</strong>: dose-response effects of single-occasion alcohol consumption are hard coded into the function <code><a href="reference/PArisk.html">tobalcepi::PArisk()</a></code>, which is called by <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>. See <code>vignette("alc_pa_risk")</code>.<br>
+<strong>Alcohol - partially-attributable acute conditions</strong>: dose-response effects of single-occasion alcohol consumption are hard coded into the function <code><a href="reference/PArisk.html">tobalcepi::PArisk()</a></code>, which is called by <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>. See <a href="https://stapm.gitlab.io/r-packages/tobalcepi/articles/alc_partially_attrib_acute.html">vignette(“alc_pa_risk”)</a>.<br>
 </li>
 <li>
-<strong>Alcohol - wholly-attributable acute conditions</strong>: these are not based on published risk functions but are based on thresholds, in UK standard units of alcohol drunk on a single occasion, over which individuals begin to experience an elevated risk for acute diseases that are wholly attributable to alcohol. This is applied by the function <code><a href="reference/WArisk_acute.html">tobalcepi::WArisk_acute()</a></code>, which is called by <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>. See <code>vignette("alc_wa_ac_risk")</code>.<br>
+<strong>Alcohol - wholly-attributable acute conditions</strong>: these are not based on published risk functions but are based on thresholds, in UK standard units of alcohol drunk on a single occasion, over which individuals begin to experience an elevated risk for acute diseases that are wholly attributable to alcohol. This is applied by the function <code><a href="reference/WArisk_acute.html">tobalcepi::WArisk_acute()</a></code>, which is called by <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>. See <a href="https://stapm.gitlab.io/r-packages/tobalcepi/articles/alc_wholly_attrib_acute.html">vignette(“alc_wa_ac_risk”)</a>.<br>
 </li>
 <li>
-<strong>Alcohol - wholly-attributable chronic conditions</strong>: these are also based on thresholds in UK standard units of alcohol drunk on average in a week, over which individuals begin to experience an elevated risk for chronic diseases that are wholly attributable to alcohol. This is applied by code within the function <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>. See <code>vignette("alc_wa_ch_risk")</code>.</li>
+<strong>Alcohol - wholly-attributable chronic conditions</strong>: these are also based on thresholds in UK standard units of alcohol drunk on average in a week, over which individuals begin to experience an elevated risk for chronic diseases that are wholly attributable to alcohol. This is applied by code within the function <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>. See <a href="https://stapm.gitlab.io/r-packages/tobalcepi/articles/alc_wholly_attrib_chronic.html">vignette(“alc_wa_ch_risk”)</a>.</li>
 </ol>
 </div>
 <div id="tobacco" class="section level3">
 <h3 class="hasAnchor">
 <a href="#tobacco" class="anchor"></a>Tobacco</h3>
+<p>See <a href="https://stapm.gitlab.io/r-packages/tobalcepi/articles/smoking-disease-risks.html">vignette(“smoke_risks”)</a></p>
 <ol>
 <li>
 <code><a href="reference/RRtob.html">RRtob()</a></code> takes a lookup table of the risks associated with current vs. never smoking and assigns these to individuals based on their smoking state, age and sex (Webster et al. <a href="#ref-webster2018risk">2018</a>).<br>

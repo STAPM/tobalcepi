@@ -2,7 +2,7 @@
 title: "Smoking disease risks"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Smoking disease risks}
+  %\VignetteIndexEntry{smoke_risks}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: disease-risks.bib

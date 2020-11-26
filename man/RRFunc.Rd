@@ -47,7 +47,9 @@ and should be FALSE if this function is being used
 as part of the calculation of population attributable fractions.}
 
 \item{alc_indiv_risk_trajectories_store}{Data table that stores 
-each individual's life-course history of relative risks for alcohol related diseases.}
+each individual's life-course history of relative risks for alcohol related diseases. 
+This can be NULL for the first year of the simulation, and if this is the case then the 
+function will initialise and return this storage data table after the first year of the simulation.}
 
 \item{alc_protective}{Logical - whether to include the protective effects of
 alcohol in the risk function. Defaults to TRUE. If TRUE, then the part of the risk function < 1 is set to equal 1.}
@@ -71,7 +73,7 @@ ethanol in one UK standard unit of alcohol.}
 should be considered (defaults to TRUE).}
 
 \item{tobalc_include_int}{Logical - in computing joint relative risks for tobacco and alcohol,
-should a (synergystic/multiplicative) interaction between exposure to tobacco and alcohol be included.
+should a (synergistic/multiplicative) interaction between exposure to tobacco and alcohol be included.
 Defaults to FALSE. If TRUE, then only interactive effects for oesophageal, pharynx, oral cavity and larynx cancers
 are considered.}
 
@@ -82,9 +84,9 @@ are considered.}
 \value{
 Two data tables are returned:
 \itemize{
-\item "data_plus_rr" is a copy of "data" with added columns that give each
+\item "data_plus_rr" is a version of "data" with added columns that give each
 individual's relative risk for each disease.
-\item "new_alc_indiv_risk_trajectories_store" is a copy of "alc_indiv_risk_trajectories_store" with
+\item "new_alc_indiv_risk_trajectories_store" is a version of "alc_indiv_risk_trajectories_store" with
 the relative risks for the current year added to the store.
 }
 }
@@ -94,10 +96,15 @@ for each disease according to their current tobacco and alcohol consumption.
 There is an option to tailor this
 to the alcohol only, tobacco only, or joint tobacco and alcohol contexts.
 }
+\details{
+See below
+}
 \section{Alcohol risk}{
 
 For alcohol, the relative risk for each individual for each disease is calculated based on 
-their average weekly alcohol consumption (using [RRalc()]).
+their average weekly alcohol consumption (using \code{\link{RRalc}}). 
+Alcohol consumption is converted to grams of ethanal consumed on average in a day, and 
+this is truncated at 150g/day. We assume 8 grams of ethanol per UK standard unit of alcohol. 
  For diseases that have separate mortality and morbidity risk functions, 
  separate variables are created containing
  the relative risks for each for the same disease.
@@ -120,7 +127,7 @@ adjusted to take account of
 each individual's stored drinking histories. 
 This adjustment takes the form of a weighted average of current and past relative risk, 
 where the weights are proportional to
-the disease-specific lag function (which comes from [AlcLags()]). 
+the disease-specific lag function (which comes from \code{\link{AlcLags}}). 
 This method is slightly different to the method that was developed for SAPM, 
 as it needed to be adapted to suit the modelling of individual life-course 
 trajectories of alcohol consumption.
@@ -129,18 +136,19 @@ trajectories of alcohol consumption.
 \section{Tobacco risk}{
 
 For tobacco, the relative risk for each individual is calculated based on whether 
-they are a current, former or never smoker (using [RRtob()]).
+they are a current, former or never smoker (using \code{\link{RRtob}}).
 Currently, all current smokers have the same relative risk regardless of 
 the amount they currently smoke or have smoked in the past (but we are in the process 
 of developing inputs and a function to take account of dose-response effects of 
-the amount currently smoked using [RRTobDR()]).
+the amount currently smoked using \code{\link{RRTobDR}}).
 }
 
 \section{Tobacco lags}{
 
-Former smokers are initially given the relative risk associated with current smokers (using [RRtob()]), 
+Former smokers are initially given the relative risk associated with current smokers (using \code{\link{RRtob}}), 
 which we then scale according to a disease-specific
-function that describes how risk declines after quitting smoking (which comes from [TobLags()]).
+function that describes how risk declines after quitting smoking (which comes from \code{\link{TobLags}}). 
+After 40 years from quitting, we assume that risk has reached the level of a never smoker.
 }
 
 \section{Joint alcohol and tobacco risk}{
@@ -155,7 +163,7 @@ tobacco and alcohol consumption interact physiologically, and that interaction
 further increases disease risk). 
 We currently include estimates of synergistic effects for 
 oral, pharyngeal, laryngeal and oesophageal cancers. 
-We apply these effects using [TobAlcInt()] by scaling the joint risks by a 'synergy index', 
+We apply these effects using \code{\link{TobAlcInt}} by scaling the joint risks by a 'synergy index', 
 which takes the result of a meta-analysis of the additional
 risk faced by people because they consume both tobacco and alcohol.
 }
@@ -274,6 +282,6 @@ RRFunc(
 }
 }
 \seealso{
-[RRalc()] for alcohol-specific risks, [RRtob()] for tobacco-specific risks, 
-[AlcLags()] for alcohol-specific lag times, and [TobLags()] for tobacco-specific lag times.
+\code{\link{RRalc}} for alcohol-specific risks, \code{\link{RRtob}} for tobacco-specific risks, 
+\code{\link{AlcLags}} for alcohol-specific lag times, and \code{\link{TobLags}} for tobacco-specific lag times.
 }

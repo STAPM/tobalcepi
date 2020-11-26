@@ -198,7 +198,9 @@ as part of the calculation of population attributable fractions.</p></td>
     <tr>
       <th>alc_indiv_risk_trajectories_store</th>
       <td><p>Data table that stores 
-each individual's life-course history of relative risks for alcohol related diseases.</p></td>
+each individual's life-course history of relative risks for alcohol related diseases. 
+This can be NULL for the first year of the simulation, and if this is the case then the 
+function will initialise and return this storage data table after the first year of the simulation.</p></td>
     </tr>
     <tr>
       <th>alc_protective</th>
@@ -236,7 +238,7 @@ should be considered (defaults to TRUE).</p></td>
     <tr>
       <th>tobalc_include_int</th>
       <td><p>Logical - in computing joint relative risks for tobacco and alcohol,
-should a (synergystic/multiplicative) interaction between exposure to tobacco and alcohol be included.
+should a (synergistic/multiplicative) interaction between exposure to tobacco and alcohol be included.
 Defaults to FALSE. If TRUE, then only interactive effects for oesophageal, pharynx, oral cavity and larynx cancers
 are considered.</p></td>
     </tr>
@@ -253,18 +255,23 @@ are considered.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Two data tables are returned:</p><ul>
-<li><p>"data_plus_rr" is a copy of "data" with added columns that give each
+<li><p>"data_plus_rr" is a version of "data" with added columns that give each
 individual's relative risk for each disease.</p></li>
-<li><p>"new_alc_indiv_risk_trajectories_store" is a copy of "alc_indiv_risk_trajectories_store" with
+<li><p>"new_alc_indiv_risk_trajectories_store" is a version of "alc_indiv_risk_trajectories_store" with
 the relative risks for the current year added to the store.</p></li>
 </ul>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>See below</p>
     <h2 class="hasAnchor" id="alcohol-risk"><a class="anchor" href="#alcohol-risk"></a>Alcohol risk</h2>
 
     
 
 <p>For alcohol, the relative risk for each individual for each disease is calculated based on 
-their average weekly alcohol consumption (using [RRalc()]).
+their average weekly alcohol consumption (using <code><a href='RRalc.html'>RRalc</a></code>). 
+Alcohol consumption is converted to grams of ethanal consumed on average in a day, and 
+this is truncated at 150g/day. We assume 8 grams of ethanol per UK standard unit of alcohol. 
  For diseases that have separate mortality and morbidity risk functions, 
  separate variables are created containing
  the relative risks for each for the same disease.
@@ -287,7 +294,7 @@ adjusted to take account of
 each individual's stored drinking histories. 
 This adjustment takes the form of a weighted average of current and past relative risk, 
 where the weights are proportional to
-the disease-specific lag function (which comes from [AlcLags()]). 
+the disease-specific lag function (which comes from <code><a href='AlcLags.html'>AlcLags</a></code>). 
 This method is slightly different to the method that was developed for SAPM, 
 as it needed to be adapted to suit the modelling of individual life-course 
 trajectories of alcohol consumption.</p>
@@ -296,18 +303,19 @@ trajectories of alcohol consumption.</p>
     
 
 <p>For tobacco, the relative risk for each individual is calculated based on whether 
-they are a current, former or never smoker (using [RRtob()]).
+they are a current, former or never smoker (using <code><a href='RRtob.html'>RRtob</a></code>).
 Currently, all current smokers have the same relative risk regardless of 
 the amount they currently smoke or have smoked in the past (but we are in the process 
 of developing inputs and a function to take account of dose-response effects of 
-the amount currently smoked using [RRTobDR()]).</p>
+the amount currently smoked using <code><a href='RRTobDR.html'>RRTobDR</a></code>).</p>
     <h2 class="hasAnchor" id="tobacco-lags"><a class="anchor" href="#tobacco-lags"></a>Tobacco lags</h2>
 
     
 
-<p>Former smokers are initially given the relative risk associated with current smokers (using [RRtob()]), 
+<p>Former smokers are initially given the relative risk associated with current smokers (using <code><a href='RRtob.html'>RRtob</a></code>), 
 which we then scale according to a disease-specific
-function that describes how risk declines after quitting smoking (which comes from [TobLags()]).</p>
+function that describes how risk declines after quitting smoking (which comes from <code><a href='TobLags.html'>TobLags</a></code>). 
+After 40 years from quitting, we assume that risk has reached the level of a never smoker.</p>
     <h2 class="hasAnchor" id="joint-alcohol-and-tobacco-risk"><a class="anchor" href="#joint-alcohol-and-tobacco-risk"></a>Joint alcohol and tobacco risk</h2>
 
     
@@ -322,13 +330,13 @@ tobacco and alcohol consumption interact physiologically, and that interaction
 further increases disease risk). 
 We currently include estimates of synergistic effects for 
 oral, pharyngeal, laryngeal and oesophageal cancers. 
-We apply these effects using [TobAlcInt()] by scaling the joint risks by a 'synergy index', 
+We apply these effects using <code><a href='TobAlcInt.html'>TobAlcInt</a></code> by scaling the joint risks by a 'synergy index', 
 which takes the result of a meta-analysis of the additional
 risk faced by people because they consume both tobacco and alcohol.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>[RRalc()] for alcohol-specific risks, [RRtob()] for tobacco-specific risks, 
-[AlcLags()] for alcohol-specific lag times, and [TobLags()] for tobacco-specific lag times.</p></div>
+    <div class='dont-index'><p><code><a href='RRalc.html'>RRalc</a></code> for alcohol-specific risks, <code><a href='RRtob.html'>RRtob</a></code> for tobacco-specific risks, 
+<code><a href='AlcLags.html'>AlcLags</a></code> for alcohol-specific lag times, and <code><a href='TobLags.html'>TobLags</a></code> for tobacco-specific lag times.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {

@@ -5,10 +5,17 @@
 #' Assigns the disease-specific interaction term (synergy index) appropriate to each
 #' individual's tobacco and alcohol consumption.
 #'
+#' We currently include estimates of synergistic effects for 
+#' oral, pharyngeal, laryngeal and oesophageal cancers 
+#' (we describe these data and their sources in our tobacco risk functions report 
+#' \insertCite{webster2018risk;textual}{tobalcepi}). 
+#' The data sources we use are \insertCite{Prabhu2014;textual}{tobalcepi} 
+#'  and \insertCite{Hashibe2009;textual}{tobalcepi}.
+#' We apply these effects by scaling the joint risks by a 'synergy index', 
+#' which takes the result of a meta-analysis of the additional
+#' risk faced by people because they consume both tobacco and alcohol.   
 #'
-#'
-#'
-#' @param data Data table
+#' @param data Data table - containing the individual characteristics of smokers and drinkers 
 #' @param disease Character
 #' @param alcohol_var Character
 #' @param tobacco_var Character
@@ -19,7 +26,13 @@
 #' specified by "disease".
 #' @importFrom data.table := setDT setnames
 #' @export
-#'
+#' @references
+#' \insertRef{webster2018risk}{tobalcepi}  
+#' 
+#' \insertRef{Hashibe2009}{tobalcepi}  
+#' 
+#' \insertRef{Prabhu2014}{tobalcepi}  
+#' 
 #' @examples 
 #' 
 #' \dontrun{

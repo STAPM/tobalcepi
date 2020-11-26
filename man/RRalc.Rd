@@ -11,7 +11,7 @@ RRalc(
   sex_var = "sex",
   age_var = "age",
   mort_or_morb = c("mort", "morb"),
-  protective = TRUE,
+  alc_protective = TRUE,
   alc_wholly_chronic_thresholds = c(2, 2),
   alc_wholly_acute_thresholds = c(3, 4),
   grams_ethanol_per_unit = 8,
@@ -34,7 +34,7 @@ average weekly consumption of alcohol in grams of ethanol per day.}
 relative risk curves for mortality and morbidity, should the curve corresponding to
  mortality ("mort") or morbidity ("morb") be used.}
 
-\item{protective}{Logical - whether to include the protective effects of
+\item{alc_protective}{Logical - whether to include the protective effects of
 alcohol in the risk function. Defaults to TRUE. If TRUE, then the part of the risk function < 1 is set to equal 1.}
 
 \item{alc_wholly_chronic_thresholds}{Numeric vector - the thresholds in UK standard units of alcohol per day 

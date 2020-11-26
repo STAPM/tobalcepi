@@ -10,4 +10,4 @@ Archive/
 dev/
 .DS_Store
 *.pdf
-
+data-raw/binge_params/*.csv

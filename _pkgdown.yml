@@ -19,6 +19,12 @@ authors:
     href: https://www.sheffield.ac.uk/scharr/sections/heds/staff/brennan_a
     
 reference:
+
+- title: Use of risk functions
+  contents:
+  - RRFunc
+  - subgroupRisk
+
 - title: Tobacco relative risks
 - subtitle: Disease definitions and relative risks
   contents:
@@ -52,11 +58,6 @@ reference:
   contents:
   - TobAlcInt
   - tob_alc_risk_int
-  
-- title: Use of risk functions
-  contents:
-  - RRFunc
-  - subgroupRisk
   
 - title: Misc
   contents:

@@ -149,7 +149,7 @@ individual's tobacco and alcohol consumption.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>Data table</p></td>
+      <td><p>Data table - containing the individual characteristics of smokers and drinkers</p></td>
     </tr>
     <tr>
       <th>disease</th>
@@ -177,6 +177,36 @@ individual's tobacco and alcohol consumption.</p>
 
     <p>Returns a numeric vector containing  of each individual's relative risks for the tobacco-related disease
 specified by "disease".</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>We currently include estimates of synergistic effects for 
+oral, pharyngeal, laryngeal and oesophageal cancers 
+(we describe these data and their sources in our tobacco risk functions report 
+Webster et al. (2018)
+). 
+The data sources we use are Prabhu et al. (2014)
+ 
+ and Hashibe et al. (2009)
+.
+We apply these effects by scaling the joint risks by a 'synergy index', 
+which takes the result of a meta-analysis of the additional
+risk faced by people because they consume both tobacco and alcohol.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Webster L, Angus C, Brennan A, Gillespie D (2018).
+&#8220;Smoking and the risks of adult diseases.&#8221;
+doi: <a href='https://doi.org/10.15131/shef.data.7411451.v1'>10.15131/shef.data.7411451.v1</a>
+, <a href='https://figshare.shef.ac.uk/articles/Smoking_and_the_risks_of_adult_diseases/7411451/1'>https://figshare.shef.ac.uk/articles/Smoking_and_the_risks_of_adult_diseases/7411451/1</a>.</p>
+<p>Hashibe M, Brennan P, Chuang SC, Boccia S, Castellsague X, Chen C, Curado MP, Dal Maso L, Daudt AW, Fabianova E, Fernandez L, Wunsch-Filho V, Franceschi S, Hayes RB, Herrero R, Kelsey K, Koifman S, La Vecchia C, Lazarus P, Levi F, Lence JJ, Mates D, Matos E, Menezes A, McClean MD, Muscat J, Eluf-Neto J, Olshan AF, Purdue M, Rudnai P, Schwartz SM, Smith E, Sturgis EM, Szeszenia-Dabrowska N, Talamini R, Wei QY, Winn DM, Shangina O, Pilarska A, Zhang ZF, Ferro G, Berthiller J, Boffetta P (2009).
+&#8220;Interaction between Tobacco and Alcohol Use and the Risk of Head and Neck Cancer: Pooled Analysis in the International Head and Neck Cancer Epidemiology Consortium.&#8221;
+<em>Cancer Epidemiology Biomarkers \&amp; Prevention</em>, <b>18</b>(2), 541-550.
+ISSN 1055-9965, doi: <a href='https://doi.org/10.1158/1055-9965.epi-08-0347'>10.1158/1055-9965.epi-08-0347</a>
+, <a href='&lt;Go to ISI&gt;://WOS:000263547800022'>&lt;Go to ISI&gt;://WOS:000263547800022</a>.</p>
+<p>Prabhu A, Obi KO, Rubenstein JH (2014).
+&#8220;The Synergistic Effects of Alcohol and Tobacco Consumption on the Risk of Esophageal Squamous Cell Carcinoma: A Meta-Analysis.&#8221;
+<em>American Journal of Gastroenterology</em>, <b>109</b>(6), 821-827.
+ISSN 0002-9270, doi: <a href='https://doi.org/10.1038/ajg.2014.71'>10.1038/ajg.2014.71</a>
+, <a href='&lt;Go to ISI&gt;://WOS:000344458900006'>&lt;Go to ISI&gt;://WOS:000344458900006</a>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>

@@ -14,7 +14,7 @@ TobAlcInt(
 )
 }
 \arguments{
-\item{data}{Data table}
+\item{data}{Data table - containing the individual characteristics of smokers and drinkers}
 
 \item{disease}{Character}
 
@@ -34,6 +34,17 @@ specified by "disease".
 Assigns the disease-specific interaction term (synergy index) appropriate to each
 individual's tobacco and alcohol consumption.
 }
+\details{
+We currently include estimates of synergistic effects for 
+oral, pharyngeal, laryngeal and oesophageal cancers 
+(we describe these data and their sources in our tobacco risk functions report 
+\insertCite{webster2018risk;textual}{tobalcepi}). 
+The data sources we use are \insertCite{Prabhu2014;textual}{tobalcepi} 
+ and \insertCite{Hashibe2009;textual}{tobalcepi}.
+We apply these effects by scaling the joint risks by a 'synergy index', 
+which takes the result of a meta-analysis of the additional
+risk faced by people because they consume both tobacco and alcohol.
+}
 \examples{
 
 \dontrun{
@@ -43,4 +54,11 @@ TobAlcInt()
 }
 
 
+}
+\references{
+\insertRef{webster2018risk}{tobalcepi}  
+
+\insertRef{Hashibe2009}{tobalcepi}  
+
+\insertRef{Prabhu2014}{tobalcepi}
 }

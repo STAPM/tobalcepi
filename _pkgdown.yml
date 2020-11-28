@@ -4,7 +4,7 @@ home:
   links:
   - text: STAPM webpage
     href: https://stapm.gitlab.io/
-url: https://stapm.gitlab.io/tobalcepi
+url: https://stapm.gitlab.io/r-packages/tobalcepi/
 template:
   params:
     bootswatch: flatly

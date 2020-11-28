@@ -27,6 +27,7 @@ Authors@R:
 Maintainer: Duncan Gillespie <duncan.gillespie@sheffield.ac.uk>
 Description: Functions to assign relative risks of disease to individuals based on their tobacco and/or alcohol consumption, and to estimate the attributable fractions of disease.
 License: GPL-3
+URL: https://stapm.gitlab.io/r-packages/tobalcepi/
 Encoding: UTF-8
 LazyData: true
 Suggests: 

@@ -6,8 +6,8 @@ articles:
   alc_wholly_attrib_acute: alc_wholly_attrib_acute.html
   alc_wholly_attrib_chronic: alc_wholly_attrib_chronic.html
   smoking-disease-risks: smoking-disease-risks.html
-last_built: 2020-11-28T17:18Z
+last_built: 2020-11-28T19:22Z
 urls:
-  reference: https://stapm.gitlab.io/tobalcepi/reference
-  article: https://stapm.gitlab.io/tobalcepi/articles
+  reference: https://stapm.gitlab.io/r-packages/tobalcepi//reference
+  article: https://stapm.gitlab.io/r-packages/tobalcepi//articles
 

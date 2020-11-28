@@ -1,7 +1,5 @@
 
-#' Alcohol lag times
-#'
-#' \lifecycle{stable}
+#' Alcohol lag times \lifecycle{stable}
 #'
 #' Prepare the disease specific functions that describe how a change in alcohol consumption
 #' gradually has an effect on the relative risk of disease incidence over time (up to 20 years)

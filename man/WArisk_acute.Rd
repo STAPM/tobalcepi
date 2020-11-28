@@ -2,7 +2,7 @@
 % Please edit documentation in R/WArisk_acute.R
 \name{WArisk_acute}
 \alias{WArisk_acute}
-\title{Risk of acute conditions wholly-attributable to alcohol}
+\title{Risk of acute conditions wholly-attributable to alcohol \lifecycle{stable}}
 \usage{
 WArisk_acute(
   SODMean,
@@ -37,13 +37,11 @@ Defaults to 3 units/day for females and 4 units/day for males.}
 Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.
 }
 \description{
-\lifecycle{stable}
-}
-\details{
 Uses the 'new' binge model methods to calculate the risk
 that each individual experiences each acute consequence of drinking during one year 
-(e.g. alcohol poisoning or the effects of acute intoxication). 
-
+(e.g. alcohol poisoning or the effects of acute intoxication).
+}
+\details{
 The function implements a new method for estimating risk that was developed to suit the STAPM modelling. 
 The calculation is based on the link between average weekly alcohol consumption and 
 the distribution of characteristics of single ocassion drinking described by the 

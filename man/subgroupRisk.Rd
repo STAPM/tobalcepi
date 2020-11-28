@@ -2,7 +2,7 @@
 % Please edit documentation in R/subgroupRisk.R
 \name{subgroupRisk}
 \alias{subgroupRisk}
-\title{Summarise relative risk}
+\title{Summarise relative risk \lifecycle{stable}}
 \usage{
 subgroupRisk(
   data,
@@ -38,12 +38,10 @@ Weight variable must be called "wt_int".}
 Returns a data table containing the subgroup specific summaries for each disease.
 }
 \description{
-\lifecycle{stable}
-}
-\details{
 Calculate the sum of the relative risk for all individuals in a subgroup,
 or calculate the subgroup specific attributable fraction based on the current relative risks.
-
+}
+\details{
 Attributable fractions are calculated using the method as in Bellis & Jones 2014, which is also equivalent to the
 method described in the Brennan et al. 2015 SAPM mathematical description paper.
 }

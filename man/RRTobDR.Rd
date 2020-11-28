@@ -2,7 +2,7 @@
 % Please edit documentation in R/RRTobDR.R
 \name{RRTobDR}
 \alias{RRTobDR}
-\title{Dose-response relative risks for tobacco-related cancers}
+\title{Dose-response relative risks for tobacco-related cancers \lifecycle{experimental}}
 \usage{
 RRTobDR(data, disease = "Pharynx", av_cigs_day = "cigs_per_day")
 }
@@ -18,11 +18,9 @@ average number of daily cigarettes.}
 Returns a numeric vector of each individual's relative risks for the tobacco related disease specified by "disease".
 }
 \description{
-\lifecycle{experimental}
+Computes the relative risks for each tobacco-related cancer based on the published risk curves.
 }
 \details{
-Computes the relative risks for each tobacco-related cancer based on the published risk curves.
-
 Relative risks for come from published risk functions whose parameters have been
 hard-coded within this function rather than being read from an external spreadsheet. 
 These relative risks are based on an individual's current smoking intensity. There are 

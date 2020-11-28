@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dose-response relative risks for tobacco-related cancers — RRTobDR • tobalcepi</title>
+<title>Dose-response relative risks for tobacco-related cancers  — RRTobDR • tobalcepi</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Dose-response relative risks for tobacco-related cancers — RRTobDR" />
-<meta property="og:description" content="" />
+<meta property="og:title" content="Dose-response relative risks for tobacco-related cancers  — RRTobDR" />
+<meta property="og:description" content="Computes the relative risks for each tobacco-related cancer based on the published risk curves." />
 
 
 
@@ -124,13 +124,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Dose-response relative risks for tobacco-related cancers</h1>
+    <h1>Dose-response relative risks for tobacco-related cancers <a href='https://www.tidyverse.org/lifecycle/#experimental'><img src='figures/lifecycle-experimental.svg' alt='Experimental lifecycle'></a></h1>
     
     <div class="hidden name"><code>RRTobDR.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><a href='https://www.tidyverse.org/lifecycle/#experimental'><img src='figures/lifecycle-experimental.svg' alt='Experimental lifecycle'></a></p>
+    <p>Computes the relative risks for each tobacco-related cancer based on the published risk curves.</p>
     </div>
 
     <pre class="usage"><span class='fu'>RRTobDR</span><span class='op'>(</span><span class='va'>data</span>, disease <span class='op'>=</span> <span class='st'>"Pharynx"</span>, av_cigs_day <span class='op'>=</span> <span class='st'>"cigs_per_day"</span><span class='op'>)</span></pre>
@@ -158,8 +158,7 @@ average number of daily cigarettes.</p></td>
     <p>Returns a numeric vector of each individual's relative risks for the tobacco related disease specified by "disease".</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Computes the relative risks for each tobacco-related cancer based on the published risk curves.</p>
-<p>Relative risks for come from published risk functions whose parameters have been
+    <p>Relative risks for come from published risk functions whose parameters have been
 hard-coded within this function rather than being read from an external spreadsheet. 
 These relative risks are based on an individual's current smoking intensity. There are 
 others measures of smoking exposure including smoking duration and pack-years, which 

@@ -1,7 +1,5 @@
 
-#' Risk of acute conditions wholly-attributable to alcohol
-#' 
-#' \lifecycle{stable}
+#' Risk of acute conditions wholly-attributable to alcohol \lifecycle{stable}
 #'
 #' Uses the 'new' binge model methods to calculate the risk
 #' that each individual experiences each acute consequence of drinking during one year 

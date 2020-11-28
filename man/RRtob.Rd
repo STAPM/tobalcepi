@@ -2,7 +2,7 @@
 % Please edit documentation in R/RRtob.R
 \name{RRtob}
 \alias{RRtob}
-\title{Tobacco relative risks}
+\title{Tobacco relative risks \lifecycle{maturing}}
 \usage{
 RRtob(
   data,
@@ -33,11 +33,9 @@ Returns a numeric vector of each individual's relative risks for the tobacco-rel
 specified by "disease".
 }
 \description{
-\lifecycle{maturing}
+Relative risks for current vs. never cigarette smokers.
 }
 \details{
-Relative risks for current vs. never cigarette smokers.
-
 We focus on the risks of current smoking and limit ourselves to diseases that affect the consumer themselves e.g.
  excluding secondary effects of smoking on children.
  We assume the equivalence of relative risks and odds ratios.

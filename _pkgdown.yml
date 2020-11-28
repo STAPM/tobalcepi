@@ -28,11 +28,12 @@ reference:
 - title: Tobacco relative risks
 - subtitle: Disease definitions and relative risks
   contents:
+  - RRtob
+  - RRTobDR
   - tob_disease_names
   - tob_icd10_lookups
   - tobacco_relative_risks
-  - RRtob
-  - RRTobDR
+
 - subtitle: Tobacco lag times
   contents:
   - TobLags
@@ -41,9 +42,10 @@ reference:
 - title: Alcohol relative risks
 - subtitle: Disease definitions and relative risks
   contents:
+  - RRalc
   - alc_disease_names
   - alc_icd10_lookups
-  - RRalc
+
 - subtitle: Disease risk linked to intoxication
   contents:  
   - AlcBinge

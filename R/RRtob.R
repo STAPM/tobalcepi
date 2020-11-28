@@ -1,7 +1,5 @@
 
-#' Tobacco relative risks
-#' 
-#' \lifecycle{maturing}
+#' Tobacco relative risks \lifecycle{maturing}
 #'
 #' Relative risks for current vs. never cigarette smokers.
 #'

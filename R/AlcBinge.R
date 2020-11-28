@@ -1,7 +1,5 @@
 
-#' Calculate variables to inform alcohol binge model
-#' 
-#' \lifecycle{superseded}
+#' Calculate variables to inform alcohol binge model \lifecycle{superseded}
 #'
 #' Designed to work with cross-sectional survey data with a wide range of individual-level covariates. 
 #' Uses survey data and previously estimated coefficients to describe

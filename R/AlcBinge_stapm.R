@@ -1,7 +1,5 @@
 
-#' Calculate variables to inform alcohol binge model - STAPM version
-#' 
-#' \lifecycle{maturing}
+#' Calculate variables to inform alcohol binge model - STAPM version \lifecycle{maturing}
 #'
 #' Designed to work with simulated individual trajectories of alcohol consumption - stratified by 
 #' age category, sex and IMD quintile. Assigns coefficients stratified by age category, sex and IMD quintile to 

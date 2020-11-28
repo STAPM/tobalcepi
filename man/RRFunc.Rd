@@ -2,7 +2,7 @@
 % Please edit documentation in R/RRFunc.R
 \name{RRFunc}
 \alias{RRFunc}
-\title{Individual relative risks of disease}
+\title{Individual relative risks of disease \lifecycle{maturing}}
 \usage{
 RRFunc(
   data,
@@ -97,8 +97,6 @@ There is an option to tailor this
 to the alcohol only, tobacco only, or joint tobacco and alcohol contexts.
 }
 \details{
-\lifecycle{maturing}
-
 See below
 }
 \section{Alcohol risk}{

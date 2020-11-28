@@ -1,6 +1,4 @@
-#' Dose-response relative risks for tobacco-related cancers
-#' 
-#' \lifecycle{experimental}
+#' Dose-response relative risks for tobacco-related cancers \lifecycle{experimental}
 #'
 #' Computes the relative risks for each tobacco-related cancer based on the published risk curves.
 #'

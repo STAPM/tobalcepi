@@ -1,7 +1,5 @@
 
-#' Individual relative risks of disease
-#' 
-#' \lifecycle{maturing}
+#' Individual relative risks of disease \lifecycle{maturing}
 #'
 #' @description 
 #' This function takes a sample of individuals and computes each individual's relative risk

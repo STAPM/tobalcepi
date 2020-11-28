@@ -2,7 +2,7 @@
 % Please edit documentation in R/PArisk.R
 \name{PArisk}
 \alias{PArisk}
-\title{Relative risks for alcohol-related injuries}
+\title{Relative risks for alcohol-related injuries \lifecycle{stable}}
 \usage{
 PArisk(
   SODMean = NULL,
@@ -53,12 +53,10 @@ the number of grams of ethanol in one standard drink.}
 Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.
 }
 \description{
-\lifecycle{stable}
-}
-\details{
 Uses the 'new' binge model methods to calculate a relative risk
 for each individual for experiencing each cause during one year.
-
+}
+\details{
 This calculation treats an ocassion as a single point in time and therefore does not detail
 about the rate of alcohol absorbtion (i.e. there is no alcohol absorbtion rate constant)
 or the time interval between drinks within an occassion. This could introduce inaccuracies if

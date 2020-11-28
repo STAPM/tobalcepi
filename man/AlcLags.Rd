@@ -2,7 +2,7 @@
 % Please edit documentation in R/AlcLags.R
 \name{AlcLags}
 \alias{AlcLags}
-\title{Alcohol lag times}
+\title{Alcohol lag times \lifecycle{stable}}
 \usage{
 AlcLags(disease_name = c("Pharynx", "Oral_cavity"), n_years = 20)
 }
@@ -18,13 +18,11 @@ that gives the proportion by which the effect of a change in consumption
 on an individual's relative risk of disease has so far emerged.
 }
 \description{
-\lifecycle{stable}
-}
-\details{
 Prepare the disease specific functions that describe how a change in alcohol consumption
 gradually has an effect on the relative risk of disease incidence over time (up to 20 years)
 since alcohol consumption changed.
-
+}
+\details{
 All lag times are taken from the review by Holmes et al. 2012,
  and are the numbers used in the current version of SAPM.
 }

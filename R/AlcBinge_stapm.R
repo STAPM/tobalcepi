@@ -27,6 +27,8 @@
 #' @return Returns data plus the estimated variables.
 #' @importFrom data.table := setDT setnames
 #' @export
+#' 
+#' \lifecycle{maturing}
 #'
 #' @examples
 #'

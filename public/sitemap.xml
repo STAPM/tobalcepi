@@ -43,6 +43,9 @@
     <loc>https://stapm.gitlab.io/tobalcepi/reference/alc_disease_names.html</loc>
   </url>
   <url>
+    <loc>https://stapm.gitlab.io/tobalcepi/reference/alc_icd10_lookups.html</loc>
+  </url>
+  <url>
     <loc>https://stapm.gitlab.io/tobalcepi/reference/binge_params.html</loc>
   </url>
   <url>
@@ -61,10 +64,16 @@
     <loc>https://stapm.gitlab.io/tobalcepi/reference/tob_disease_names.html</loc>
   </url>
   <url>
+    <loc>https://stapm.gitlab.io/tobalcepi/reference/tob_icd10_lookups.html</loc>
+  </url>
+  <url>
     <loc>https://stapm.gitlab.io/tobalcepi/reference/tobacco_lag_times.html</loc>
   </url>
   <url>
     <loc>https://stapm.gitlab.io/tobalcepi/reference/tobacco_relative_risks.html</loc>
+  </url>
+  <url>
+    <loc>https://stapm.gitlab.io/tobalcepi/reference/tobalc_icd10_lookups.html</loc>
   </url>
   <url>
     <loc>https://stapm.gitlab.io/tobalcepi/articles/alc_partially_attrib_acute.html</loc>

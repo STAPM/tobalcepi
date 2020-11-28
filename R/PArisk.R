@@ -37,6 +37,8 @@
 #' @importFrom data.table := setDT setnames
 #' @export
 #'
+#' \lifecycle{stable}
+#'
 #' @examples
 #' 
 #' \dontrun{

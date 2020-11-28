@@ -73,7 +73,7 @@ individual's tobacco and alcohol consumption." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -135,14 +135,14 @@ individual's tobacco and alcohol consumption." />
 individual's tobacco and alcohol consumption.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>TobAlcInt</span>(
-  <span class='no'>data</span>,
-  <span class='kw'>disease</span> <span class='kw'>=</span> <span class='st'>"Pharynx"</span>,
-  <span class='kw'>alcohol_var</span> <span class='kw'>=</span> <span class='st'>"weekmean"</span>,
-  <span class='kw'>tobacco_var</span> <span class='kw'>=</span> <span class='st'>"smk.state"</span>,
-  <span class='no'>rr.data</span>,
-  <span class='kw'>account_for_synergy</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>TobAlcInt</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  disease <span class='op'>=</span> <span class='st'>"Pharynx"</span>,
+  alcohol_var <span class='op'>=</span> <span class='st'>"weekmean"</span>,
+  tobacco_var <span class='op'>=</span> <span class='st'>"smk.state"</span>,
+  <span class='va'>rr.data</span>,
+  account_for_synergy <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -199,22 +199,26 @@ doi: <a href='https://doi.org/10.15131/shef.data.7411451.v1'>10.15131/shef.data.
 , <a href='https://figshare.shef.ac.uk/articles/Smoking_and_the_risks_of_adult_diseases/7411451/1'>https://figshare.shef.ac.uk/articles/Smoking_and_the_risks_of_adult_diseases/7411451/1</a>.</p>
 <p>Hashibe M, Brennan P, Chuang SC, Boccia S, Castellsague X, Chen C, Curado MP, Dal Maso L, Daudt AW, Fabianova E, Fernandez L, Wunsch-Filho V, Franceschi S, Hayes RB, Herrero R, Kelsey K, Koifman S, La Vecchia C, Lazarus P, Levi F, Lence JJ, Mates D, Matos E, Menezes A, McClean MD, Muscat J, Eluf-Neto J, Olshan AF, Purdue M, Rudnai P, Schwartz SM, Smith E, Sturgis EM, Szeszenia-Dabrowska N, Talamini R, Wei QY, Winn DM, Shangina O, Pilarska A, Zhang ZF, Ferro G, Berthiller J, Boffetta P (2009).
 &#8220;Interaction between Tobacco and Alcohol Use and the Risk of Head and Neck Cancer: Pooled Analysis in the International Head and Neck Cancer Epidemiology Consortium.&#8221;
-<em>Cancer Epidemiology Biomarkers \&amp; Prevention</em>, <b>18</b>(2), 541-550.
+<em>Cancer Epidemiology Biomarkers \&amp; Prevention</em>, <b>18</b>(2), 541--550.
 ISSN 1055-9965, doi: <a href='https://doi.org/10.1158/1055-9965.epi-08-0347'>10.1158/1055-9965.epi-08-0347</a>
-.</p>
+, <a href='https://doi.org/10.1158/1055-9965.epi-08-0347'>https://doi.org/10.1158/1055-9965.epi-08-0347</a>.</p>
 <p>Prabhu A, Obi KO, Rubenstein JH (2014).
 &#8220;The Synergistic Effects of Alcohol and Tobacco Consumption on the Risk of Esophageal Squamous Cell Carcinoma: A Meta-Analysis.&#8221;
-<em>American Journal of Gastroenterology</em>, <b>109</b>(6), 821-827.
+<em>American Journal of Gastroenterology</em>, <b>109</b>(6), 821--827.
 ISSN 0002-9270, doi: <a href='https://doi.org/10.1038/ajg.2014.71'>10.1038/ajg.2014.71</a>
-.</p>
+, <a href='https://doi.org/10.1038/ajg.2014.71'>https://doi.org/10.1038/ajg.2014.71</a>.</p>
+<p><a href='https://www.tidyverse.org/lifecycle/#maturing'><img src='figures/lifecycle-maturing.svg' alt='Maturing lifecycle'></a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
-<span class='fu'>TobAlcInt</span>()
+<span class='fu'>TobAlcInt</span><span class='op'>(</span><span class='op'>)</span>
 
-}</div></pre>
+<span class='op'>}</span>
+
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -230,7 +234,7 @@ ISSN 0002-9270, doi: <a href='https://doi.org/10.1038/ajg.2014.71'>10.1038/ajg.2
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

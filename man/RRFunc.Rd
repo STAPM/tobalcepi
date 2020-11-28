@@ -284,4 +284,6 @@ RRFunc(
 \seealso{
 \code{\link{RRalc}} for alcohol-specific risks, \code{\link{RRtob}} for tobacco-specific risks, 
 \code{\link{AlcLags}} for alcohol-specific lag times, and \code{\link{TobLags}} for tobacco-specific lag times.
+
+\lifecycle{maturing}
 }

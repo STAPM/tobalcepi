@@ -21,6 +21,8 @@
 #' @return Returns a data table containing the subgroup specific summaries for each disease.
 #' @importFrom data.table := setDT setnames
 #' @export
+#' 
+#' \lifecycle{stable}
 #'
 #' @examples
 #' \dontrun{

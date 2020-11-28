@@ -75,7 +75,7 @@ to the alcohol only, tobacco only, or joint tobacco and alcohol contexts." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -139,24 +139,24 @@ There is an option to tailor this
 to the alcohol only, tobacco only, or joint tobacco and alcohol contexts.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>RRFunc</span>(
-  <span class='no'>data</span>,
-  <span class='kw'>substance</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"tob"</span>, <span class='st'>"alc"</span>, <span class='st'>"tobalc"</span>),
-  <span class='kw'>k_year</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>alc_diseases</span> <span class='kw'>=</span> <span class='kw pkg'>tobalcepi</span><span class='kw ns'>::</span><span class='no'><a href='alc_disease_names.html'>alc_disease_names</a></span>,
-  <span class='kw'>alc_mort_and_morb</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Ischaemic_heart_disease"</span>, <span class='st'>"LiverCirrhosis"</span>),
-  <span class='kw'>alc_risk_lags</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>alc_indiv_risk_trajectories_store</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>alc_protective</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>alc_wholly_chronic_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>),
-  <span class='kw'>alc_wholly_acute_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>4</span>),
-  <span class='kw'>grams_ethanol_per_unit</span> <span class='kw'>=</span> <span class='fl'>8</span>,
-  <span class='kw'>tob_diseases</span> <span class='kw'>=</span> <span class='kw pkg'>tobalcepi</span><span class='kw ns'>::</span><span class='no'><a href='tob_disease_names.html'>tob_disease_names</a></span>,
-  <span class='kw'>tob_include_risk_in_former_smokers</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>tobalc_include_int</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>tobalc_int_data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>show_progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>RRFunc</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  substance <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"tob"</span>, <span class='st'>"alc"</span>, <span class='st'>"tobalc"</span><span class='op'>)</span>,
+  k_year <span class='op'>=</span> <span class='cn'>NULL</span>,
+  alc_diseases <span class='op'>=</span> <span class='fu'>tobalcepi</span><span class='fu'>::</span><span class='va'><a href='alc_disease_names.html'>alc_disease_names</a></span>,
+  alc_mort_and_morb <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Ischaemic_heart_disease"</span>, <span class='st'>"LiverCirrhosis"</span><span class='op'>)</span>,
+  alc_risk_lags <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  alc_indiv_risk_trajectories_store <span class='op'>=</span> <span class='cn'>NULL</span>,
+  alc_protective <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  alc_wholly_chronic_thresholds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span><span class='op'>)</span>,
+  alc_wholly_acute_thresholds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>4</span><span class='op'>)</span>,
+  grams_ethanol_per_unit <span class='op'>=</span> <span class='fl'>8</span>,
+  tob_diseases <span class='op'>=</span> <span class='fu'>tobalcepi</span><span class='fu'>::</span><span class='va'><a href='tob_disease_names.html'>tob_disease_names</a></span>,
+  tob_include_risk_in_former_smokers <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  tobalc_include_int <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  tobalc_int_data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  show_progress <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -336,87 +336,88 @@ risk faced by people because they consume both tobacco and alcohol.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='RRalc.html'>RRalc</a></code> for alcohol-specific risks, <code><a href='RRtob.html'>RRtob</a></code> for tobacco-specific risks, 
-<code><a href='AlcLags.html'>AlcLags</a></code> for alcohol-specific lag times, and <code><a href='TobLags.html'>TobLags</a></code> for tobacco-specific lag times.</p></div>
+<code><a href='AlcLags.html'>AlcLags</a></code> for alcohol-specific lag times, and <code><a href='TobLags.html'>TobLags</a></code> for tobacco-specific lag times.</p>
+<p><a href='https://www.tidyverse.org/lifecycle/#maturing'><img src='figures/lifecycle-maturing.svg' alt='Maturing lifecycle'></a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'>#############################</span>
 <span class='co'>## ALCOHOL</span>
 
 <span class='co'># Simulate individual data</span>
 
 <span class='co'># Using the parameters for the Gamma distribution from Kehoe et al. 2012</span>
-<span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>1e4</span>
-<span class='no'>grams_ethanol_day</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/GammaDist.html'>rgamma</a></span>(<span class='no'>n</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fl'>0.69</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fl'>19.03</span>)
+<span class='va'>n</span> <span class='op'>&lt;-</span> <span class='fl'>1e4</span>
+<span class='va'>grams_ethanol_day</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/GammaDist.html'>rgamma</a></span><span class='op'>(</span><span class='va'>n</span>, shape <span class='op'>=</span> <span class='fl'>0.69</span>, scale <span class='op'>=</span> <span class='fl'>19.03</span><span class='op'>)</span>
 
 <span class='co'># Note: the socioeconomic and other variables are needed for the binge model</span>
 
-<span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'>data.table</span>(
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2016</span>,
-  <span class='kw'>weekmean</span> <span class='kw'>=</span> <span class='no'>grams_ethanol_day</span> * <span class='fl'>7</span> / <span class='fl'>8</span>,
+<span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='op'>(</span>
+  year <span class='op'>=</span> <span class='fl'>2016</span>,
+  weekmean <span class='op'>=</span> <span class='va'>grams_ethanol_day</span> <span class='op'>*</span> <span class='fl'>7</span> <span class='op'>/</span> <span class='fl'>8</span>,
   <span class='co'>#peakday = 2 * grams_ethanol_day / 8,</span>
-  <span class='kw'>age</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Poisson.html'>rpois</a></span>(<span class='no'>n</span>, <span class='fl'>30</span>),
-  <span class='kw'>sex</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Male"</span>, <span class='st'>"Female"</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='no'>T</span>),
-  <span class='kw'>income5cat</span> <span class='kw'>=</span> <span class='st'>"1_lowest income"</span>,
-  <span class='kw'>imd_quintile</span> <span class='kw'>=</span> <span class='st'>"5_most_deprived"</span>,
-  <span class='kw'>kids</span> <span class='kw'>=</span> <span class='st'>"0"</span>,
-  <span class='kw'>social_grade</span> <span class='kw'>=</span> <span class='st'>"C2DE"</span>,
-  <span class='kw'>eduend4cat</span> <span class='kw'>=</span> <span class='st'>"16-18"</span>, <span class='co'># age finished education</span>
-  <span class='kw'>ethnic2cat</span> <span class='kw'>=</span> <span class='st'>"white"</span>, <span class='co'># white / non-white</span>
-  <span class='kw'>employ2cat</span> <span class='kw'>=</span> <span class='st'>"yes"</span>, <span class='co'># employed / not</span>
-  <span class='kw'>wtval</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>60</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>5</span>), <span class='co'># weight in kg</span>
-  <span class='kw'>htval</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>1.7</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>.1</span>) <span class='co'># height in m</span>
-)
+  age <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Poisson.html'>rpois</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fl'>30</span><span class='op'>)</span>,
+  sex <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Male"</span>, <span class='st'>"Female"</span><span class='op'>)</span>, size <span class='op'>=</span> <span class='va'>n</span>, replace <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>,
+  income5cat <span class='op'>=</span> <span class='st'>"1_lowest income"</span>,
+  imd_quintile <span class='op'>=</span> <span class='st'>"5_most_deprived"</span>,
+  kids <span class='op'>=</span> <span class='st'>"0"</span>,
+  social_grade <span class='op'>=</span> <span class='st'>"C2DE"</span>,
+  eduend4cat <span class='op'>=</span> <span class='st'>"16-18"</span>, <span class='co'># age finished education</span>
+  ethnic2cat <span class='op'>=</span> <span class='st'>"white"</span>, <span class='co'># white / non-white</span>
+  employ2cat <span class='op'>=</span> <span class='st'>"yes"</span>, <span class='co'># employed / not</span>
+  wtval <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span>, mean <span class='op'>=</span> <span class='fl'>60</span>, sd <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>, <span class='co'># weight in kg</span>
+  htval <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span>, mean <span class='op'>=</span> <span class='fl'>1.7</span>, sd <span class='op'>=</span> <span class='fl'>.1</span><span class='op'>)</span> <span class='co'># height in m</span>
+<span class='op'>)</span>
 
 <span class='co'># Add individual ids to the data</span>
-<span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'>MakeSeeds</span>(<span class='no'>data</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>0</span>)
+<span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'>MakeSeeds</span><span class='op'>(</span><span class='va'>data</span>, n <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
 
 <span class='co'># Disease names</span>
-<span class='no'>alc_disease_names</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
+<span class='va'>alc_disease_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
   <span class='st'>"Pharynx"</span>,
   <span class='st'>"Ischaemic_heart_disease"</span>,
   <span class='st'>"LiverCirrhosis"</span>,
   <span class='st'>"Transport_injuries"</span>,
   <span class='st'>"Alcohol_poisoning"</span>,
   <span class='st'>"Alcoholic_gastritis"</span>
-)
+<span class='op'>)</span>
 
-<span class='no'>test_data</span> <span class='kw'>&lt;-</span> <span class='fu'>copy</span>(<span class='no'>data</span>)
+<span class='va'>test_data</span> <span class='op'>&lt;-</span> <span class='fu'>copy</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
 
-<span class='no'>test_data1</span> <span class='kw'>&lt;-</span> <span class='fu'>RRFunc</span>(
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>test_data</span>,
-  <span class='kw'>substance</span> <span class='kw'>=</span> <span class='st'>"alc"</span>,
-  <span class='kw'>k_year</span> <span class='kw'>=</span> <span class='fl'>2017</span>,
-  <span class='kw'>alc_diseases</span> <span class='kw'>=</span> <span class='no'>alc_disease_names</span>,
-  <span class='kw'>alc_indiv_risk_trajectories_store</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>alc_wholly_chronic_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>),
-  <span class='kw'>alc_wholly_acute_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>4</span>),
-  <span class='kw'>show_progress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)
+<span class='va'>test_data1</span> <span class='op'>&lt;-</span> <span class='fu'>RRFunc</span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='va'>test_data</span>,
+  substance <span class='op'>=</span> <span class='st'>"alc"</span>,
+  k_year <span class='op'>=</span> <span class='fl'>2017</span>,
+  alc_diseases <span class='op'>=</span> <span class='va'>alc_disease_names</span>,
+  alc_indiv_risk_trajectories_store <span class='op'>=</span> <span class='cn'>NULL</span>,
+  alc_wholly_chronic_thresholds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span><span class='op'>)</span>,
+  alc_wholly_acute_thresholds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>4</span><span class='op'>)</span>,
+  show_progress <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
 
-<span class='no'>test_data1</span>
+<span class='va'>test_data1</span>
 
-<span class='no'>test_data</span> <span class='kw'>&lt;-</span> <span class='fu'>copy</span>(<span class='no'>data</span>)
-<span class='no'>test_data</span>[ , <span class='no'>year</span> <span class='kw'>:=</span> <span class='fl'>2017</span>]
+<span class='va'>test_data</span> <span class='op'>&lt;-</span> <span class='fu'>copy</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
+<span class='va'>test_data</span><span class='op'>[</span> , <span class='va'>year</span> <span class='op'>:=</span> <span class='fl'>2017</span><span class='op'>]</span>
 
-<span class='no'>test_data2</span> <span class='kw'>&lt;-</span> <span class='fu'>RRFunc</span>(
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>test_data</span>,
-  <span class='kw'>substance</span> <span class='kw'>=</span> <span class='st'>"alc"</span>,
-  <span class='kw'>k_year</span> <span class='kw'>=</span> <span class='fl'>2018</span>,
-  <span class='kw'>alc_diseases</span> <span class='kw'>=</span> <span class='no'>alc_disease_names</span>,
-  <span class='kw'>alc_indiv_risk_trajectories_store</span> <span class='kw'>=</span> <span class='no'>test_data1</span>$<span class='no'>new_alc_indiv_risk_trajectories_store</span>,
-  <span class='kw'>alc_wholly_chronic_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>),
-  <span class='kw'>alc_wholly_acute_thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>4</span>),
-  <span class='kw'>show_progress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)
+<span class='va'>test_data2</span> <span class='op'>&lt;-</span> <span class='fu'>RRFunc</span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='va'>test_data</span>,
+  substance <span class='op'>=</span> <span class='st'>"alc"</span>,
+  k_year <span class='op'>=</span> <span class='fl'>2018</span>,
+  alc_diseases <span class='op'>=</span> <span class='va'>alc_disease_names</span>,
+  alc_indiv_risk_trajectories_store <span class='op'>=</span> <span class='va'>test_data1</span><span class='op'>$</span><span class='va'>new_alc_indiv_risk_trajectories_store</span>,
+  alc_wholly_chronic_thresholds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span><span class='op'>)</span>,
+  alc_wholly_acute_thresholds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>4</span><span class='op'>)</span>,
+  show_progress <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
 
-<span class='no'>test_data2</span>
+<span class='va'>test_data2</span>
 
 
 <span class='co'>#############################</span>
 <span class='co'>## TOBACCO</span>
 
-<span class='no'>tob_disease_names</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
+<span class='va'>tob_disease_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
   <span class='st'>"Pharynx"</span>,
   <span class='st'>"Chronic_obstructive_pulmonary_disease"</span>,
   <span class='st'>"Ischaemic_heart_disease"</span>,
@@ -424,32 +425,33 @@ risk faced by people because they consume both tobacco and alcohol.</p>
   <span class='st'>"Influenza_clinically_diagnosed"</span>,
   <span class='st'>"Diabetes"</span>,
   <span class='st'>"Schizophrenia"</span>
-)
+<span class='op'>)</span>
 
-<span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>1e4</span>
+<span class='va'>n</span> <span class='op'>&lt;-</span> <span class='fl'>1e4</span>
 
-<span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'>data.table</span>(
-  <span class='kw'>smk.state</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"current"</span>, <span class='st'>"former"</span>, <span class='st'>"never"</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='no'>T</span>),
-  <span class='kw'>time_since_quit</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>0</span>:<span class='fl'>40</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='no'>T</span>),
-  <span class='kw'>age</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Poisson.html'>rpois</a></span>(<span class='no'>n</span>, <span class='fl'>30</span>),
-  <span class='kw'>sex</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Male"</span>, <span class='st'>"Female"</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='no'>T</span>)
-)
+<span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'>data.table</span><span class='op'>(</span>
+  smk.state <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"current"</span>, <span class='st'>"former"</span>, <span class='st'>"never"</span><span class='op'>)</span>, size <span class='op'>=</span> <span class='va'>n</span>, replace <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>,
+  time_since_quit <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fl'>0</span><span class='op'>:</span><span class='fl'>40</span>, size <span class='op'>=</span> <span class='va'>n</span>, replace <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>,
+  age <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Poisson.html'>rpois</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fl'>30</span><span class='op'>)</span>,
+  sex <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Male"</span>, <span class='st'>"Female"</span><span class='op'>)</span>, size <span class='op'>=</span> <span class='va'>n</span>, replace <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='no'>data</span>[<span class='no'>smk.state</span> <span class='kw'>!=</span> <span class='st'>"former"</span>, <span class='no'>time_since_quit</span> <span class='kw'>:=</span> <span class='fl'>NA</span>]
+<span class='va'>data</span><span class='op'>[</span><span class='va'>smk.state</span> <span class='op'>!=</span> <span class='st'>"former"</span>, <span class='va'>time_since_quit</span> <span class='op'>:=</span> <span class='cn'>NA</span><span class='op'>]</span>
 
 <span class='co'># Tobacco relative risks for Pharygeal cancer</span>
-<span class='fu'>RRFunc</span>(
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>data</span>,
-  <span class='kw'>substance</span> <span class='kw'>=</span> <span class='st'>"tob"</span>,
-  <span class='kw'>tob_diseases</span> <span class='kw'>=</span> <span class='no'>tob_disease_names</span>,
-  <span class='kw'>show_progress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)
+<span class='fu'>RRFunc</span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='va'>data</span>,
+  substance <span class='op'>=</span> <span class='st'>"tob"</span>,
+  tob_diseases <span class='op'>=</span> <span class='va'>tob_disease_names</span>,
+  show_progress <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
 
 
 <span class='co'>#############################</span>
 <span class='co'>## TOBACCO AND ALCOHOL</span>
 
-}</div></pre>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -465,7 +467,7 @@ risk faced by people because they consume both tobacco and alcohol.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

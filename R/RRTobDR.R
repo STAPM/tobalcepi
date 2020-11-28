@@ -17,6 +17,9 @@
 #' @importFrom data.table := setDT setnames
 #' @export
 #'
+#' \lifecycle{experimental}
+#'
+#'
 #' @examples
 #'
 #' \dontrun{

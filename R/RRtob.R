@@ -37,6 +37,8 @@
 #' specified by "disease".
 #' @importFrom data.table := setDT setnames
 #' @export
+#' 
+#' \lifecycle{maturing}
 #'
 #' @examples
 #'\dontrun{

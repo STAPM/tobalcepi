@@ -33,6 +33,8 @@
 #' 
 #' \insertRef{Prabhu2014}{tobalcepi}  
 #' 
+#' \lifecycle{maturing}
+#' 
 #' @examples 
 #' 
 #' \dontrun{

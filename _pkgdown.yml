@@ -29,6 +29,7 @@ reference:
 - subtitle: Disease definitions and relative risks
   contents:
   - tob_disease_names
+  - tob_icd10_lookups
   - tobacco_relative_risks
   - RRtob
   - RRTobDR
@@ -41,6 +42,7 @@ reference:
 - subtitle: Disease definitions and relative risks
   contents:
   - alc_disease_names
+  - alc_icd10_lookups
   - RRalc
 - subtitle: Disease risk linked to intoxication
   contents:  
@@ -58,6 +60,7 @@ reference:
   contents:
   - TobAlcInt
   - tob_alc_risk_int
+  - tobalc_icd10_lookups
   
 - title: Misc
   contents:

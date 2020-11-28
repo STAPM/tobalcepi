@@ -3,13 +3,14 @@
 
 # tobalcepi <img src="tools/tobalcepi_hex.png" align="right" style="padding-left:10px;background-color:white;" width="100" height="100" />
 
+<!-- badges: start -->
+
+[![Lifecycle:
+maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
-developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-
-**DRAFT WORKING VERSION** - Some code and documentation is still
-incomplete or in need of being refined. The code and documentation are
-still undergoing internal review by the analyst team.
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)  
+<!-- badges: end -->
 
 ## Motivation
 
@@ -217,8 +218,8 @@ Tobacco and Alcohol. R package version x.x.x.
 
 Angus, Colin, M Henney, L Webster, and Duncan Gillespie. 2018.
 “Alcohol-Attributable Diseases and Dose-Response Curves for the
-Sheffield Alcohol Policy Model Version 4.0.”
-<https://doi.org/10.15131/shef.data.6819689.v1>.
+Sheffield Alcohol Policy Model Version 4.0.” The University of
+Sheffield. <https://doi.org/10.15131/shef.data.6819689.v2>.
 
 </div>
 

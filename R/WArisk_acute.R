@@ -41,6 +41,8 @@
 #' @return Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.
 #' @importFrom data.table := setDT setnames
 #' @export
+#' 
+#' \lifecycle{stable}
 #'
 #' @examples
 #' 

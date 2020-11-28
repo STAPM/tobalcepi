@@ -73,7 +73,7 @@ for each individual for experiencing each cause during one year." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -135,19 +135,19 @@ for each individual for experiencing each cause during one year." />
 for each individual for experiencing each cause during one year.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>PArisk</span>(
-  <span class='kw'>SODMean</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>SODSDV</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>SODFreq</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>Weight</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>Widmark_r</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>cause</span> <span class='kw'>=</span> <span class='st'>"Transport"</span>,
-  <span class='kw'>grams_ethanol</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>100</span>,
-  <span class='kw'>grams_ethanol_per_unit</span> <span class='kw'>=</span> <span class='fl'>8</span>,
-  <span class='kw'>grams_ethanol_per_std_drink</span> <span class='kw'>=</span> <span class='fl'>12.8</span>,
-  <span class='kw'>liver_clearance_rate_h</span> <span class='kw'>=</span> <span class='fl'>0.017</span>,
-  <span class='kw'>getcurve</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>PArisk</span><span class='op'>(</span>
+  SODMean <span class='op'>=</span> <span class='cn'>NULL</span>,
+  SODSDV <span class='op'>=</span> <span class='cn'>NULL</span>,
+  SODFreq <span class='op'>=</span> <span class='cn'>NULL</span>,
+  Weight <span class='op'>=</span> <span class='cn'>NULL</span>,
+  Widmark_r <span class='op'>=</span> <span class='cn'>NULL</span>,
+  cause <span class='op'>=</span> <span class='st'>"Transport"</span>,
+  grams_ethanol <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>,
+  grams_ethanol_per_unit <span class='op'>=</span> <span class='fl'>8</span>,
+  grams_ethanol_per_std_drink <span class='op'>=</span> <span class='fl'>12.8</span>,
+  liver_clearance_rate_h <span class='op'>=</span> <span class='fl'>0.017</span>,
+  getcurve <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -221,28 +221,28 @@ or the time interval between drinks within an occassion. This could introduce in
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='co'>## Further explanation</span>
-
+ 
 <span class='co'># For a male with the following characteristics:</span>
-<span class='no'>Weight</span> <span class='kw'>&lt;-</span> <span class='fl'>70</span> <span class='co'># weight in kg</span>
-<span class='no'>Height</span> <span class='kw'>&lt;-</span> <span class='fl'>2</span> <span class='co'># height in m</span>
-<span class='no'>Age</span> <span class='kw'>&lt;-</span> <span class='fl'>25</span> <span class='co'># age in years</span>
+<span class='va'>Weight</span> <span class='op'>&lt;-</span> <span class='fl'>70</span> <span class='co'># weight in kg</span>
+<span class='va'>Height</span> <span class='op'>&lt;-</span> <span class='fl'>2</span> <span class='co'># height in m</span>
+<span class='va'>Age</span> <span class='op'>&lt;-</span> <span class='fl'>25</span> <span class='co'># age in years</span>
 
 <span class='co'># We can estimate their r value from the Widmark equation </span>
 <span class='co'># using parameter values from Posey and Mozayani (2007)</span>
-<span class='no'>Widmark_r</span> <span class='kw'>&lt;-</span> <span class='fl'>0.39834</span> + ((<span class='fl'>12.725</span> * <span class='no'>Height</span> - <span class='fl'>0.11275</span> * <span class='no'>Age</span> + <span class='fl'>2.8993</span>) / <span class='no'>Weight</span>)
+<span class='va'>Widmark_r</span> <span class='op'>&lt;-</span> <span class='fl'>0.39834</span> <span class='op'>+</span> <span class='op'>(</span><span class='op'>(</span><span class='fl'>12.725</span> <span class='op'>*</span> <span class='va'>Height</span> <span class='op'>-</span> <span class='fl'>0.11275</span> <span class='op'>*</span> <span class='va'>Age</span> <span class='op'>+</span> <span class='fl'>2.8993</span><span class='op'>)</span> <span class='op'>/</span> <span class='va'>Weight</span><span class='op'>)</span>
 
 <span class='co'># They might drink from 1 to 100 grams of ethanol on one occassion</span>
-<span class='no'>grams_ethanol</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>:<span class='fl'>100</span>
+<span class='va'>grams_ethanol</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>
 
 <span class='co'># In minutes, We would expect them to remain intoxicated </span>
 <span class='co'># (with blood alcohol content &gt; 0 percent) for</span>
-<span class='no'>Duration_m</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span> * <span class='no'>grams_ethanol</span> / (<span class='no'>Widmark_r</span> * <span class='no'>Weight</span> * <span class='fl'>1000</span> * (<span class='no'>liver_clearance_rate_h</span> / <span class='fl'>60</span>))
+<span class='va'>Duration_m</span> <span class='op'>&lt;-</span> <span class='fl'>100</span> <span class='op'>*</span> <span class='va'>grams_ethanol</span> <span class='op'>/</span> <span class='op'>(</span><span class='va'>Widmark_r</span> <span class='op'>*</span> <span class='va'>Weight</span> <span class='op'>*</span> <span class='fl'>1000</span> <span class='op'>*</span> <span class='op'>(</span><span class='va'>liver_clearance_rate_h</span> <span class='op'>/</span> <span class='fl'>60</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># and hours</span>
-<span class='no'>Duration_h</span> <span class='kw'>&lt;-</span> <span class='no'>Duration_m</span> / <span class='fl'>60</span>
+<span class='va'>Duration_h</span> <span class='op'>&lt;-</span> <span class='va'>Duration_m</span> <span class='op'>/</span> <span class='fl'>60</span>
 
 <span class='co'># Duration is the length of time taken to clear all alcohol from the blood</span>
 <span class='co'># so we don't apply any thresholds of intoxication,</span>
@@ -253,69 +253,71 @@ or the time interval between drinks within an occassion. This could introduce in
 <span class='co'># and that the standard deviation of amount drunk on an occasion is 14 units.</span>
 
 <span class='co'># The cumulative probability distribution of each amount of alcohol being drunk on an occassion is</span>
-<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>pnorm</a></span>(<span class='no'>grams_ethanol</span>, <span class='fl'>2</span> * <span class='fl'>8</span>, <span class='fl'>14</span> * <span class='fl'>8</span>)
+<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>pnorm</a></span><span class='op'>(</span><span class='va'>grams_ethanol</span>, <span class='fl'>2</span> <span class='op'>*</span> <span class='fl'>8</span>, <span class='fl'>14</span> <span class='op'>*</span> <span class='fl'>8</span><span class='op'>)</span>
 
 <span class='co'># Convert from the cumulative distribution to the</span>
 <span class='co'># probability that each level of alcohol is consumed on a drinking occasion</span>
-<span class='no'>interval_prob</span> <span class='kw'>&lt;-</span> <span class='no'>x</span> - <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='no'>x</span>[<span class='fl'>1</span>:(<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>x</span>) - <span class='fl'>1</span>)])
+<span class='va'>interval_prob</span> <span class='op'>&lt;-</span> <span class='va'>x</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='va'>x</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
 
 <span class='co'># The probability-weighted distribution of time spent intoxicated during a year (52 weeks) is</span>
-<span class='no'>Time_intox</span> <span class='kw'>&lt;-</span> <span class='fl'>5</span> * <span class='fl'>52</span> * <span class='no'>interval_prob</span> * <span class='no'>Duration_h</span>
+<span class='va'>Time_intox</span> <span class='op'>&lt;-</span> <span class='fl'>5</span> <span class='op'>*</span> <span class='fl'>52</span> <span class='op'>*</span> <span class='va'>interval_prob</span> <span class='op'>*</span> <span class='va'>Duration_h</span>
 
 <span class='co'># And the expected total time spent intoxicated is</span>
-<span class='no'>Time_intox_sum</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>Time_intox</span>)
+<span class='va'>Time_intox_sum</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>Time_intox</span><span class='op'>)</span>
 
 <span class='co'># The relative risk of a transport injury corresponding to each amount drunk on a single occasion</span>
 <span class='co'># corresponds to the number of standard drinks consumed</span>
 
 <span class='co'># We convert to standard drinking and apply the risk parameters from Cherpitel</span>
 
-<span class='no'>v</span> <span class='kw'>&lt;-</span> <span class='no'>grams_ethanol</span> / <span class='fl'>12.8</span>
-<span class='no'>v1</span> <span class='kw'>&lt;-</span> (<span class='no'>v</span> + <span class='fl'>1</span>) / <span class='fl'>100</span>
+<span class='va'>v</span> <span class='op'>&lt;-</span> <span class='va'>grams_ethanol</span> <span class='op'>/</span> <span class='fl'>12.8</span>
+<span class='va'>v1</span> <span class='op'>&lt;-</span> <span class='op'>(</span><span class='va'>v</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>/</span> <span class='fl'>100</span>
 
 <span class='co'># Parameters from Cherpitel</span>
-<span class='no'>b1</span> <span class='kw'>&lt;-</span> <span class='fl'>3.973538882</span>
-<span class='no'>b2</span> <span class='kw'>&lt;-</span> <span class='fl'>6.65184e-6</span>
-<span class='no'>b3</span> <span class='kw'>&lt;-</span> <span class='fl'>0.837637</span>
-<span class='no'>b4</span> <span class='kw'>&lt;-</span> <span class='fl'>1.018824</span>
+<span class='va'>b1</span> <span class='op'>&lt;-</span> <span class='fl'>3.973538882</span>
+<span class='va'>b2</span> <span class='op'>&lt;-</span> <span class='fl'>6.65184e-6</span>
+<span class='va'>b3</span> <span class='op'>&lt;-</span> <span class='fl'>0.837637</span>
+<span class='va'>b4</span> <span class='op'>&lt;-</span> <span class='fl'>1.018824</span>
 
 <span class='co'># Apply formula for the risk curve from Cherpital</span>
-<span class='no'>lvold_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='no'>v1</span>) + <span class='no'>b1</span>
-<span class='no'>lvold_2</span> <span class='kw'>&lt;-</span> (<span class='no'>v1</span>^<span class='fl'>3</span>) - <span class='no'>b2</span>
-<span class='no'>logitp</span> <span class='kw'>&lt;-</span> <span class='no'>lvold_1</span> * <span class='no'>b3</span> + <span class='no'>lvold_2</span> * <span class='no'>b4</span>
-<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>boot</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/boot/man/inv.logit.html'>inv.logit</a></span>(<span class='no'>logitp</span>)
+<span class='va'>lvold_1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>v1</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>b1</span>
+<span class='va'>lvold_2</span> <span class='op'>&lt;-</span> <span class='op'>(</span><span class='va'>v1</span><span class='op'>^</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'>-</span> <span class='va'>b2</span>
+<span class='va'>logitp</span> <span class='op'>&lt;-</span> <span class='va'>lvold_1</span> <span class='op'>*</span> <span class='va'>b3</span> <span class='op'>+</span> <span class='va'>lvold_2</span> <span class='op'>*</span> <span class='va'>b4</span>
+<span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'>boot</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/boot/man/inv.logit.html'>inv.logit</a></span><span class='op'>(</span><span class='va'>logitp</span><span class='op'>)</span>
 
 <span class='co'># The relative risk associated with each amount drunk on an occasion</span>
-<span class='no'>rr</span> <span class='kw'>&lt;-</span> <span class='no'>p</span> / <span class='no'>p</span>[<span class='fl'>1</span>]
+<span class='va'>rr</span> <span class='op'>&lt;-</span> <span class='va'>p</span> <span class='op'>/</span> <span class='va'>p</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>
 
 <span class='co'># The relative risk multiplied by the time exposed to that level of risk</span>
-<span class='no'>Current_risk</span> <span class='kw'>&lt;-</span> <span class='no'>rr</span> * <span class='no'>Time_intox</span>
+<span class='va'>Current_risk</span> <span class='op'>&lt;-</span> <span class='va'>rr</span> <span class='op'>*</span> <span class='va'>Time_intox</span>
 
 <span class='co'># The sum of the relative risk associated with the time spent intoxicated during one year</span>
-<span class='no'>Risk_sum</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>Current_risk</span>)
+<span class='va'>Risk_sum</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>Current_risk</span><span class='op'>)</span>
 
 <span class='co'># The average annual relative risk, considering that time in the year spent with a</span>
 <span class='co'># blood alcohol content of zero has a relative risk of 1.</span>
-<span class='no'>Annual_risk</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span>(
-  (<span class='no'>Risk_sum</span> + <span class='fl'>1</span> * (<span class='fl'>365</span> * <span class='fl'>24</span> - <span class='no'>Time_intox_sum</span>)) / (<span class='fl'>365</span> * <span class='fl'>24</span>),
-  <span class='fl'>365</span> * <span class='fl'>24</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='no'>T</span>)
+<span class='va'>Annual_risk</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span>
+  <span class='op'>(</span><span class='va'>Risk_sum</span> <span class='op'>+</span> <span class='fl'>1</span> <span class='op'>*</span> <span class='op'>(</span><span class='fl'>365</span> <span class='op'>*</span> <span class='fl'>24</span> <span class='op'>-</span> <span class='va'>Time_intox_sum</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>/</span> <span class='op'>(</span><span class='fl'>365</span> <span class='op'>*</span> <span class='fl'>24</span><span class='op'>)</span>,
+  <span class='fl'>365</span> <span class='op'>*</span> <span class='fl'>24</span>, na.rm <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>
 
 
 
 <span class='co'># THE FOLLOWING ARE NOT CONSIDERED IN THIS CALCULATION</span>
 
 <span class='co'># Elapsed time in minutes since consuming alcohol</span>
-<span class='no'>t</span> <span class='kw'>&lt;-</span> <span class='fl'>30</span>
+<span class='va'>t</span> <span class='op'>&lt;-</span> <span class='fl'>30</span>
 
 <span class='co'># Alcohol absorbtion rate constant</span>
-<span class='no'>k_empty_stomach</span> <span class='kw'>&lt;-</span> <span class='fl'>6.5</span> / <span class='fl'>60</span> <span class='co'># grams of ethanol per minute</span>
+<span class='va'>k_empty_stomach</span> <span class='op'>&lt;-</span> <span class='fl'>6.5</span> <span class='op'>/</span> <span class='fl'>60</span> <span class='co'># grams of ethanol per minute</span>
 
 <span class='co'># Alcohol absorbtion</span>
-<span class='no'>alcohol_absorbed</span> <span class='kw'>&lt;-</span> <span class='no'>grams_ethanol</span> * (<span class='fl'>1</span> - <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span>(-<span class='no'>k_empty_stomach</span> * <span class='no'>t</span>))
+<span class='va'>alcohol_absorbed</span> <span class='op'>&lt;-</span> <span class='va'>grams_ethanol</span> <span class='op'>*</span> <span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='op'>-</span><span class='va'>k_empty_stomach</span> <span class='op'>*</span> <span class='va'>t</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Calculate blood alcohol content using the Widemark eqn</span>
-<span class='no'>bac</span> <span class='kw'>&lt;-</span> (<span class='fl'>100</span> * <span class='no'>alcohol_absorbed</span> / (<span class='no'>Widmark_r</span> * <span class='no'>Weight</span> * <span class='fl'>1000</span>)) - ((<span class='no'>liver_clearance_rate_h</span> / <span class='fl'>60</span>) * <span class='no'>t</span>)
-}</div></pre>
+<span class='va'>bac</span> <span class='op'>&lt;-</span> <span class='op'>(</span><span class='fl'>100</span> <span class='op'>*</span> <span class='va'>alcohol_absorbed</span> <span class='op'>/</span> <span class='op'>(</span><span class='va'>Widmark_r</span> <span class='op'>*</span> <span class='va'>Weight</span> <span class='op'>*</span> <span class='fl'>1000</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>-</span> <span class='op'>(</span><span class='op'>(</span><span class='va'>liver_clearance_rate_h</span> <span class='op'>/</span> <span class='fl'>60</span><span class='op'>)</span> <span class='op'>*</span> <span class='va'>t</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -331,7 +333,7 @@ or the time interval between drinks within an occassion. This could introduce in
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

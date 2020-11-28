@@ -18,15 +18,25 @@ authors:
   Alan Brennan:
     href: https://www.sheffield.ac.uk/scharr/sections/heds/staff/brennan_a
     
-reference:
+articles:
+- title: "Tobacco relative risks"
+  contents:
+  - smoking-disease-risks
 
-- title: Use of risk functions
+- title: "Alcohol relative risks"
+  contents:
+  - alc_partially_attrib_acute
+  - alc_wholly_attrib_acute
+  - alc_wholly_attrib_chronic
+    
+reference:
+- title: "Use of risk functions"
   contents:
   - RRFunc
   - subgroupRisk
 
-- title: Tobacco relative risks
-- subtitle: Disease definitions and relative risks
+- title: "Tobacco relative risks"
+- subtitle: "Disease definitions and relative risks"
   contents:
   - RRtob
   - RRTobDR
@@ -34,19 +44,19 @@ reference:
   - tob_icd10_lookups
   - tobacco_relative_risks
 
-- subtitle: Tobacco lag times
+- subtitle: "Tobacco lag times"
   contents:
   - TobLags
   - tobacco_lag_times
   
-- title: Alcohol relative risks
-- subtitle: Disease definitions and relative risks
+- title: "Alcohol relative risks"
+- subtitle: "Disease definitions and relative risks"
   contents:
   - RRalc
   - alc_disease_names
   - alc_icd10_lookups
 
-- subtitle: Disease risk linked to intoxication
+- subtitle: "Disease risk linked to intoxication"
   contents:  
   - AlcBinge
   - AlcBinge_stapm
@@ -54,17 +64,17 @@ reference:
   - WArisk_acute
   - binge_params
   - binge_params_stapm
-- subtitle: Alcohol lag times
+- subtitle: "Alcohol lag times"
   contents:
   - AlcLags
   
-- title: Joint tobacco and alcohol risk
+- title: "Joint tobacco and alcohol risk"
   contents:
   - TobAlcInt
   - tob_alc_risk_int
   - tobalc_icd10_lookups
   
-- title: Misc
+- title: "Misc"
   contents:
   - ExpandCodes
   - disease_groups

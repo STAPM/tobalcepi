@@ -2,6 +2,8 @@ destination: public
 home:
   title: Risk Functions and Attributable Fractions for Tobacco and Alcohol
   links:
+  - text: View source code (team members)
+    href: https://gitlab.com/stapm/r-packages/tobalcepi
   - text: STAPM webpage
     href: https://stapm.gitlab.io/
 url: https://stapm.gitlab.io/r-packages/tobalcepi/

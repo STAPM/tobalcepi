@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Dose-response relative risks for tobacco-related cancers — RRTobDR" />
-<meta property="og:description" content="Computes the relative risks for each tobacco-related cancer based on the published risk curves." />
+<meta property="og:description" content="" />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
       </span>
     </div>
 
@@ -130,7 +130,7 @@
     </div>
 
     <div class="ref-description">
-    <p>Computes the relative risks for each tobacco-related cancer based on the published risk curves.</p>
+    <p><a href='https://www.tidyverse.org/lifecycle/#experimental'><img src='figures/lifecycle-experimental.svg' alt='Experimental lifecycle'></a></p>
     </div>
 
     <pre class="usage"><span class='fu'>RRTobDR</span><span class='op'>(</span><span class='va'>data</span>, disease <span class='op'>=</span> <span class='st'>"Pharynx"</span>, av_cigs_day <span class='op'>=</span> <span class='st'>"cigs_per_day"</span><span class='op'>)</span></pre>
@@ -158,7 +158,8 @@ average number of daily cigarettes.</p></td>
     <p>Returns a numeric vector of each individual's relative risks for the tobacco related disease specified by "disease".</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Relative risks for come from published risk functions whose parameters have been
+    <p>Computes the relative risks for each tobacco-related cancer based on the published risk curves.</p>
+<p>Relative risks for come from published risk functions whose parameters have been
 hard-coded within this function rather than being read from an external spreadsheet. 
 These relative risks are based on an individual's current smoking intensity. There are 
 others measures of smoking exposure including smoking duration and pack-years, which 

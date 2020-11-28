@@ -1,6 +1,8 @@
 
 
 #' Convert groups of ICD-10 codes to single codes
+#' 
+#' \lifecycle{stable}
 #'
 #' Creates the lookup files for search for single ICD-10 codes related to tobacco and/or alcohol.
 #'
@@ -14,7 +16,6 @@
 #' @importFrom data.table := setDT setnames
 #' @export
 #'
-#' \lifecycle{stable}
 #'
 #' @examples
 #'

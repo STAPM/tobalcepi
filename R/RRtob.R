@@ -1,5 +1,7 @@
 
 #' Tobacco relative risks
+#' 
+#' \lifecycle{maturing}
 #'
 #' Relative risks for current vs. never cigarette smokers.
 #'
@@ -38,7 +40,6 @@
 #' @importFrom data.table := setDT setnames
 #' @export
 #' 
-#' \lifecycle{maturing}
 #'
 #' @examples
 #'\dontrun{

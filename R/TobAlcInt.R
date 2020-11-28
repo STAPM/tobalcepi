@@ -1,6 +1,8 @@
 
 
 #' Risk interaction between tobacco and alcohol
+#' 
+#' \lifecycle{maturing}
 #'
 #' Assigns the disease-specific interaction term (synergy index) appropriate to each
 #' individual's tobacco and alcohol consumption.
@@ -33,7 +35,6 @@
 #' 
 #' \insertRef{Prabhu2014}{tobalcepi}  
 #' 
-#' \lifecycle{maturing}
 #' 
 #' @examples 
 #' 

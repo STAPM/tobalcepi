@@ -1,5 +1,7 @@
 
 #' Summarise relative risk
+#' 
+#' \lifecycle{stable}
 #'
 #' Calculate the sum of the relative risk for all individuals in a subgroup,
 #' or calculate the subgroup specific attributable fraction based on the current relative risks.
@@ -22,7 +24,6 @@
 #' @importFrom data.table := setDT setnames
 #' @export
 #' 
-#' \lifecycle{stable}
 #'
 #' @examples
 #' \dontrun{

@@ -40,10 +40,7 @@
 
 
 <meta property="og:title" content="Calculate variables to inform alcohol binge model - STAPM version — AlcBinge_stapm" />
-<meta property="og:description" content="Designed to work with simulated individual trajectories of alcohol consumption - stratified by 
-age category, sex and IMD quintile. Assigns coefficients stratified by age category, sex and IMD quintile to 
-the simulated sample of individuals to estimate their characteristics of single occassion drinking 
-at each time step in the simulation." />
+<meta property="og:description" content="" />
 
 
 
@@ -75,7 +72,7 @@ at each time step in the simulation." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
       </span>
     </div>
 
@@ -133,10 +130,7 @@ at each time step in the simulation." />
     </div>
 
     <div class="ref-description">
-    <p>Designed to work with simulated individual trajectories of alcohol consumption - stratified by 
-age category, sex and IMD quintile. Assigns coefficients stratified by age category, sex and IMD quintile to 
-the simulated sample of individuals to estimate their characteristics of single occassion drinking 
-at each time step in the simulation.</p>
+    <p><a href='https://www.tidyverse.org/lifecycle/#maturing'><img src='figures/lifecycle-maturing.svg' alt='Maturing lifecycle'></a></p>
     </div>
 
     <pre class="usage"><span class='fu'>AlcBinge_stapm</span><span class='op'>(</span><span class='va'>data</span>, params <span class='op'>=</span> <span class='fu'>tobalcepi</span><span class='fu'>::</span><span class='va'><a href='binge_params_stapm.html'>binge_params_stapm</a></span><span class='op'>)</span></pre>
@@ -162,7 +156,11 @@ averaged by age category, sex and IMD quintile.</p></td>
     <p>Returns data plus the estimated variables.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The coefficients used come originally from a study by Hill-McManus 2014,
+    <p>Designed to work with simulated individual trajectories of alcohol consumption - stratified by 
+age category, sex and IMD quintile. Assigns coefficients stratified by age category, sex and IMD quintile to 
+the simulated sample of individuals to estimate their characteristics of single occassion drinking 
+at each time step in the simulation.</p>
+<p>The coefficients used come originally from a study by Hill-McManus 2014,
 who analysed drinking occasions using data from detailed diaries in the National Diet and Nutrition Survey 2000/2001.
 Using the results, it possible to model each individual's expected number of drinking occasions across the year,
 the average amount they drunk on an occasion, the variability in the amount drunk among occasions,

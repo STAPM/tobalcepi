@@ -25,11 +25,13 @@ that gives the proportion by which the effect of a change in consumption
 on an individual's relative risk of disease has so far emerged.
 }
 \description{
+\lifecycle{stable}
+}
+\details{
 Prepare the disease specific functions that describe how a change in tobacco consumption
 gradually has an effect on the relative risk of disease incidence over time (up to 40 years)
 since e.g. someone quit smoking
-}
-\details{
+
 All lag times are taken from a re-analysis of the Cancer prevention II study by Oza et al 2011 and Kontis et al 2014
 The values were sent to us by Kontis. Lags are smoothed functions over time describing the proportion of
 the excess risk due to smoking that still remains.

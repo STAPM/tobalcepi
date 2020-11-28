@@ -37,11 +37,13 @@ Defaults to 3 units/day for females and 4 units/day for males.}
 Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.
 }
 \description{
-Uses the 'new' binge model methods to calculate the risk
-that each individual experiences each acute consequence of drinking during one year 
-(e.g. alcohol poisoning or the effects of acute intoxication).
+\lifecycle{stable}
 }
 \details{
+Uses the 'new' binge model methods to calculate the risk
+that each individual experiences each acute consequence of drinking during one year 
+(e.g. alcohol poisoning or the effects of acute intoxication). 
+
 The function implements a new method for estimating risk that was developed to suit the STAPM modelling. 
 The calculation is based on the link between average weekly alcohol consumption and 
 the distribution of characteristics of single ocassion drinking described by the 

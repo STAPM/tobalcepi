@@ -1,6 +1,8 @@
 
 
 #' Relative risks for alcohol related diseases
+#' 
+#' \lifecycle{stable}
 #'
 #' Computes the relative risks for each alcohol related disease based on the published risk curves.
 #'
@@ -38,7 +40,6 @@
 #' @importFrom data.table := setDT setnames
 #' @export
 #' 
-#' \lifecycle{stable}
 #'
 #' @examples
 #'

@@ -33,9 +33,11 @@ Returns a numeric vector of each individual's relative risks for the tobacco-rel
 specified by "disease".
 }
 \description{
-Relative risks for current vs. never cigarette smokers.
+\lifecycle{maturing}
 }
 \details{
+Relative risks for current vs. never cigarette smokers.
+
 We focus on the risks of current smoking and limit ourselves to diseases that affect the consumer themselves e.g.
  excluding secondary effects of smoking on children.
  We assume the equivalence of relative risks and odds ratios.

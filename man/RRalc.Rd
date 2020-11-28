@@ -56,9 +56,11 @@ ethanol in one UK standard unit of alcohol.}
 Returns a numeric vector of each individual's relative risks for the alcohol related disease specified by "disease".
 }
 \description{
-Computes the relative risks for each alcohol related disease based on the published risk curves.
+\lifecycle{stable}
 }
 \details{
+Computes the relative risks for each alcohol related disease based on the published risk curves.
+
 Relative risks for partially attributable chronic come from published risk functions whose parameters have been
 hard-coded within this function rather than being read from an external spreadsheet. For some conditions there are
 separate risk functions for morbidity and mortality. For conditions that show a J-shaped risk function that

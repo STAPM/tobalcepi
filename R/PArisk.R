@@ -1,6 +1,8 @@
 
 
 #' Relative risks for alcohol-related injuries
+#' 
+#' \lifecycle{stable}
 #'
 #' Uses the 'new' binge model methods to calculate a relative risk
 #' for each individual for experiencing each cause during one year.
@@ -37,7 +39,6 @@
 #' @importFrom data.table := setDT setnames
 #' @export
 #'
-#' \lifecycle{stable}
 #'
 #' @examples
 #' 

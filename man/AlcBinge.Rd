@@ -16,11 +16,13 @@ from Hill-McManus et al 2014, Tables 3, 5 and 6.}
 Returns data plus the estimated variables.
 }
 \description{
+\lifecycle{superseded}
+}
+\details{
 Designed to work with cross-sectional survey data with a wide range of individual-level covariates. 
 Uses survey data and previously estimated coefficients to describe
 the patterns of single occasion drinking.
-}
-\details{
+
 This is based on a study by Hill-McManus 2014,
 who analysed drinking occasions using data from detailed diaries in the National Diet and Nutrition Survey 2000/2001.
 Using the results, it possible to model each individual's expected number of drinking occasions across the year,

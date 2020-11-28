@@ -18,12 +18,14 @@ averaged by age category, sex and IMD quintile.}
 Returns data plus the estimated variables.
 }
 \description{
+\lifecycle{maturing}
+}
+\details{
 Designed to work with simulated individual trajectories of alcohol consumption - stratified by 
 age category, sex and IMD quintile. Assigns coefficients stratified by age category, sex and IMD quintile to 
 the simulated sample of individuals to estimate their characteristics of single occassion drinking 
-at each time step in the simulation.
-}
-\details{
+at each time step in the simulation.  
+
 The coefficients used come originally from a study by Hill-McManus 2014,
 who analysed drinking occasions using data from detailed diaries in the National Diet and Nutrition Survey 2000/2001.
 Using the results, it possible to model each individual's expected number of drinking occasions across the year,

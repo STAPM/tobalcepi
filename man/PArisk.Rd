@@ -53,10 +53,12 @@ the number of grams of ethanol in one standard drink.}
 Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.
 }
 \description{
-Uses the 'new' binge model methods to calculate a relative risk
-for each individual for experiencing each cause during one year.
+\lifecycle{stable}
 }
 \details{
+Uses the 'new' binge model methods to calculate a relative risk
+for each individual for experiencing each cause during one year.
+
 This calculation treats an ocassion as a single point in time and therefore does not detail
 about the rate of alcohol absorbtion (i.e. there is no alcohol absorbtion rate constant)
 or the time interval between drinks within an occassion. This could introduce inaccuracies if

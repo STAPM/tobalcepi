@@ -1,5 +1,7 @@
 
 #' Tobacco lag times
+#' 
+#' \lifecycle{stable}
 #'
 #' Prepare the disease specific functions that describe how a change in tobacco consumption
 #' gradually has an effect on the relative risk of disease incidence over time (up to 40 years)
@@ -38,7 +40,6 @@
 #' @importFrom data.table := setDT setnames
 #' @export
 #'
-#' \lifecycle{stable}
 #'
 #' @examples
 #'

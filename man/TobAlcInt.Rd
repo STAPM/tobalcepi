@@ -31,10 +31,12 @@ Returns a numeric vector containing  of each individual's relative risks for the
 specified by "disease".
 }
 \description{
-Assigns the disease-specific interaction term (synergy index) appropriate to each
-individual's tobacco and alcohol consumption.
+\lifecycle{maturing}
 }
 \details{
+Assigns the disease-specific interaction term (synergy index) appropriate to each
+individual's tobacco and alcohol consumption.
+
 We currently include estimates of synergistic effects for 
 oral, pharyngeal, laryngeal and oesophageal cancers 
 (we describe these data and their sources in our tobacco risk functions report 
@@ -60,7 +62,5 @@ TobAlcInt()
 
 \insertRef{Hashibe2009}{tobalcepi}  
 
-\insertRef{Prabhu2014}{tobalcepi}  
-
-\lifecycle{maturing}
+\insertRef{Prabhu2014}{tobalcepi}
 }

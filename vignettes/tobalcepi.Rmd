@@ -13,6 +13,7 @@ At the moment, these workflows are accessible only to the project team. To acces
 
 The workflows are listed below:  
 
+- [Smoking and the risks of adult diseases report](https://gitlab.com/stapm/model-inputs/epi_tobacco_risk)  
 
 
 

@@ -15,8 +15,8 @@ The workflows are listed below:
 
 - [Smoking and the risks of adult diseases report](https://gitlab.com/stapm/model-inputs/epi_tobacco_risk)    
 - [Alcohol-attributable diseases and dose-response curves report](https://gitlab.com/stapm/model-inputs/epi_alcohol_risk)   
-- [Population attributable fractions](https://gitlab.com/stapm/model-inputs/epi_pop_attrib_fractions)   
-
+- [Population attributable fractions](https://gitlab.com/stapm/model-inputs/epi_pop_attrib_fractions)     
+- [Irish alcohol attributable fractions (consultancy project)](https://gitlab.com/stapm/projects/irish-aafsr)  
 
 
 

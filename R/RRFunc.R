@@ -278,7 +278,7 @@ RRFunc <- function(
   
   #########################################
   
-  message(paste0("\t\tCalculating risk for ", dn, " conditions"))
+  cat(paste0("\t\tCalculating risk for ", dn, " conditions"))
   
   # Loop through each disease
   for (i in 1:dn) {
@@ -287,7 +287,7 @@ RRFunc <- function(
     
     d <- as.character(diseases[i])
     
-    if(isTRUE(show_progress)) message(paste0("\t\t\t", d, " ", round(100 * i / dn, 0), "%"))
+    if(isTRUE(show_progress)) cat(paste0("\t\t\t", d, " ", round(100 * i / dn, 0), "%"))
     
     
     #############################################################
@@ -522,7 +522,7 @@ RRFunc <- function(
       
     }
     
-    if(isTRUE(show_progress)) message("\t\t\t\tdone")
+    if(isTRUE(show_progress)) cat(crayon::green("\tdone\n"))
     
   }
   

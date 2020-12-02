@@ -278,7 +278,7 @@ RRFunc <- function(
   
   #########################################
   
-  cat(paste0("\t\tCalculating risk for ", dn, " conditions"))
+  cat(paste0("\t\tCalculating risk for ", dn, " conditions\n"))
   
   # Loop through each disease
   for (i in 1:dn) {

@@ -9,5 +9,4 @@
 #'  for acute diseases that are wholly attributable to alcohol. Input in the form c(female, male). 
 #'  Defaults to 3 units/day for females and 4 units/day for males.   
 #' @param grams_ethanol_per_unit Numeric value giving the conversion factor for the number of grams of pure
-#' ethanol in one UK standard unit of alcohol.  
-#' 
+#' ethanol in one UK standard unit of alcohol. 

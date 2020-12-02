@@ -269,8 +269,8 @@ RRFunc <- function(
   if(substance == "tobalc") {
     
     diseases <- union(alc_diseases, tob_diseases)
-    mort_and_morb_diseases <- union(alc_mort_and_morb, diseases)
-    diseases <- c(diseases, paste0(mort_and_morb_diseases, "_morb"))
+    #mort_and_morb_diseases <- union(alc_mort_and_morb, diseases)
+    #diseases <- c(diseases, paste0(mort_and_morb_diseases, "_morb"))
     
   }
   
@@ -316,7 +316,7 @@ RRFunc <- function(
         data = data,
         disease = d,
         mort_or_morb = alc_mort_or_morb,
-        protective = alc_protective,
+        alc_protective = alc_protective,
         alc_wholly_chronic_thresholds = alc_wholly_chronic_thresholds,
         alc_wholly_acute_thresholds = alc_wholly_acute_thresholds,
         av_weekly_grams_per_day_var = "GPerDay",

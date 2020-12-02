@@ -8,6 +8,13 @@
 \description{
 Functions to assign relative risks of disease to individuals based on their tobacco and/or alcohol consumption, and to estimate the attributable fractions of disease.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://stapm.gitlab.io/r-packages/tobalcepi/}
+}
+
+}
 \author{
 \strong{Maintainer}: Duncan Gillespie \email{duncan.gillespie@sheffield.ac.uk} (\href{https://orcid.org/0000-0003-3450-5747}{ORCID})
 

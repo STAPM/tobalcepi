@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
-# tobalcepi <img src="tools/tobalcepi_hex.png" align="right" style="padding-left:10px;background-color:white;" width="100" height="100" />
+# Risk Functions and Attributable Fractions for Tobacco and Alcohol <img src="logo.png" align="right" style="padding-left:10px;background-color:white;" width="100" height="100" />
 
 <!-- badges: start -->
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
@@ -31,7 +31,7 @@ The motivation for `tobalcepi` was to organise how we store, process and use the
 `tobalcepi` was created as part of a programme of work on the health economics of tobacco and alcohol at the School of Health and Related Research (ScHARR), The University of Sheffield. This programme is based around the development of the Sheffield Tobacco and Alcohol Policy Modelling (STAPM), which aims to use comparable methodologies to evaluate the impacts of tobacco and alcohol policies, and investigate the consequences of clustering and interactions between tobacco and alcohol consumption behaviours.    
 
 ## Relative risk data
-The disease lists and risk functions in this package all have published sources, which we have referenced [@Angus2018;@webster2018risk]. We have written some short [articles](https://stapm.gitlab.io/r-packages/tobalcepi/articles/index.html) to explain how these risk functions are implemented in STAPM. We store the master files for our tobacco and alcohol disease lists and risk functions sources in the University of Sheffield folder `X:/ScHARR/PR_Disease_Risk_TA/Code/tables`. In order to obtain mathematical descriptions of the risk functions for use in modelling, we needed to contact some authors to ask for additional information.     
+The disease lists and risk functions in this package all have published sources, which we have referenced [@Angus2018;@webster2018risk]. We have written some working [technical descriptions](https://stapm.gitlab.io/r-packages/tobalcepi/articles/index.html) to explain how these risk functions are implemented in STAPM. We store the master files for our tobacco and alcohol disease lists and risk functions sources in the University of Sheffield folder `X:/ScHARR/PR_Disease_Risk_TA/Code/tables`. In order to obtain mathematical descriptions of the risk functions for use in modelling, we needed to contact some authors to ask for additional information.     
 
 ### Alcohol
 The high-level function for alcohol is `tobalcepi::RRalc()`, which calculates individual risks of diseases as follows:  
@@ -42,8 +42,8 @@ The high-level function for alcohol is `tobalcepi::RRalc()`, which calculates in
 1. **Alcohol - wholly-attributable chronic conditions**: these are also based on thresholds in UK standard units of alcohol drunk on average in a week, over which individuals begin to experience an elevated risk for chronic diseases that are wholly attributable to alcohol. This is applied by code within the function `tobalcepi::RRalc()`.    
 
 ### Tobacco
-1. `RRtob()` takes a lookup table of the risks associated with current vs. never smoking and assigns these to individuals based on their smoking state, age and sex [@webster2018risk].   
-1. We are in the process of developing the function `RRTobDR()` to stratify the risks of some cancers according to the amount smoked per day by current smokers. There is limited info on these dose-reponse effects, so we are gradually building up the epidemiological detail in this area as we review, critically appraise and integrate new risk data into our modelling.  
+1. `tobalcepi::RRtob()` takes a lookup table of the risks associated with current vs. never smoking and assigns these to individuals based on their smoking state, age and sex [@webster2018risk].   
+1. We are in the process of developing the function `tobalcepi::RRTobDR()` to stratify the risks of some cancers according to the amount smoked per day by current smokers. There is limited info on these dose-response effects, so we are gradually building up the epidemiological detail in this area as we review, critically appraise and integrate new risk data into our modelling.  
 
 ### Lag times
 Lag times are the information on the delay between a change to tobacco or alcohol consumption and the decline in the risk of disease associated with that consumption. The relevant functions are `tobalcepi::TobLags()` (which uses lags stored in `tobalcepi::tobacco_lag_times`) and `tobalcepi::AlcLags()` (which contains lags hard-coded into the function). 
@@ -88,9 +88,9 @@ The **processes** applied by the functions in `tobalcepi` give options to estima
 The **outputs** of these processes are datasets in which an individual's tobacco and/or alcohol consumption has been matched to their relative risks of certain diseases, and aggregated datasets that summarise the risks of disease within certain population subgroups.      
 
 ## Installation
-`tobalcepi` is currently available only to members of the project team (but please contact Duncan Gillespie duncan.gillespie@sheffield.ac.uk to discuss). To access you need to [**sign-up for a GitLab account**](https://gitlab.com/). You will then need to be added to the STAPM project team to gain access.   
+`tobalcepi` is currently available only to members of the project team (but please contact Duncan Gillespie duncan.gillespie@sheffield.ac.uk to discuss). To access you need to [sign-up for a GitLab account](https://gitlab.com/). You will then need to be added to the STAPM project team to gain access.   
 
-Once that is sorted, you can **install the development version** from GitLab with:     
+Once that is sorted, you can install the latest or a specified version from GitLab with:     
 
 ```{r gh_installation, message=FALSE, eval = FALSE}
 #install.packages("devtools")

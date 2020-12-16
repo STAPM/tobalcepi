@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# tobalcepi <img src="tools/tobalcepi_hex.png" align="right" style="padding-left:10px;background-color:white;" width="100" height="100" />
+# Risk Functions and Attributable Fractions for Tobacco and Alcohol <img src="logo.png" align="right" style="padding-left:10px;background-color:white;" width="100" height="100" />
 
 <!-- badges: start -->
 
@@ -32,8 +32,9 @@ alcohol consumption behaviours.
 
 The disease lists and risk functions in this package all have published
 sources, which we have referenced (Angus et al. [2018](#ref-Angus2018);
-Webster et al. [2018](#ref-webster2018risk)). We have written some short
-[articles](https://stapm.gitlab.io/r-packages/tobalcepi/articles/index.html)
+Webster et al. [2018](#ref-webster2018risk)). We have written some
+working [technical
+descriptions](https://stapm.gitlab.io/r-packages/tobalcepi/articles/index.html)
 to explain how these risk functions are implemented in STAPM. We store
 the master files for our tobacco and alcohol disease lists and risk
 functions sources in the University of Sheffield folder
@@ -70,16 +71,16 @@ calculates individual risks of diseases as follows:
 
 ### Tobacco
 
-1.  `RRtob()` takes a lookup table of the risks associated with current
-    vs. never smoking and assigns these to individuals based on their
-    smoking state, age and sex (Webster et al.
+1.  `tobalcepi::RRtob()` takes a lookup table of the risks associated
+    with current vs. never smoking and assigns these to individuals
+    based on their smoking state, age and sex (Webster et al.
     [2018](#ref-webster2018risk)).  
-2.  We are in the process of developing the function `RRTobDR()` to
-    stratify the risks of some cancers according to the amount smoked
-    per day by current smokers. There is limited info on these
-    dose-reponse effects, so we are gradually building up the
-    epidemiological detail in this area as we review, critically
-    appraise and integrate new risk data into our modelling.
+2.  We are in the process of developing the function
+    `tobalcepi::RRTobDR()` to stratify the risks of some cancers
+    according to the amount smoked per day by current smokers. There is
+    limited info on these dose-response effects, so we are gradually
+    building up the epidemiological detail in this area as we review,
+    critically appraise and integrate new risk data into our modelling.
 
 ### Lag times
 
@@ -161,12 +162,12 @@ risks of disease within certain population subgroups.
 
 `tobalcepi` is currently available only to members of the project team
 (but please contact Duncan Gillespie <duncan.gillespie@sheffield.ac.uk>
-to discuss). To access you need to [**sign-up for a GitLab
-account**](https://gitlab.com/). You will then need to be added to the
+to discuss). To access you need to [sign-up for a GitLab
+account](https://gitlab.com/). You will then need to be added to the
 STAPM project team to gain access.
 
-Once that is sorted, you can **install the development version** from
-GitLab with:
+Once that is sorted, you can install the latest or a specified version
+from GitLab with:
 
 ``` r
 #install.packages("devtools")

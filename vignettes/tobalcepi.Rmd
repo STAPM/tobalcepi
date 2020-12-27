@@ -13,10 +13,10 @@ At the moment, these workflows are accessible only to the project team. To acces
 
 The workflows are listed below:  
 
-- [Smoking and the risks of adult diseases report](https://gitlab.com/stapm/model-inputs/epi_tobacco_risk)    
-- [Alcohol-attributable diseases and dose-response curves report](https://gitlab.com/stapm/model-inputs/epi_alcohol_risk)   
-- [Population attributable fractions](https://gitlab.com/stapm/model-inputs/epi_pop_attrib_fractions)     
-- [Irish alcohol attributable fractions (consultancy project)](https://gitlab.com/stapm/projects/irish-aafsr)  
+- [Smoking and the risks of adult diseases report](https://gitlab.com/stapm/model-inputs/epi_tobacco_risk). A working Rmarkdown version of the published report.       
+- [Alcohol-attributable diseases and dose-response curves report](https://gitlab.com/stapm/model-inputs/epi_alcohol_risk). A working Rmarkdown version of the published report.       
+- [Population attributable fractions](https://gitlab.com/stapm/model-inputs/epi_pop_attrib_fractions). Working repo for our main project on the fractions of disease attributable to tobacco and/or alcohol.       
+- [Irish alcohol attributable fractions](https://gitlab.com/stapm/projects/irish-aafsr). A consultancy project in which we adapted the code in `tobalcepi` to suit alcohol survey data from Ireland.     
 
 
 

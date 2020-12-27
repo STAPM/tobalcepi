@@ -54,6 +54,7 @@ reference:
   contents:
   - RRFunc
   - subgroupRisk
+  - PAFcalc
 
 - title: "Tobacco relative risks"
 - subtitle: "Disease definitions and relative risks"

@@ -11,6 +11,7 @@
 #' just tobacco ("tob") or joint risks for tobacco and alcohol ("tobalc").
 #' @param tob_include_risk_in_former_smokers Logical - whether the residual risks of smoking in former smokers
 #' should be considered (defaults to TRUE).
+#' @template alc-epi-args
 #' @param use_weights Logical - should the calculation account for survey weights. Defaults to FALSE.
 #' Weight variable must be called "wt_int".
 #' @param year_range Either an integer vector of the years to be selected or "all". Defaults to "all".
@@ -40,6 +41,10 @@ PAFcalc <- function(
   data,
   substance,
   tob_include_risk_in_former_smokers = TRUE,
+  alc_protective = TRUE,
+  alc_wholly_chronic_thresholds = c(2, 2),
+  alc_wholly_acute_thresholds = c(3, 4),
+  grams_ethanol_per_unit = 8,
   use_weights = FALSE,
   year_range = "all",
   pool = FALSE,
@@ -52,13 +57,28 @@ PAFcalc <- function(
     substance = substance,
     tob_diseases = tobalcepi::tob_disease_names,
     tob_include_risk_in_former_smokers = tob_include_risk_in_former_smokers,
+    alc_diseases = tobalcepi::alc_disease_names,
+    alc_mort_and_morb = c(
+      "Ischaemic_heart_disease", 
+      "LiverCirrhosis", 
+      "Haemorrhagic_Stroke",
+      "Ischaemic_Stroke"),
+    alc_risk_lags = FALSE,
+    alc_protective = alc_protective,
+    alc_wholly_chronic_thresholds = c(2, 2),
+    alc_wholly_acute_thresholds = c(3, 4),
+    grams_ethanol_per_unit = 8,
     show_progress = FALSE)
   
   # Calculate PAFs
+  
+  if(substance == "tob") disease_names <- tobalcepi::tob_disease_names
+  if(substance == "alc") disease_names <- tobalcepi::alc_disease_names
+  
   paf_data <- subgroupRisk(
     data = data_rr,
     af = TRUE,
-    disease_names = tobalcepi::tob_disease_names,
+    disease_names = disease_names,
     use_weights = use_weights,
     pool = pool,
     subgroups = subgroups)

@@ -92,7 +92,7 @@ based on the survey data provided." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -149,6 +149,10 @@ based on the survey data provided.</p>
   <span class='va'>data</span>,
   <span class='va'>substance</span>,
   tob_include_risk_in_former_smokers <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  alc_protective <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  alc_wholly_chronic_thresholds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span><span class='op'>)</span>,
+  alc_wholly_acute_thresholds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>4</span><span class='op'>)</span>,
+  grams_ethanol_per_unit <span class='op'>=</span> <span class='fl'>8</span>,
   use_weights <span class='op'>=</span> <span class='cn'>FALSE</span>,
   year_range <span class='op'>=</span> <span class='st'>"all"</span>,
   pool <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -171,6 +175,30 @@ just tobacco ("tob") or joint risks for tobacco and alcohol ("tobalc").</p></td>
       <th>tob_include_risk_in_former_smokers</th>
       <td><p>Logical - whether the residual risks of smoking in former smokers
 should be considered (defaults to TRUE).</p></td>
+    </tr>
+    <tr>
+      <th>alc_protective</th>
+      <td><p>Logical - whether to include the protective effects of
+alcohol in the risk function. Defaults to TRUE. If TRUE, then the part of the risk function &lt; 1 is set to equal 1.</p></td>
+    </tr>
+    <tr>
+      <th>alc_wholly_chronic_thresholds</th>
+      <td><p>Numeric vector - the thresholds in UK standard units of alcohol per day 
+over which individuals begin to experience an elevated risk
+ for chronic diseases that are wholly attributable to alcohol. Input in the order c(female, male). 
+ Defaults to the current UK healthy drinking threshold of 14 units/week for females and males, or 2 units/day.</p></td>
+    </tr>
+    <tr>
+      <th>alc_wholly_acute_thresholds</th>
+      <td><p>Numeric vector - the thresholds in UK standard units of alcohol /day over
+which individuals begin to experience an elevated risk
+for acute diseases that are wholly attributable to alcohol. Input in the form c(female, male). 
+Defaults to 3 units/day for females and 4 units/day for males.</p></td>
+    </tr>
+    <tr>
+      <th>grams_ethanol_per_unit</th>
+      <td><p>Numeric value giving the conversion factor for the number of grams of pure
+ethanol in one UK standard unit of alcohol.</p></td>
     </tr>
     <tr>
       <th>use_weights</th>

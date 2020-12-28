@@ -10,8 +10,8 @@
 #' @details See below
 #' @section Alcohol risk:
 #' For alcohol, the relative risk for each individual for each disease is calculated based on 
-#' their average weekly alcohol consumption (using \code{\link{RRalc}}). 
-#' Alcohol consumption is converted to grams of ethanal consumed on average in a day, and 
+#' their average weekly alcohol consumption (using \code{RRalc()}). 
+#' Alcohol consumption is converted to grams of ethanol consumed on average in a day, and 
 #' this is truncated at 150g/day. We assume 8 grams of ethanol per UK standard unit of alcohol. 
 #'  For diseases that have separate mortality and morbidity risk functions, 
 #'  separate variables are created containing
@@ -87,6 +87,7 @@
 #' each individual's life-course history of relative risks for alcohol related diseases. 
 #' This can be NULL for the first year of the simulation, and if this is the case then the 
 #' function will initialise and return this storage data table after the first year of the simulation.
+#' @template alc-epi-args
 #' @param tob_diseases Character vector of tobacco related diseases.
 #' @param tob_include_risk_in_former_smokers Logical - whether the residual risks of smoking in former smokers
 #' should be considered (defaults to TRUE).
@@ -96,7 +97,8 @@
 #'  are considered.
 #' @param tobalc_int_data Data table containing the disease-specific interactions between tobacco and alcohol.
 #' @param show_progress Logical - Should the progress of the loop through diseases be shown. Defaults to FALSE.
-#' @template alc-epi-args
+#' @param within_model Logical - is the function being used within a new-style STAPM simulation. 
+#' Defaults to TRUE.
 #' 
 #' @return Two data tables are returned:
 #' \itemize{
@@ -240,7 +242,8 @@ RRFunc <- function(
   tob_include_risk_in_former_smokers = TRUE,
   tobalc_include_int = FALSE,
   tobalc_int_data = NULL,
-  show_progress = FALSE
+  show_progress = FALSE,
+  within_model = TRUE
 ) {
   
   
@@ -322,7 +325,8 @@ RRFunc <- function(
         av_weekly_grams_per_day_var = "GPerDay",
         sex_var = "sex",
         age_var = "age",
-        grams_ethanol_per_unit = 8
+        grams_ethanol_per_unit = grams_ethanol_per_unit,
+        within_model = within_model
       )]
       
       # Remove the variables that give alcohol consumption in grams

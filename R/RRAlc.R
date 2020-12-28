@@ -10,17 +10,17 @@
 #' indicates protective effects of alcohol, there is an option to remove the protective effect by setting all
 #' RR < 1 = 1.   
 #' 
-#' Relative risks for partially attributable acute are computed by the PArisk function called from within
-#'  this function. The characteristics of individual single occassion drinking are also calculated within this function 
-#'  using AlcBinge_stapm().     
+#' Relative risks for partially attributable acute are computed by the \code{PArisk()} function called from within
+#'  this function. The characteristics of individual single occasion drinking are also calculated within this function 
+#'  using \code{AlcBinge_stapm()}.     
 #'  
 #'  Relative risks for wholly attributable chronic and wholly attributable acute conditions are calculated
 #'  based on the extent to which either weekly or daily consumption exceeds a pre-specified threshold. The risk 
-#'  for wholly attributable acute conditions is calculated by the function WArisk_acute(). We developed a new 
+#'  for wholly attributable acute conditions is calculated by the function \code{WArisk_acute()}. We developed a new 
 #'  method to model the absolute risk of wholly attributable acute conditions to suit the STAPM modelling. 
 #'  This new method is based on the method used to model the risk of partially attributable acute conditions - 
 #'  the shape of the risk function is determined by the individual variation in the total annual number of units that
-#'   are drunk above the male/female thresholds for single ocassion binge drinking.  
+#'   are drunk above the male/female thresholds for single occasion binge drinking.  
 #'
 #' @param data Data table of individual characteristics.
 #' @param disease Character - the name of the disease for which the relative risks will be computed.
@@ -31,9 +31,11 @@
 #' @param mort_or_morb Character - for alcohol related diseases that have separate
 #' relative risk curves for mortality and morbidity, should the curve corresponding to
 #'  mortality ("mort") or morbidity ("morb") be used.
-#' @param getcurve Logical - do you just want to look at the risk function curve?
 #' @template alc-epi-args
-#'
+#' @param getcurve Logical - do you just want to look at the risk function curve?
+#' @param within_model Logical - is the function being used within a new-style STAPM simulation. 
+#' Defaults to TRUE.
+#' 
 #' @return Returns a numeric vector of each individual's relative risks for the alcohol related disease specified by "disease".
 #' @importFrom data.table := setDT setnames
 #' @export
@@ -92,15 +94,18 @@ RRalc <- function(
   alc_wholly_chronic_thresholds = c(2, 2),
   alc_wholly_acute_thresholds = c(3, 4),
   grams_ethanol_per_unit = 8,
-  getcurve = F
+  getcurve = FALSE,
+  within_model = TRUE
 ) {
   
-  n <- nrow(data)
+  data_RRalc <- copy(data)
   
-  x <- data[ , get(av_weekly_grams_per_day_var)]
+  n <- nrow(data_RRalc)
+  
+  x <- data_RRalc[ , get(av_weekly_grams_per_day_var)]
   #p <- data[ , get(peak_grams_per_day_var)] # old code when used peakday directly from HSE
-  sex <- data[ , get(sex_var)]
-  age <-  data[ , get(age_var)]
+  sex <- data_RRalc[ , get(sex_var)]
+  age <-  data_RRalc[ , get(age_var)]
   
   # Convert age in single years into categories
   age <- c("<16", "16-17", "18-24", "25-34", "35-49", "50-64", "65-74", "75-89", "90+")[
@@ -110,11 +115,22 @@ RRalc <- function(
   # Initially set everyone's value to 1
   risk_indiv <- rep(1, n)
   
-  if(getcurve == FALSE) {
+  if(!isTRUE(getcurve)) {
     
-    # Estimate the characteristics of single occassion drinking
-    # based on the coefficients from Hill-McManus et al 2014
-    data <- tobalcepi::AlcBinge_stapm(data)
+    if(isTRUE(within_model)) {
+      
+      # Estimate the characteristics of single occasion drinking
+      # based on the coefficients from Hill-McManus et al 2014
+      
+      # new version of function - adapted to new STAPM modelling
+      data_RRalc <- tobalcepi::AlcBinge_stapm(data_RRalc)
+      
+    } else {
+      
+      # original version of function - replicated from SAPM modelling
+      data_RRalc <- tobalcepi::AlcBinge(data_RRalc)
+      
+    }
     
   }
   
@@ -122,10 +138,10 @@ RRalc <- function(
   # Partial chronic--------
   
   
-  if(getcurve == FALSE) {
+  if(!isTRUE(getcurve)) {
     
-    # Calculate average amount drunk per drinking occassion
-    p <- grams_ethanol_per_unit * data[ , mean_sod] / data[ , drink_freq]
+    # Calculate average amount drunk per drinking occasion
+    p <- grams_ethanol_per_unit * data_RRalc[ , mean_sod] / data_RRalc[ , drink_freq]
     
   }
   
@@ -838,7 +854,7 @@ RRalc <- function(
   
   if(disease == "Transport_injuries") {
     
-    data[ , rr := sapply(1:n, function(z) {
+    data_RRalc[ , rr := sapply(1:n, function(z) {
       
       tobalcepi::PArisk(
         SODMean = mean_sod[z],
@@ -851,9 +867,9 @@ RRalc <- function(
       )
     })]
     
-    risk_indiv <- data[ , rr]
+    risk_indiv <- data_RRalc[ , rr]
     
-    data[ , rr := NULL]
+    data_RRalc[ , rr := NULL]
     
   }
   
@@ -862,7 +878,7 @@ RRalc <- function(
   
   if(disease == "Fall_injuries") {
     
-    data[ , rr := sapply(1:n, function(z) {
+    data_RRalc[ , rr := sapply(1:n, function(z) {
       tobalcepi::PArisk(
         SODMean = mean_sod[z],
         SODSDV = occ_sd[z],
@@ -874,9 +890,9 @@ RRalc <- function(
       )
     })]
     
-    risk_indiv <- data[ , rr]
+    risk_indiv <- data_RRalc[ , rr]
     
-    data[ , rr := NULL]
+    data_RRalc[ , rr := NULL]
     
   }
   
@@ -884,7 +900,7 @@ RRalc <- function(
   
   if(disease %in% c("Assault", "Other_intentional_injuries")) {
     
-    data[ , rr := sapply(1:n, function(z) {
+    data_RRalc[ , rr := sapply(1:n, function(z) {
       tobalcepi::PArisk(
         SODMean = mean_sod[z],
         SODSDV = occ_sd[z],
@@ -896,9 +912,9 @@ RRalc <- function(
       )
     })]
     
-    risk_indiv <- data[ , rr]
+    risk_indiv <- data_RRalc[ , rr]
     
-    data[ , rr := NULL]
+    data_RRalc[ , rr := NULL]
     
   }
   
@@ -906,7 +922,7 @@ RRalc <- function(
   
   if(disease %in% c("Mechanical_forces", "Drowning", "Other_unintentional_injuries", "intentional_self_harm", "Accidental_poisoning", "Fire_injuries")) {
     
-    data[ , rr := sapply(1:n, function(z) {
+    data_RRalc[ , rr := sapply(1:n, function(z) {
       tobalcepi::PArisk(
         SODMean = mean_sod[z],
         SODSDV = occ_sd[z],
@@ -918,9 +934,9 @@ RRalc <- function(
       )
     })]
     
-    risk_indiv <- data[ , rr]
+    risk_indiv <- data_RRalc[ , rr]
     
-    data[ , rr := NULL]
+    data_RRalc[ , rr := NULL]
     
   }
   
@@ -967,7 +983,7 @@ RRalc <- function(
     #grams_ethanol_per_unit = grams_ethanol_per_unit
     #alc_wholly_acute_thresholds = alc_wholly_acute_thresholds
     
-    data[ , ar := sapply(1:n, function(z) {
+    data_RRalc[ , ar := sapply(1:n, function(z) {
       tobalcepi::WArisk_acute(
         SODMean = mean_sod[z],
         SODSDV = occ_sd[z],
@@ -978,9 +994,9 @@ RRalc <- function(
       )
     })]
     
-    risk_indiv <- 1 + data[ , ar] # add 1 to remove 0/0 = Not a number error later
+    risk_indiv <- 1 + data_RRalc[ , ar] # add 1 to remove 0/0 = Not a number error later
     
-    data[ , ar := NULL]
+    data_RRalc[ , ar := NULL]
     
   }
   
@@ -1005,22 +1021,22 @@ RRalc <- function(
   ) {
     
     # Assign the drinking thresholds over which harm occurs, in grams of ethanol per day
-    data[sex == "Female", threshold := alc_wholly_chronic_thresholds[1] * grams_ethanol_per_unit]
-    data[sex == "Male", threshold := alc_wholly_chronic_thresholds[2] * grams_ethanol_per_unit]
+    data_RRalc[sex == "Female", threshold := alc_wholly_chronic_thresholds[1] * grams_ethanol_per_unit]
+    data_RRalc[sex == "Male", threshold := alc_wholly_chronic_thresholds[2] * grams_ethanol_per_unit]
     
-    data[ , ar := 0]
-    data[ , diff := x - threshold]
+    data_RRalc[ , ar := 0]
+    data_RRalc[ , diff := x - threshold]
     #data[diff > 0, ar := diff  * (7 / grams_ethanol_per_unit)]
-    data[diff > 0, ar := diff]
+    data_RRalc[diff > 0, ar := diff]
     
-    risk_indiv <- 1 + data[ , ar]
+    risk_indiv <- 1 + data_RRalc[ , ar]
     
-    data[ , `:=`(ar = NULL, threshold = NULL, diff = NULL)]
+    data_RRalc[ , `:=`(ar = NULL, threshold = NULL, diff = NULL)]
     
   }
   
   
-  data[ , `:=`(mean_sod = NULL, occ_sd = NULL, drink_freq = NULL, weight = NULL, rwatson = NULL)]
+  #data[ , `:=`(mean_sod = NULL, occ_sd = NULL, drink_freq = NULL, weight = NULL, rwatson = NULL)]
   
   
   return(risk_indiv)

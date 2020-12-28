@@ -15,7 +15,8 @@ RRalc(
   alc_wholly_chronic_thresholds = c(2, 2),
   alc_wholly_acute_thresholds = c(3, 4),
   grams_ethanol_per_unit = 8,
-  getcurve = F
+  getcurve = FALSE,
+  within_model = TRUE
 )
 }
 \arguments{
@@ -51,6 +52,9 @@ Defaults to 3 units/day for females and 4 units/day for males.}
 ethanol in one UK standard unit of alcohol.}
 
 \item{getcurve}{Logical - do you just want to look at the risk function curve?}
+
+\item{within_model}{Logical - is the function being used within a new-style STAPM simulation. 
+Defaults to TRUE.}
 }
 \value{
 Returns a numeric vector of each individual's relative risks for the alcohol related disease specified by "disease".
@@ -65,17 +69,17 @@ separate risk functions for morbidity and mortality. For conditions that show a 
 indicates protective effects of alcohol, there is an option to remove the protective effect by setting all
 RR < 1 = 1.   
 
-Relative risks for partially attributable acute are computed by the PArisk function called from within
- this function. The characteristics of individual single occassion drinking are also calculated within this function 
- using AlcBinge_stapm().     
+Relative risks for partially attributable acute are computed by the \code{PArisk()} function called from within
+ this function. The characteristics of individual single occasion drinking are also calculated within this function 
+ using \code{AlcBinge_stapm()}.     
  
  Relative risks for wholly attributable chronic and wholly attributable acute conditions are calculated
  based on the extent to which either weekly or daily consumption exceeds a pre-specified threshold. The risk 
- for wholly attributable acute conditions is calculated by the function WArisk_acute(). We developed a new 
+ for wholly attributable acute conditions is calculated by the function \code{WArisk_acute()}. We developed a new 
  method to model the absolute risk of wholly attributable acute conditions to suit the STAPM modelling. 
  This new method is based on the method used to model the risk of partially attributable acute conditions - 
  the shape of the risk function is determined by the individual variation in the total annual number of units that
-  are drunk above the male/female thresholds for single ocassion binge drinking.
+  are drunk above the male/female thresholds for single occasion binge drinking.
 }
 \examples{
 

@@ -90,7 +90,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -152,7 +152,8 @@
   alc_wholly_chronic_thresholds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span><span class='op'>)</span>,
   alc_wholly_acute_thresholds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>4</span><span class='op'>)</span>,
   grams_ethanol_per_unit <span class='op'>=</span> <span class='fl'>8</span>,
-  getcurve <span class='op'>=</span> <span class='cn'>F</span>
+  getcurve <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  within_model <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -213,6 +214,11 @@ ethanol in one UK standard unit of alcohol.</p></td>
       <th>getcurve</th>
       <td><p>Logical - do you just want to look at the risk function curve?</p></td>
     </tr>
+    <tr>
+      <th>within_model</th>
+      <td><p>Logical - is the function being used within a new-style STAPM simulation. 
+Defaults to TRUE.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -225,16 +231,16 @@ hard-coded within this function rather than being read from an external spreadsh
 separate risk functions for morbidity and mortality. For conditions that show a J-shaped risk function that
 indicates protective effects of alcohol, there is an option to remove the protective effect by setting all
 RR &lt; 1 = 1.</p>
-<p>Relative risks for partially attributable acute are computed by the PArisk function called from within
- this function. The characteristics of individual single occassion drinking are also calculated within this function 
- using AlcBinge_stapm().</p> 
+<p>Relative risks for partially attributable acute are computed by the <code><a href='PArisk.html'>PArisk()</a></code> function called from within
+ this function. The characteristics of individual single occasion drinking are also calculated within this function 
+ using <code><a href='AlcBinge_stapm.html'>AlcBinge_stapm()</a></code>.</p> 
 <p>Relative risks for wholly attributable chronic and wholly attributable acute conditions are calculated
  based on the extent to which either weekly or daily consumption exceeds a pre-specified threshold. The risk 
- for wholly attributable acute conditions is calculated by the function WArisk_acute(). We developed a new 
+ for wholly attributable acute conditions is calculated by the function <code><a href='WArisk_acute.html'>WArisk_acute()</a></code>. We developed a new 
  method to model the absolute risk of wholly attributable acute conditions to suit the STAPM modelling. 
  This new method is based on the method used to model the risk of partially attributable acute conditions - 
  the shape of the risk function is determined by the individual variation in the total annual number of units that
-  are drunk above the male/female thresholds for single ocassion binge drinking.</p>
+  are drunk above the male/female thresholds for single occasion binge drinking.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>

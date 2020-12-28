@@ -20,7 +20,8 @@ RRFunc(
   tob_include_risk_in_former_smokers = TRUE,
   tobalc_include_int = FALSE,
   tobalc_int_data = NULL,
-  show_progress = FALSE
+  show_progress = FALSE,
+  within_model = TRUE
 )
 }
 \arguments{
@@ -80,6 +81,9 @@ are considered.}
 \item{tobalc_int_data}{Data table containing the disease-specific interactions between tobacco and alcohol.}
 
 \item{show_progress}{Logical - Should the progress of the loop through diseases be shown. Defaults to FALSE.}
+
+\item{within_model}{Logical - is the function being used within a new-style STAPM simulation. 
+Defaults to TRUE.}
 }
 \value{
 Two data tables are returned:
@@ -102,8 +106,8 @@ See below
 \section{Alcohol risk}{
 
 For alcohol, the relative risk for each individual for each disease is calculated based on 
-their average weekly alcohol consumption (using \code{\link{RRalc}}). 
-Alcohol consumption is converted to grams of ethanal consumed on average in a day, and 
+their average weekly alcohol consumption (using \code{RRalc()}). 
+Alcohol consumption is converted to grams of ethanol consumed on average in a day, and 
 this is truncated at 150g/day. We assume 8 grams of ethanol per UK standard unit of alcohol. 
  For diseases that have separate mortality and morbidity risk functions, 
  separate variables are created containing

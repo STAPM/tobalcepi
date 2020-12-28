@@ -8,6 +8,10 @@ PAFcalc(
   data,
   substance,
   tob_include_risk_in_former_smokers = TRUE,
+  alc_protective = TRUE,
+  alc_wholly_chronic_thresholds = c(2, 2),
+  alc_wholly_acute_thresholds = c(3, 4),
+  grams_ethanol_per_unit = 8,
   use_weights = FALSE,
   year_range = "all",
   pool = FALSE,
@@ -22,6 +26,22 @@ just tobacco ("tob") or joint risks for tobacco and alcohol ("tobalc").}
 
 \item{tob_include_risk_in_former_smokers}{Logical - whether the residual risks of smoking in former smokers
 should be considered (defaults to TRUE).}
+
+\item{alc_protective}{Logical - whether to include the protective effects of
+alcohol in the risk function. Defaults to TRUE. If TRUE, then the part of the risk function < 1 is set to equal 1.}
+
+\item{alc_wholly_chronic_thresholds}{Numeric vector - the thresholds in UK standard units of alcohol per day 
+over which individuals begin to experience an elevated risk
+ for chronic diseases that are wholly attributable to alcohol. Input in the order c(female, male). 
+ Defaults to the current UK healthy drinking threshold of 14 units/week for females and males, or 2 units/day.}
+
+\item{alc_wholly_acute_thresholds}{Numeric vector - the thresholds in UK standard units of alcohol /day over
+which individuals begin to experience an elevated risk
+for acute diseases that are wholly attributable to alcohol. Input in the form c(female, male). 
+Defaults to 3 units/day for females and 4 units/day for males.}
+
+\item{grams_ethanol_per_unit}{Numeric value giving the conversion factor for the number of grams of pure
+ethanol in one UK standard unit of alcohol.}
 
 \item{use_weights}{Logical - should the calculation account for survey weights. Defaults to FALSE.
 Weight variable must be called "wt_int".}

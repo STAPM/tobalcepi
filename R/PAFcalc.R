@@ -65,10 +65,11 @@ PAFcalc <- function(
       "Ischaemic_Stroke"),
     alc_risk_lags = FALSE,
     alc_protective = alc_protective,
-    alc_wholly_chronic_thresholds = c(2, 2),
-    alc_wholly_acute_thresholds = c(3, 4),
-    grams_ethanol_per_unit = 8,
-    show_progress = FALSE)
+    alc_wholly_chronic_thresholds = alc_wholly_chronic_thresholds,
+    alc_wholly_acute_thresholds = alc_wholly_acute_thresholds,
+    grams_ethanol_per_unit = grams_ethanol_per_unit,
+    show_progress = TRUE,
+    within_model = FALSE)
   
   # Calculate PAFs
   

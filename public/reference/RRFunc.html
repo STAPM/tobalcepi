@@ -93,7 +93,7 @@ to the alcohol only, tobacco only, or joint tobacco and alcohol contexts." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -163,7 +163,8 @@ to the alcohol only, tobacco only, or joint tobacco and alcohol contexts.</p>
   tob_include_risk_in_former_smokers <span class='op'>=</span> <span class='cn'>TRUE</span>,
   tobalc_include_int <span class='op'>=</span> <span class='cn'>FALSE</span>,
   tobalc_int_data <span class='op'>=</span> <span class='cn'>NULL</span>,
-  show_progress <span class='op'>=</span> <span class='cn'>FALSE</span>
+  show_progress <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  within_model <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -258,6 +259,11 @@ are considered.</p></td>
       <th>show_progress</th>
       <td><p>Logical - Should the progress of the loop through diseases be shown. Defaults to FALSE.</p></td>
     </tr>
+    <tr>
+      <th>within_model</th>
+      <td><p>Logical - is the function being used within a new-style STAPM simulation. 
+Defaults to TRUE.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -277,8 +283,8 @@ the relative risks for the current year added to the store.</p></li>
     
 
 <p>For alcohol, the relative risk for each individual for each disease is calculated based on 
-their average weekly alcohol consumption (using <code><a href='RRalc.html'>RRalc</a></code>). 
-Alcohol consumption is converted to grams of ethanal consumed on average in a day, and 
+their average weekly alcohol consumption (using <code><a href='RRalc.html'>RRalc()</a></code>). 
+Alcohol consumption is converted to grams of ethanol consumed on average in a day, and 
 this is truncated at 150g/day. We assume 8 grams of ethanol per UK standard unit of alcohol. 
  For diseases that have separate mortality and morbidity risk functions, 
  separate variables are created containing

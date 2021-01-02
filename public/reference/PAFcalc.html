@@ -92,7 +92,7 @@ based on the survey data provided." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.3</span>
       </span>
     </div>
 
@@ -156,7 +156,8 @@ based on the survey data provided.</p>
   use_weights <span class='op'>=</span> <span class='cn'>FALSE</span>,
   year_range <span class='op'>=</span> <span class='st'>"all"</span>,
   pool <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  subgroups <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"sex"</span>, <span class='st'>"age_cat"</span><span class='op'>)</span>
+  subgroups <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"sex"</span>, <span class='st'>"age_cat"</span><span class='op'>)</span>,
+  tobalc_include_int <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -216,6 +217,13 @@ Weight variable must be called "wt_int".</p></td>
     <tr>
       <th>subgroups</th>
       <td><p>Character vector - the variable names of the subgroups used to stratify the estimates.</p></td>
+    </tr>
+    <tr>
+      <th>tobalc_include_int</th>
+      <td><p>Logical - in computing joint relative risks for tobacco and alcohol,
+should a (synergistic/multiplicative) interaction between exposure to tobacco and alcohol be included.
+Defaults to FALSE. If TRUE, then only interactive effects for oesophageal, pharynx, oral cavity and larynx cancers
+are considered.</p></td>
     </tr>
     </table>
 

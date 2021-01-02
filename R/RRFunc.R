@@ -241,7 +241,7 @@ RRFunc <- function(
   tob_diseases = tobalcepi::tob_disease_names,
   tob_include_risk_in_former_smokers = TRUE,
   tobalc_include_int = FALSE,
-  tobalc_int_data = NULL,
+  tobalc_int_data = tobalcepi::tob_alc_risk_int,
   show_progress = FALSE,
   within_model = TRUE
 ) {

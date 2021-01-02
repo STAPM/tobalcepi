@@ -15,7 +15,8 @@ PAFcalc(
   use_weights = FALSE,
   year_range = "all",
   pool = FALSE,
-  subgroups = c("sex", "age_cat")
+  subgroups = c("sex", "age_cat"),
+  tobalc_include_int = FALSE
 )
 }
 \arguments{
@@ -51,6 +52,11 @@ Weight variable must be called "wt_int".}
 \item{pool}{Logical - should the years selected be pooled. Defaults to FALSE.}
 
 \item{subgroups}{Character vector - the variable names of the subgroups used to stratify the estimates.}
+
+\item{tobalc_include_int}{Logical - in computing joint relative risks for tobacco and alcohol,
+should a (synergistic/multiplicative) interaction between exposure to tobacco and alcohol be included.
+Defaults to FALSE. If TRUE, then only interactive effects for oesophageal, pharynx, oral cavity and larynx cancers
+are considered.}
 }
 \value{
 Returns a data.table containing the estimated PAFs.

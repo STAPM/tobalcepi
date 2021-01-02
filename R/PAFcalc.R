@@ -17,6 +17,10 @@
 #' @param year_range Either an integer vector of the years to be selected or "all". Defaults to "all".
 #' @param pool Logical - should the years selected be pooled. Defaults to FALSE.
 #' @param subgroups Character vector - the variable names of the subgroups used to stratify the estimates.
+#' @param tobalc_include_int Logical - in computing joint relative risks for tobacco and alcohol,
+#'  should a (synergistic/multiplicative) interaction between exposure to tobacco and alcohol be included.
+#'  Defaults to FALSE. If TRUE, then only interactive effects for oesophageal, pharynx, oral cavity and larynx cancers
+#'  are considered.
 #' 
 #' @return Returns a data.table containing the estimated PAFs.
 #' 
@@ -48,7 +52,8 @@ PAFcalc <- function(
   use_weights = FALSE,
   year_range = "all",
   pool = FALSE,
-  subgroups = c("sex", "age_cat")
+  subgroups = c("sex", "age_cat"),
+  tobalc_include_int = FALSE
 ) {
   
   # Add the relative risks to the data
@@ -69,12 +74,14 @@ PAFcalc <- function(
     alc_wholly_acute_thresholds = alc_wholly_acute_thresholds,
     grams_ethanol_per_unit = grams_ethanol_per_unit,
     show_progress = TRUE,
-    within_model = FALSE)
+    within_model = FALSE,
+    tobalc_include_int = tobalc_include_int)
   
   # Calculate PAFs
   
   if(substance == "tob") disease_names <- tobalcepi::tob_disease_names
   if(substance == "alc") disease_names <- tobalcepi::alc_disease_names
+  if(substance == "tobalc") disease_names <- union(tobalcepi::tob_disease_names, tobalcepi::alc_disease_names)
   
   paf_data <- subgroupRisk(
     data = data_rr,

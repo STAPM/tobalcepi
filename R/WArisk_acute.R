@@ -7,17 +7,17 @@
 #'
 #' The function implements a new method for estimating risk that was developed to suit the STAPM modelling. 
 #' The calculation is based on the link between average weekly alcohol consumption and 
-#' the distribution of characteristics of single ocassion drinking described by the 
+#' the distribution of characteristics of single occasion drinking described by the 
 #' parameter estimates of Hill-McManus et al 2014.     
 #' 
 #' The function uses the outputs of AlcBinge_stapm() 
 #' to estimate for each individual: (1) the average amount that each individual is expected to
-#' drink on a single drinking occassion; (2) the standard deviation of the amount that each individual is expected to
-#' drink on a single drinking occassion; (3) the expected number of drinking occassions that
+#' drink on a single drinking occasion; (2) the standard deviation of the amount that each individual is expected to
+#' drink on a single drinking occasion; (3) the expected number of drinking occasions that
 #' each individual has each week.    
 #' 
 #' Based on those estimates, a probability distribution is generated over the 
-#' number of units of alcohol that could be consumed on a single drinking ocassion by each individual. 
+#' number of units of alcohol that could be consumed on a single drinking occasion by each individual. 
 #' Values for the number of units that fall below the binge drinking thresholds (6 units a day for women, 
 #' 8 units a day for men) are set to zero. The probability distribution is then used to compute the 
 #' total number of units above the binge thresholds that each individual is expected to drink in a year. 
@@ -25,10 +25,10 @@
 #' 
 #'
 #' @param SODMean Numeric - the average amount that each individual is expected to
-#' drink on a single drinking occassion.
+#' drink on a single drinking occasion.
 #' @param SODSDV Numeric - the standard deviation of the amount that each individual is expected to
-#' drink on a single drinking occassion.
-#' @param SODFreq Numeric - the expected number of drinking occassions that
+#' drink on a single drinking occasion.
+#' @param SODFreq Numeric - the expected number of drinking occasions that
 #' each individual has each week.
 #' @param sex Character - individual sex (Male or Female).
 #' @param grams_ethanol_per_unit Numeric value giving the conversion factor for the number of grams of pure
@@ -75,12 +75,21 @@ WArisk_acute <- function(
   alc_wholly_acute_thresholds = c(6, 8)
 ) {
   
+  # SODMean <- 26
+  # SODSDV <- 14
+  # SODFreq <- 4
+  # sex <- "Male"
+  # grams_ethanol_per_unit <- 8
+  # alc_wholly_acute_thresholds <- c(6, 8)
+  
+  
+  
   # The amounts of alcohol (g ethanol) that could be consumed on an occasion
   # i.e. the mass of alcohol ingested
-  grams_ethanol <- 1:100 # units * ConvertToGramOfAlcohol#1:100
+  grams_ethanol <- 1:400 # units * ConvertToGramOfAlcohol#1:100
   
   # Calculate the cumulative probability distribution of each amount of alcohol (1 to 100 g) 
-  # being drunk on an occassion
+  # being drunk on an occasion
   x <- stats::pnorm(
     grams_ethanol,
     SODMean * grams_ethanol_per_unit, # mean
@@ -90,6 +99,8 @@ WArisk_acute <- function(
   # Convert from the cumulative distribution to the
   # probability that each level of alcohol is consumed on a drinking occasion
   interval_prob <- x - c(0, x[1:(length(x) - 1)])
+  
+  interval_prob <- interval_prob / sum(interval_prob)
   
   # Units consumed above the binge threshold
   
@@ -114,7 +125,7 @@ WArisk_acute <- function(
   units_above_threshold <-
     SODFreq * # expected number of weekly drinking occasions [number]
     52 * # multiply by the number of weeks in a year [number]
-    interval_prob * # the probability that each level of alcohol is consumed on a drinking occassion [vector]
+    interval_prob * # the probability that each level of alcohol is consumed on a drinking occasion [vector]
     units_vec # units that are above the threshold
   
   # Total annual units drunk above the binge threshold

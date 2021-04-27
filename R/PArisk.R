@@ -143,7 +143,7 @@ PArisk <- function(
   Weight = NULL,
   Widmark_r = NULL,
   cause = "Transport",
-  grams_ethanol = 1:100,
+  grams_ethanol = 1:400,
   grams_ethanol_per_unit = 8,
   grams_ethanol_per_std_drink = 12.8,
   liver_clearance_rate_h = 0.017,
@@ -178,6 +178,8 @@ PArisk <- function(
     # Convert from the cumulative distribution to the
     # probability that each level of alcohol is consumed on a drinking occasion
     interval_prob <- x - c(0, x[1:(length(x) - 1)])
+    
+    interval_prob <- interval_prob / sum(interval_prob)
     
     #######################
     # Calculate the total annual time spent intoxicated

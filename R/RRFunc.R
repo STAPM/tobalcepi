@@ -286,12 +286,19 @@ RRFunc <- function(
   # Loop through each disease
   for (i in 1:dn) {
     
-    #i <- 1
+    #i <- 24
     
     d <- as.character(diseases[i])
     
-    if(isTRUE(show_progress)) cat(paste0("\t\t\t", d, " ", round(100 * i / dn, 0), "%"))
-    
+    if(isTRUE(show_progress)) {
+      
+      cat(paste0("\t\t\t", d, " ", round(100 * i / dn, 0), "%"))
+      
+    } else {
+      
+      cat(".")
+      
+    }
     
     #############################################################
     # Relative risks - alcohol
@@ -304,7 +311,7 @@ RRFunc <- function(
       # Update: this is now done within the function RRalc()
       
       # Convert units to grams of alcohol / truncate
-      data[ , GPerDay := weekmean * (grams_ethanol_per_unit / 7)]
+      data[ , GPerDay := weekmean * grams_ethanol_per_unit / 7]
       data[GPerDay >= 150, GPerDay := 150]
       #data[ , peakday_grams := peakday * grams_ethanol_per_unit]
       
@@ -315,7 +322,8 @@ RRFunc <- function(
       alc_mort_or_morb <- ifelse(stringr::str_detect(d, "_morb"), "morb", "mort")
       
       # Apply function that computes each individual's relative risk for a condition
-      data[ , (d_alc) := tobalcepi::RRalc(
+      
+      alcrr <- tobalcepi::RRalc(
         data = data,
         disease = d,
         mort_or_morb = alc_mort_or_morb,
@@ -327,7 +335,9 @@ RRFunc <- function(
         age_var = "age",
         grams_ethanol_per_unit = grams_ethanol_per_unit,
         within_model = within_model
-      )]
+      )
+      
+      data[ , (d_alc) := alcrr]
       
       # Remove the variables that give alcohol consumption in grams
       data[ , `:=`(GPerDay = NULL)]#, peakday_grams = NULL)]
@@ -390,8 +400,8 @@ RRFunc <- function(
         # reflecting the lagged link between current consumption and relative risk
         
         indiv_risk_trajectories_alc_adjusted <- indiv_risk_trajectories_alc[ ,
-          .(rr_adj = sum(get(d_alc) * (1 + prop_risk_reduction), na.rm = T) / sum(1 + prop_risk_reduction, na.rm = T)),
-          by = "ran_id"]
+                                                                             .(rr_adj = sum(get(d_alc) * (1 + prop_risk_reduction), na.rm = T) / sum(1 + prop_risk_reduction, na.rm = T)),
+                                                                             by = "ran_id"]
         
         # Remove the unadjusted relative risks from the data
         data[ , (d_alc) := NULL]
@@ -451,7 +461,7 @@ RRFunc <- function(
       data <- merge(
         data,
         tobalcepi::TobLags(d),
-        by = c("time_since_quit"), all.x = T, all.y = F, sort = F)
+        by = "time_since_quit", all.x = T, all.y = F, sort = F)
       
       data[is.na(prop_risk_reduction), prop_risk_reduction := 0L]
       
@@ -526,9 +536,17 @@ RRFunc <- function(
       
     }
     
-    if(isTRUE(show_progress)) cat(crayon::green("\tdone\n"))
+    if(isTRUE(show_progress)) {
+      
+      cat(crayon::green("\tdone\n"))
+      
+    } 
     
   }
+  
+  
+  
+  cat("\n")
   
   
   

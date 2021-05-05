@@ -75,7 +75,7 @@ WArisk_acute <- function(
   alc_wholly_acute_thresholds = c(6, 8)
 ) {
   
-  # SODMean <- 26
+  # SODMean <- 18
   # SODSDV <- 14
   # SODFreq <- 4
   # sex <- "Male"
@@ -86,7 +86,7 @@ WArisk_acute <- function(
   
   # The amounts of alcohol (g ethanol) that could be consumed on an occasion
   # i.e. the mass of alcohol ingested
-  grams_ethanol <- 1:400 # units * ConvertToGramOfAlcohol#1:100
+  grams_ethanol <- 1:600 # units * ConvertToGramOfAlcohol#1:100
   
   # Calculate the cumulative probability distribution of each amount of alcohol (1 to 100 g) 
   # being drunk on an occasion
@@ -98,7 +98,8 @@ WArisk_acute <- function(
   
   # Convert from the cumulative distribution to the
   # probability that each level of alcohol is consumed on a drinking occasion
-  interval_prob <- x - c(0, x[1:(length(x) - 1)])
+  #interval_prob <- x - c(0, x[1:(length(x) - 1)])
+  interval_prob <- diff(x)
   
   interval_prob <- interval_prob / sum(interval_prob)
   
@@ -113,7 +114,7 @@ WArisk_acute <- function(
   }
   
   # Convert grams of ethanol back to units
-  units_vec <- grams_ethanol / grams_ethanol_per_unit
+  units_vec <- grams_ethanol[1:(600 - 1)] / grams_ethanol_per_unit
   
   # Subtract the threshold and replace negative values with zero
   units_vec <- units_vec - threshold
@@ -130,6 +131,19 @@ WArisk_acute <- function(
   
   # Total annual units drunk above the binge threshold
   units_above_threshold_sum <- sum(units_above_threshold)
+  
+  
+  
+  # rm(
+  #   grams_ethanol, 
+  #   x,
+  #   interval_prob,
+  #   threshold,
+  #   units_vec,
+  #   units_above_threshold
+  # )
+  # gc()
+  
   
   
   return(units_above_threshold_sum)

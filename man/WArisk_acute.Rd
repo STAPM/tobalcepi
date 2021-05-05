@@ -15,12 +15,12 @@ WArisk_acute(
 }
 \arguments{
 \item{SODMean}{Numeric - the average amount that each individual is expected to
-drink on a single drinking occassion.}
+drink on a single drinking occasion.}
 
 \item{SODSDV}{Numeric - the standard deviation of the amount that each individual is expected to
-drink on a single drinking occassion.}
+drink on a single drinking occasion.}
 
-\item{SODFreq}{Numeric - the expected number of drinking occassions that
+\item{SODFreq}{Numeric - the expected number of drinking occasions that
 each individual has each week.}
 
 \item{sex}{Character - individual sex (Male or Female).}
@@ -44,17 +44,17 @@ that each individual experiences each acute consequence of drinking during one y
 \details{
 The function implements a new method for estimating risk that was developed to suit the STAPM modelling. 
 The calculation is based on the link between average weekly alcohol consumption and 
-the distribution of characteristics of single ocassion drinking described by the 
+the distribution of characteristics of single occasion drinking described by the 
 parameter estimates of Hill-McManus et al 2014.     
 
 The function uses the outputs of AlcBinge_stapm() 
 to estimate for each individual: (1) the average amount that each individual is expected to
-drink on a single drinking occassion; (2) the standard deviation of the amount that each individual is expected to
-drink on a single drinking occassion; (3) the expected number of drinking occassions that
+drink on a single drinking occasion; (2) the standard deviation of the amount that each individual is expected to
+drink on a single drinking occasion; (3) the expected number of drinking occasions that
 each individual has each week.    
 
 Based on those estimates, a probability distribution is generated over the 
-number of units of alcohol that could be consumed on a single drinking ocassion by each individual. 
+number of units of alcohol that could be consumed on a single drinking occasion by each individual. 
 Values for the number of units that fall below the binge drinking thresholds (6 units a day for women, 
 8 units a day for men) are set to zero. The probability distribution is then used to compute the 
 total number of units above the binge thresholds that each individual is expected to drink in a year. 

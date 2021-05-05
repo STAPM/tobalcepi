@@ -90,23 +90,23 @@ subgroupRisk <- function(
   pool = FALSE,
   subgroups = c("sex", "age_cat")
 ) {
-
+  
   out <- copy(data)
-
+  
   if("age_cat" %in% subgroups & !("age_cat" %in% colnames(out))) {
     out[ , age_cat := c("12-15", "16-17", "18-24", "25-34", "35-49", "50-64", "65-74", "75-89")[findInterval(age, c(-10, 16, 18, 25, 35, 50, 65, 75))]]
   }
-
+  
   # To select a specified range of years of data
   if(year_range[1] != "all") {
     out <- out[year %in% year_range]
   }
-
+  
   # If several years of data are selected, should they be pooled
   if(pool == T) {
     out[ , year := 1]
   }
-
+  
   # Create a weighting variable
   # depending on whether survey weights are to be used or not
   if(use_weights == F) {
@@ -114,23 +114,55 @@ subgroupRisk <- function(
   } else {
     out[, weight := wt_int / sum(wt_int, na.rm = T), by = c(subgroups, "year")]
   }
-
+  
+  # List of diseases for which absolute rather than relative risk is used
+  # These are all the wholly attributable acute and chronic conditions for alcohol
+  abs_diseases <- c(
+    "Excessive_Blood_Level_of_Alcohol",
+    "Toxic_effect_of_alcohol",
+    "Alcohol_poisoning",
+    "Evidence_of_alcohol_involvement_determined_by_blood_alcohol_level",
+    "Acute_intoxication",
+    "Alcoholic_cardiomyopathy",
+    "Alcoholic_gastritis",
+    "Alcoholic_liver_disease",
+    "Acute_pancreatitis_alcohol_induced",
+    "Chronic_pancreatitis_alcohol_induced",
+    "Alcohol_induced_pseudoCushings_syndrome",
+    "Alcoholic_myopathy",
+    "Alcoholic_polyneuropathy",
+    "Maternal_care_for_suspected_damage_to_foetus_from_alcohol",
+    "Degeneration",
+    "Mental_and_behavioural_disorders_due_to_use_of_alcohol")
+  
   # Standardise the relative risks by subtracting 1 and multiplying by the weight
   for (d in disease_names) {
-    out[, (paste0(d, "_z")) := weight * (get(d) - 1)]
+    
+    if(d %in% abs_diseases) {
+      
+      # For absolute risk
+      out[, (paste0(d, "_z")) := weight * get(d)]
+      
+    } else {
+      
+      # For relative risk
+      out[, (paste0(d, "_z")) := weight * (get(d) - 1)]
+      
+    }
+    
   }
-
+  
   ############################################################
   # To prepare for subsequent computation of a PIF
   # compute the average relative risk within a subgroup
-
+  
   # compute the average rather than the total, so that when we later calculate the ratio
   # of this aggregated relative risk between treatment and control arms,
   # the ratio is not influenced by differences in the number of individuals
   # i.e. we want to calculate the ratio of the expected value of individual risk in each arm
-
+  
   if(!isTRUE(af)) {
-
+    
     # calculate average relative risk
     out_risk <- out[,
                     lapply(.SD, function(x) {
@@ -138,63 +170,46 @@ subgroupRisk <- function(
                     }),
                     by =  c(subgroups, "year"),
                     .SDcols = paste0(disease_names, "_z")]
-
+    
     setnames(out_risk, paste0(disease_names, "_z"), disease_names)
-
+    
     out_risk <- data.table::melt(
       out_risk,
       id.vars = c(subgroups, "year"),
       variable.name = "condition",
       value.name = paste0("av_risk_", label)
     )
-
+    
   }
-
+  
   ############################################################
   # For attributable fractions
-
+  
   if(isTRUE(af)) {
-
+    
     # calculate attributable fractions, considering residual risk in former smokers
     out_risk <- out[,
-                  lapply(.SD, function(x) {
-                    sum(x, na.rm = T) / (sum(x, na.rm = T) + 1)
-                  }),
-                  by =  c(subgroups, "year"),
-                  .SDcols = paste0(disease_names, "_z")]
-
+                    lapply(.SD, function(x) {
+                      sum(x, na.rm = T) / (sum(x, na.rm = T) + 1)
+                    }),
+                    by =  c(subgroups, "year"),
+                    .SDcols = paste0(disease_names, "_z")]
+    
     data.table::setnames(out_risk, paste0(disease_names, "_z"), disease_names)
-
+    
     out_risk <- data.table::melt(
       out_risk,
       id.vars = c(subgroups, "year"),
       variable.name = "condition",
       value.name = "af"
     )
-
+    
     # Set the AAF = 1 for wholly attributable conditions
-    out_risk[condition %in% c(
-      "Excessive_Blood_Level_of_Alcohol",
-      "Toxic_effect_of_alcohol",
-      "Alcohol_poisoning",
-      "Evidence_of_alcohol_involvement_determined_by_blood_alcohol_level",
-      "Acute_intoxication",
-      "Alcoholic_cardiomyopathy",
-      "Alcoholic_gastritis",
-      "Alcoholic_liver_disease",
-      "Acute_pancreatitis_alcohol_induced",
-      "Chronic_pancreatitis_alcohol_induced",
-      "Alcohol_induced_pseudoCushings_syndrome",
-      "Alcoholic_myopathy",
-      "Alcoholic_polyneuropathy",
-      "Maternal_care_for_suspected_damage_to_foetus_from_alcohol",
-      "Degeneration",
-      "Mental_and_behavioural_disorders_due_to_use_of_alcohol"
-    ), af := 1]
-
+    out_risk[condition %in% abs_diseases, af := 1]
+    
   }
-
-return(out_risk[])
+  
+  return(out_risk[])
 }
 
 

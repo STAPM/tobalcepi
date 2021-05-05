@@ -11,7 +11,6 @@ PArisk(
   Weight = NULL,
   Widmark_r = NULL,
   cause = "Transport",
-  grams_ethanol = 1:100,
   grams_ethanol_per_unit = 8,
   grams_ethanol_per_std_drink = 12.8,
   liver_clearance_rate_h = 0.017,
@@ -20,12 +19,12 @@ PArisk(
 }
 \arguments{
 \item{SODMean}{Numeric vector - the average amount that each individual is expected to
-drink on a single drinking occassion.}
+drink on a single drinking occasion.}
 
 \item{SODSDV}{Numeric vector - the standard deviation of the amount that each individual is expected to
-drink on a single drinking occassion.}
+drink on a single drinking occasion.}
 
-\item{SODFreq}{Numeric vector - the expected number of drinking occassions that
+\item{SODFreq}{Numeric vector - the expected number of drinking occasions that
 each individual has each week.}
 
 \item{Weight}{Numeric vector - each individual's body weight in kg.}
@@ -35,9 +34,6 @@ if it were distributed at concentrations equal to that in blood.
 See examples of use of the Widmark equation in Watson (1981) and Posey and Mozayani (2007).}
 
 \item{cause}{Character - the acute cause being considered.}
-
-\item{grams_ethanol}{Numeric vector - the range of grams of ethanol over which to compute relative risk. 
-Defaults to 1:100.}
 
 \item{grams_ethanol_per_unit}{Numeric value giving the conversion factor for the number of grams of pure
 ethanol in one UK standard unit of alcohol.}
@@ -57,10 +53,10 @@ Uses the 'new' binge model methods to calculate a relative risk
 for each individual for experiencing each cause during one year.
 }
 \details{
-This calculation treats an ocassion as a single point in time and therefore does not detail
-about the rate of alcohol absorbtion (i.e. there is no alcohol absorbtion rate constant)
-or the time interval between drinks within an occassion. This could introduce inaccuracies if
- e.g. a drinking occassion lasted several hours. The methods to calculate the total time spent intoxicated
+This calculation treats an occasion as a single point in time and therefore does not detail
+about the rate of alcohol absorption (i.e. there is no alcohol absorption rate constant)
+or the time interval between drinks within an occasion. This could introduce inaccuracies if
+ e.g. a drinking occasion lasted several hours. The methods to calculate the total time spent intoxicated
  (with blood alcohol content greater than zero) are discussed in Taylor et al 2011
  and the discussion paper by Hill-McManus 2014. The relative risks for alcohol-related injuries
  are taken from Cherpitel et al 2015.

@@ -5,27 +5,25 @@
 #' Uses the 'new' binge model methods to calculate a relative risk
 #' for each individual for experiencing each cause during one year.
 #'
-#' This calculation treats an ocassion as a single point in time and therefore does not detail
-#' about the rate of alcohol absorbtion (i.e. there is no alcohol absorbtion rate constant)
-#' or the time interval between drinks within an occassion. This could introduce inaccuracies if
-#'  e.g. a drinking occassion lasted several hours. The methods to calculate the total time spent intoxicated
+#' This calculation treats an occasion as a single point in time and therefore does not detail
+#' about the rate of alcohol absorption (i.e. there is no alcohol absorption rate constant)
+#' or the time interval between drinks within an occasion. This could introduce inaccuracies if
+#'  e.g. a drinking occasion lasted several hours. The methods to calculate the total time spent intoxicated
 #'  (with blood alcohol content greater than zero) are discussed in Taylor et al 2011
 #'  and the discussion paper by Hill-McManus 2014. The relative risks for alcohol-related injuries
 #'  are taken from Cherpitel et al 2015.
 #'
 #' @param SODMean Numeric vector - the average amount that each individual is expected to
-#' drink on a single drinking occassion.
+#' drink on a single drinking occasion.
 #' @param SODSDV Numeric vector - the standard deviation of the amount that each individual is expected to
-#' drink on a single drinking occassion.
-#' @param SODFreq Numeric vector - the expected number of drinking occassions that
+#' drink on a single drinking occasion.
+#' @param SODFreq Numeric vector - the expected number of drinking occasions that
 #' each individual has each week.
 #' @param Weight Numeric vector - each individual's body weight in kg.
 #' @param Widmark_r Numeric vector - the fraction of the body mass in which alcohol would be present
 #'  if it were distributed at concentrations equal to that in blood.
 #'  See examples of use of the Widmark equation in Watson (1981) and Posey and Mozayani (2007).
 #' @param cause Character - the acute cause being considered.
-#' @param grams_ethanol Numeric vector - the range of grams of ethanol over which to compute relative risk. 
-#' Defaults to 1:100.
 #' @param grams_ethanol_per_unit Numeric value giving the conversion factor for the number of grams of pure
 #' ethanol in one UK standard unit of alcohol.
 #' @param grams_ethanol_per_std_drink Numeric value giving the conversion factor for
@@ -143,12 +141,15 @@ PArisk <- function(
   Weight = NULL,
   Widmark_r = NULL,
   cause = "Transport",
-  grams_ethanol = 1:400,
   grams_ethanol_per_unit = 8,
   grams_ethanol_per_std_drink = 12.8,
   liver_clearance_rate_h = 0.017,
   getcurve = FALSE
 ) {
+  
+  kn <- 600
+  
+  grams_ethanol <- 1:kn
   
   # The amounts of alcohol (g ethanol) that could be consumed on an occasion
   # i.e. the mass of alcohol ingested
@@ -161,7 +162,7 @@ PArisk <- function(
     # Convert liver clearance rate from per hour to per minute
     liver_clearance_rate_m <- liver_clearance_rate_h / 60
     
-    Duration_m <- 100 * grams_ethanol / (Widmark_r * Weight * 1000 * liver_clearance_rate_m)
+    Duration_m <- 100 * grams_ethanol[1:(kn - 1)] / (Widmark_r * Weight * 1000 * liver_clearance_rate_m)
     
     # Convert to hours
     Duration_h <- Duration_m / 60
@@ -177,7 +178,8 @@ PArisk <- function(
     #######################
     # Convert from the cumulative distribution to the
     # probability that each level of alcohol is consumed on a drinking occasion
-    interval_prob <- x - c(0, x[1:(length(x) - 1)])
+    #interval_prob <- x - c(0, x[1:(length(x) - 1)])
+    interval_prob <- diff(x)
     
     interval_prob <- interval_prob / sum(interval_prob)
     
@@ -204,7 +206,7 @@ PArisk <- function(
   
   # NOTE THAT VOLUME IS IN STANDARD DRINKS, NOT GRAMS, PER OCCASION. 1 STD. DRINK = 16ml (12.8g) OF ETHANOL
   
-  v <- grams_ethanol / grams_ethanol_per_std_drink
+  v <- grams_ethanol[1:(kn - 1)] / grams_ethanol_per_std_drink
   
   v1 <- (v + 1) / 100
   
@@ -286,6 +288,19 @@ PArisk <- function(
     
     # Annual risk
     Annual_risk <- min((Risk_sum + 1 * (365 * 24 - Time_intox_sum)) / (365 * 24), (365 * 24), na.rm = T)
+    
+    
+    # 
+    # rm(
+    #   grams_ethanol,
+    #   v, v1, logitp, p
+    # )
+    # gc()
+    # 
+    # 
+    
+    
+    
     
     return(Annual_risk)
     

@@ -107,7 +107,11 @@
 #' \item "new_alc_indiv_risk_trajectories_store" is a version of "alc_indiv_risk_trajectories_store" with
 #' the relative risks for the current year added to the store.
 #' }
+#' 
+#' 
 #' @importFrom data.table := setDT setnames copy rbindlist
+#' @importFrom stapmr %fin%
+#' 
 #' @export
 #' 
 #' @seealso \code{\link{RRalc}} for alcohol-specific risks, \code{\link{RRtob}} for tobacco-specific risks, 
@@ -231,7 +235,7 @@ RRFunc <- function(
   substance = c("tob", "alc", "tobalc"),
   k_year = NULL,
   alc_diseases = tobalcepi::alc_disease_names,
-  alc_mort_and_morb = c("Ischaemic_heart_disease", "LiverCirrhosis"),
+  alc_mort_and_morb = c("ischaemic_heart_disease", "livercirrhosis", "haemorrhagic_stroke", "ischaemic_stroke"),
   alc_risk_lags = TRUE,
   alc_indiv_risk_trajectories_store = NULL,
   alc_protective = TRUE,
@@ -250,6 +254,18 @@ RRFunc <- function(
   #########################################
   # Organise disease lists
   
+  alc_diseases_expanded <- c(alc_diseases, paste0(alc_mort_and_morb, "_morb"))
+  
+  alc_lag_diseases <- c("Pharynx", "Oral_cavity", "Oesophageal_SCC", "Colorectal", "Liver",
+    "Larynx", "Pancreas", "Breast", "Alcohol_induced_pseudoCushings_syndrome", "Degeneration", "Alcoholic_polyneuropathy",
+    "Alcoholic_myopathy", "Alcoholic_cardiomyopathy", "Maternal_care_for_suspected_damage_to_foetus_from_alcohol",
+    "LiverCirrhosis", "Chronic_Pancreatitis", "Acute_Pancreatitis",
+    "Acute_pancreatitis_alcohol_induced", "Chronic_pancreatitis_alcohol_induced",
+    "Alcoholic_liver_disease", "Diabetes", "HypertensiveHeartDisease", "Cardiac_Arrhythmias", 
+    "Ischaemic_heart_disease", "Haemorrhagic_Stroke", "Ischaemic_Stroke", "Epilepsy", "Alcoholic_gastritis", 
+    "Tuberculosis", "Influenza_clinically_diagnosed",
+    "Influenza_microbiologically_confirmed", "Pneumonia", paste0(alc_mort_and_morb, "_morb"))
+  
   if(substance == "alc") {
     
     # For the diseases that have separate risk functions for mortality and morbidity
@@ -258,26 +274,53 @@ RRFunc <- function(
     
     # Set the default as mortality
     # and mark the additions to the disease list with the postscript "_morb"
-    #alc_diseases <- c(alc_diseases, paste0(alc_mort_and_morb, "_morb"))
-    diseases <- alc_diseases
+    diseases <- alc_diseases_expanded
     
   }
   
   if(substance == "tob") {
-    
     diseases <- tob_diseases
-    
   }
   
   if(substance == "tobalc") {
-    
-    diseases <- union(alc_diseases, tob_diseases)
-    #mort_and_morb_diseases <- union(alc_mort_and_morb, diseases)
-    #diseases <- c(diseases, paste0(mort_and_morb_diseases, "_morb"))
-    
+    diseases <- union(alc_diseases_expanded, tob_diseases)
   }
   
   dn <- length(diseases)
+  
+  if(substance %fin% c("alc", "tobalc")) {
+    
+    if(isTRUE(within_model)) {
+      
+      # Estimate the characteristics of single occasion drinking
+      # based on the coefficients from Hill-McManus et al 2014
+      
+      # new version of function - adapted to new STAPM modelling
+      data <- tobalcepi::AlcBinge_stapm(data)
+      
+    } else {
+      
+      # original version of function - replicated from SAPM modelling
+      data <- tobalcepi::AlcBinge(data)
+      
+    }
+    
+    # Convert units to grams of alcohol / truncate
+    data[ , GPerDay := weekmean * grams_ethanol_per_unit / 7]
+    data[GPerDay >= 150, GPerDay := 150]
+    #data[ , peakday_grams := peakday * grams_ethanol_per_unit]
+    
+  }
+  
+  if(!is.null(alc_indiv_risk_trajectories_store)) {
+    
+    # Update the stored relative risk file 
+    # to retain only past relative risk trajectories for the individuals currently present in the simulation
+    # this should help to minimise the memory usage
+    alc_indiv_risk_trajectories_store <- alc_indiv_risk_trajectories_store[ran_id %fin% data[ , ran_id]]
+    
+  }
+  
   
   #########################################
   
@@ -291,29 +334,15 @@ RRFunc <- function(
     d <- as.character(diseases[i])
     
     if(isTRUE(show_progress)) {
-      
       cat(paste0("\t\t\t", d, " ", round(100 * i / dn, 0), "%"))
-      
     } else {
-      
       cat(".")
-      
     }
     
     #############################################################
     # Relative risks - alcohol
     
-    
-    if(d %in% alc_diseases & substance %in% c("alc", "tobalc")) {
-      
-      # Calculate the parameters of the binge model - based on average weekly consumption
-      #data <- tobalcepi::AlcBinge(data)
-      # Update: this is now done within the function RRalc()
-      
-      # Convert units to grams of alcohol / truncate
-      data[ , GPerDay := weekmean * grams_ethanol_per_unit / 7]
-      data[GPerDay >= 150, GPerDay := 150]
-      #data[ , peakday_grams := peakday * grams_ethanol_per_unit]
+    if(d %fin% alc_diseases_expanded & substance %fin% c("alc", "tobalc")) {
       
       # Setup names of temporary variables
       d_alc <- paste0(d, "_alcx")
@@ -322,7 +351,6 @@ RRFunc <- function(
       alc_mort_or_morb <- ifelse(stringr::str_detect(d, "_morb"), "morb", "mort")
       
       # Apply function that computes each individual's relative risk for a condition
-      
       alcrr <- tobalcepi::RRalc(
         data = data,
         disease = d,
@@ -339,13 +367,9 @@ RRFunc <- function(
       
       data[ , (d_alc) := alcrr]
       
-      # Remove the variables that give alcohol consumption in grams
-      data[ , `:=`(GPerDay = NULL)]#, peakday_grams = NULL)]
-      
       
       #############################################################
       #############################################################
-      
       
       # Extra method added to adapt to the new situation that STAPM tracks individuals
       # Keep this under review
@@ -354,14 +378,15 @@ RRFunc <- function(
       # also see code at the end of this function that initialises alc_indiv_risk_trajectories_store
       # if it is null in the first year of the simulation
       
-      
-      if(isTRUE(alc_risk_lags) & !is.null(alc_indiv_risk_trajectories_store)) {
+      if(isTRUE(alc_risk_lags) & !is.null(alc_indiv_risk_trajectories_store) & 
+         
+         d %fin% alc_lag_diseases
+         
+      ) {
         
         # For the individuals present in the population sample for the current year,
         # add the relative risks for the current year
         # to the trajectories of past relative risks that have been stored for each individual
-        
-        # This could result in a large file that slows the model down
         
         indiv_risk_trajectories_alc <- rbindlist(list(
           
@@ -369,7 +394,8 @@ RRFunc <- function(
           data[ , c("ran_id", "year", d_alc), with = F], 
           
           # past relative risk trajectories for the individuals currently present in the simulation
-          alc_indiv_risk_trajectories_store[ran_id %in% data[ , ran_id], c("ran_id", "year", d_alc), with = F]
+          # for the focal disease
+          alc_indiv_risk_trajectories_store[ , c("ran_id", "year", d_alc), with = F]
           
         ), use.names = T)
         
@@ -400,11 +426,12 @@ RRFunc <- function(
         # reflecting the lagged link between current consumption and relative risk
         
         indiv_risk_trajectories_alc_adjusted <- indiv_risk_trajectories_alc[ ,
-                                                                             .(rr_adj = sum(get(d_alc) * (1 + prop_risk_reduction), na.rm = T) / sum(1 + prop_risk_reduction, na.rm = T)),
+                                                                             list(rr_adj = sum(get(d_alc) * (1 + prop_risk_reduction), na.rm = T) / sum(1 + prop_risk_reduction, na.rm = T)),
                                                                              by = "ran_id"]
         
         # Remove the unadjusted relative risks from the data
         data[ , (d_alc) := NULL]
+        
         
         # Assign the adjusted relative risk the appropriate disease-specific name
         setnames(indiv_risk_trajectories_alc_adjusted, "rr_adj", d_alc)
@@ -416,21 +443,21 @@ RRFunc <- function(
           by = "ran_id", sort = F)
         
       }
-      
-      
-      #############################################################
-      #############################################################
-      
-      
-      # If the relative risk for alcohol does not need to feed forward
-      # into a further calculation of joint relative risk for the disease being considered,
-      # then the temporary name can be changed to be just the name of disease
-      if(substance == "alc" | (substance == "tobalc" & !(d %in% intersect(alc_diseases, tob_diseases)))) {
-        
-        data[ , (d) := get(d_alc)]
-        
-      }
-      
+
+
+#############################################################
+#############################################################
+
+
+# If the relative risk for alcohol does not need to feed forward
+# into a further calculation of joint relative risk for the disease being considered,
+# then the temporary name can be changed to be just the name of disease
+if(substance == "alc" | (substance == "tobalc" & !(d %fin% intersect(alc_diseases_expanded, tob_diseases)))) {
+  
+  data[ , (d) := get(d_alc)]
+  
+}
+
     }
     
     
@@ -438,7 +465,7 @@ RRFunc <- function(
     # Relative risks - tobacco
     
     
-    if(d %in% tob_diseases & substance %in% c("tob", "tobalc")) {
+    if(d %fin% tob_diseases & substance %fin% c("tob", "tobalc")) {
       
       # Setup names of temporary variables
       d_tob <- paste0(d, "_tob")
@@ -486,7 +513,7 @@ RRFunc <- function(
       # If the relative risk for alcohol does not need to feed forward
       # into a further calculation of joint relative risk for the disease being considered,
       # then the temporary name can be changed to be just the name of disease
-      if(substance == "tob" | (substance == "tobalc" & !(d %in% intersect(alc_diseases, tob_diseases)))) {
+      if(substance == "tob" | (substance == "tobalc" & !(d %fin% intersect(alc_diseases_expanded, tob_diseases)))) {
         
         setnames(data, d_tob, d)
         
@@ -499,7 +526,7 @@ RRFunc <- function(
     # Relative risks - joint tobacco and alcohol risk
     
     
-    if(d %in% intersect(alc_diseases, tob_diseases) & substance == "tobalc") {
+    if(d %fin% intersect(alc_diseases, tob_diseases) & substance == "tobalc") {
       
       if(isTRUE(tobalc_include_int)) { # If synergy should be accounted for
         
@@ -560,14 +587,14 @@ RRFunc <- function(
       if(is.null(alc_indiv_risk_trajectories_store)) {
         
         # If the first year, then create the storage data table
-        alc_indiv_risk_trajectories_store <- data[ , c("ran_id", "year", paste0(alc_diseases, "_alcx")), with = F]
+        alc_indiv_risk_trajectories_store <- data[ , c("ran_id", "year", paste0(alc_lag_diseases, "_alcx")), with = F]
         
       } else {
         
         # Otherwise append the relative risks for the current year to the stored data table
         alc_indiv_risk_trajectories_store <- rbindlist(list(
           alc_indiv_risk_trajectories_store,
-          data[ , c("ran_id", "year", paste0(alc_diseases, "_alcx")), with = F]
+          data[ , c("ran_id", "year", paste0(alc_lag_diseases, "_alcx")), with = F]
         ), use.names = T)
         
       }
@@ -577,6 +604,18 @@ RRFunc <- function(
     data <- data[ , colnames(data)[sapply(colnames(data), function(x) !stringr::str_detect(x, "_alcx"))], with = F]
     
   }
+  
+  if(substance %fin% c("alc", "tobalc")) {
+    
+    alc_vars <- c("drink_freq", "occ_sd", "mean_sod", "weight", "rwatson", "GPerDay")
+    
+    
+    # Remove the variables that give alcohol consumption in grams
+    data[ , (alc_vars) := NULL]
+    
+    
+  }
+  
   
   
   # Outputs
@@ -593,48 +632,6 @@ RRFunc <- function(
     ))
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -45,7 +45,8 @@ Imports:
     data.table,
     Rdpack,
     lifecycle,
-    crayon
+    crayon,
+    stapmr
 RdMacros: Rdpack, lifecycle
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1

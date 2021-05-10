@@ -10,7 +10,7 @@ WArisk_acute(
   SODFreq,
   sex,
   grams_ethanol_per_unit = 8,
-  alc_wholly_acute_thresholds = c(6, 8)
+  alc_wholly_acute_thresholds = c(3, 4)
 )
 }
 \arguments{

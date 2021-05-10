@@ -17,10 +17,19 @@
 #' @param year_range Either an integer vector of the years to be selected or "all". Defaults to "all".
 #' @param pool Logical - should the years selected be pooled. Defaults to FALSE.
 #' @param subgroups Character vector - the variable names of the subgroups used to stratify the estimates.
+#' @param mort_or_morb Character - for alcohol related diseases that have separate
+#' relative risk curves for mortality and morbidity, should the risks corresponding to
+#'  mortality ("mort") or morbidity ("morb") be used.
+#' @param alc_mort_and_morb Character vector of the names of the 
+#' alcohol related diseases that have separate risk functions for
+#' mortality and morbidity.
+#' @param substance Whether to compute relative risks for just alcohol ("alc"),
+#' just tobacco ("tob") or joint risks for tobacco and alcohol ("tobalc").
 #'
 #' @return Returns a data table containing the subgroup specific summaries for each disease.
 #' 
 #' @importFrom data.table := setDT setnames copy .SD .N
+#' @importFrom stapmr %fin%
 #' 
 #' @export
 #' 
@@ -88,10 +97,24 @@ subgroupRisk <- function(
   use_weights = FALSE,
   year_range = "all",
   pool = FALSE,
-  subgroups = c("sex", "age_cat")
+  subgroups = c("sex", "age_cat"),
+  mort_or_morb = "mort",
+  alc_mort_and_morb = c("Ischaemic_heart_disease", "LiverCirrhosis", "Haemorrhagic_Stroke", "Ischaemic_Stroke"),
+  substance = c("alc", "tob", "tobalc")[3]
 ) {
   
   out <- copy(data)
+  
+  # To switch-out the mortality risk functions for the morbidity risk functions if necessary
+  if(substance %fin% c("alc", "tobalc") & mort_or_morb == "morb" & !is.null(alc_mort_and_morb)) {
+    
+    out[ , (alc_mort_and_morb) := NULL]
+    
+    for(i in alc_mort_and_morb) {
+      setnames(out, paste0(i, "_morb"), stringr::str_remove(i, "_morb"))
+    }
+    
+  }
   
   if("age_cat" %in% subgroups & !("age_cat" %in% colnames(out))) {
     out[ , age_cat := c("12-15", "16-17", "18-24", "25-34", "35-49", "50-64", "65-74", "75-89")[findInterval(age, c(-10, 16, 18, 25, 35, 50, 65, 75))]]
@@ -114,6 +137,7 @@ subgroupRisk <- function(
   } else {
     out[, weight := wt_int / sum(wt_int, na.rm = T), by = c(subgroups, "year")]
   }
+  
   
   # List of diseases for which absolute rather than relative risk is used
   # These are all the wholly attributable acute and chronic conditions for alcohol

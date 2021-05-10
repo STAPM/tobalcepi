@@ -162,26 +162,38 @@ PArisk <- function(
     # Convert liver clearance rate from per hour to per minute
     liver_clearance_rate_m <- liver_clearance_rate_h / 60
     
-    Duration_m <- 100 * grams_ethanol[1:(kn - 1)] / (Widmark_r * Weight * 1000 * liver_clearance_rate_m)
+    #Duration_m <- 100 * grams_ethanol[1:(kn - 1)] / (Widmark_r * Weight * 1000 * liver_clearance_rate_m)
+    Duration_m <- outer(100 * grams_ethanol[1:(kn - 1)], Widmark_r * Weight * 1000 * liver_clearance_rate_m, FUN = "/")
     
     # Convert to hours
     Duration_h <- Duration_m / 60
     
     #######################
     # Calculate the cumulative probability distribution of each amount of alcohol (1 to 100 g) being drunk on an occasion
-    x <- stats::pnorm(
-      grams_ethanol,
-      SODMean * grams_ethanol_per_unit, # mean
-      SODSDV * grams_ethanol_per_unit # variance
-    )
+    # x <- stats::pnorm(
+    #   grams_ethanol,
+    #   SODMean * grams_ethanol_per_unit, # mean
+    #   SODSDV * grams_ethanol_per_unit # variance
+    # )
+    
+    x <- t(sapply(grams_ethanol,
+                  stats::pnorm, 
+                  mean = SODMean * grams_ethanol_per_unit, # mean
+                  sd = SODSDV * grams_ethanol_per_unit # variance
+    ))
     
     #######################
     # Convert from the cumulative distribution to the
     # probability that each level of alcohol is consumed on a drinking occasion
     #interval_prob <- x - c(0, x[1:(length(x) - 1)])
-    interval_prob <- diff(x)
+    #interval_prob <- diff(x)
+    interval_prob <- apply(x, 2, diff)
     
-    interval_prob <- interval_prob / sum(interval_prob)
+    #interval_prob <- interval_prob / sum(interval_prob)
+    interval_prob <- interval_prob / matrix(colSums(interval_prob), nrow = kn - 1, ncol = ncol(interval_prob), byrow = T)
+    
+    interval_prob[is.na(interval_prob)] <- 0
+    
     
     #######################
     # Calculate the total annual time spent intoxicated
@@ -195,7 +207,7 @@ PArisk <- function(
       Duration_h # the duration of intoxication (1 to 100g) for each amount of alcohol that could be drunk [vector]
     
     # Total annual time spent intoxicated over all levels of consumption
-    Time_intox_sum <- sum(Time_intox)
+    Time_intox_sum <- colSums(Time_intox)
     
   }
   
@@ -219,9 +231,10 @@ PArisk <- function(
     b4 <- 1.018824
     
     lvold_1 <- log(v1) + b1
-    lvold_2 <- (v1^3) - b2
+    lvold_2 <- v1^3 - b2
     logitp <- lvold_1 * b3 + lvold_2 * b4
-    p <- boot::inv.logit(logitp)
+    p <- exp(logitp) / (1 + exp(logitp))
+    #p <- boot::inv.logit(logitp)
     #or <- (p / (1 - p)) / (p[1] / (1 - p[1]))
     rr <- p / p[1]
     
@@ -235,10 +248,11 @@ PArisk <- function(
     b3 <- 0.42362
     b4 <- 0.562549
     
-    lvold_1 <- (v1^-0.5) - b1
-    lvold_2 <- (v1^3) - b2
+    lvold_1 <- v1^-0.5 - b1
+    lvold_2 <- v1^3 - b2
     logitp <- lvold_1 * -b3 + lvold_2 * b4
-    p <- boot::inv.logit(logitp)
+    p <- exp(logitp) / (1 + exp(logitp))
+    #p <- boot::inv.logit(logitp)
     #or <- (p / (1 - p)) / (p[1] / (1 - p[1]))
     rr <- p / p[1]
     
@@ -252,10 +266,11 @@ PArisk <- function(
     b3 <- 17.84434
     b4 <- 17.6229
     
-    lvold_1 <- (v1^0.5) - b1
+    lvold_1 <- v1^0.5 - b1
     lvold_2 <- v1 - b2
     logitp <- lvold_1 * b3 + lvold_2 * -b4
-    p <- boot::inv.logit(logitp)
+    p <- exp(logitp) / (1 + exp(logitp))
+    #p <- boot::inv.logit(logitp)
     #or <- (p / (1 - p)) / (p[1] / (1 - p[1]))
     rr <- p / p[1]
     
@@ -269,10 +284,11 @@ PArisk <- function(
     b3 <- 0.28148
     b4 <- 2.00946
     
-    lvold_1 <- (v1^-0.5) - b1
+    lvold_1 <- v1^-0.5 - b1
     lvold_2 <- v1 - b2
     logitp <- lvold_1 * -b3 + lvold_2 * -b4
-    p <- boot::inv.logit(logitp)
+    p <- exp(logitp) / (1 + exp(logitp))
+    #p <- boot::inv.logit(logitp)
     #or <- (p / (1 - p)) / (p[1] / (1 - p[1]))
     rr <- p / p[1]
     
@@ -284,11 +300,12 @@ PArisk <- function(
     Current_risk <- rr * Time_intox
     
     # Total risk
-    Risk_sum <- sum(Current_risk)
+    #Risk_sum <- sum(Current_risk)
+    Risk_sum <- colSums(Current_risk)
     
     # Annual risk
-    Annual_risk <- min((Risk_sum + 1 * (365 * 24 - Time_intox_sum)) / (365 * 24), (365 * 24), na.rm = T)
-    
+    #Annual_risk <- min((Risk_sum + 1 * (365 * 24 - Time_intox_sum)) / (365 * 24), 365 * 24, na.rm = T)
+    Annual_risk <- sapply(1:length(Risk_sum), function(z) min((Risk_sum[z] + 1 * (365 * 24 - Time_intox_sum[z])) / (365 * 24), (365 * 24), na.rm = T))
     
     # 
     # rm(

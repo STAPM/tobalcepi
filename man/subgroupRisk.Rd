@@ -12,7 +12,11 @@ subgroupRisk(
   use_weights = FALSE,
   year_range = "all",
   pool = FALSE,
-  subgroups = c("sex", "age_cat")
+  subgroups = c("sex", "age_cat"),
+  mort_or_morb = "mort",
+  alc_mort_and_morb = c("Ischaemic_heart_disease", "LiverCirrhosis",
+    "Haemorrhagic_Stroke", "Ischaemic_Stroke"),
+  substance = c("alc", "tob", "tobalc")[3]
 )
 }
 \arguments{
@@ -33,6 +37,17 @@ Weight variable must be called "wt_int".}
 \item{pool}{Logical - should the years selected be pooled. Defaults to FALSE.}
 
 \item{subgroups}{Character vector - the variable names of the subgroups used to stratify the estimates.}
+
+\item{mort_or_morb}{Character - for alcohol related diseases that have separate
+relative risk curves for mortality and morbidity, should the risks corresponding to
+ mortality ("mort") or morbidity ("morb") be used.}
+
+\item{alc_mort_and_morb}{Character vector of the names of the 
+alcohol related diseases that have separate risk functions for
+mortality and morbidity.}
+
+\item{substance}{Whether to compute relative risks for just alcohol ("alc"),
+just tobacco ("tob") or joint risks for tobacco and alcohol ("tobalc").}
 }
 \value{
 Returns a data table containing the subgroup specific summaries for each disease.

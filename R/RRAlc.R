@@ -37,7 +37,10 @@
 #' Defaults to TRUE.
 #' 
 #' @return Returns a numeric vector of each individual's relative risks for the alcohol related disease specified by "disease".
+#' 
 #' @importFrom data.table := setDT setnames
+#' @importFrom stapmr %fin%
+#' 
 #' @export
 #' 
 #'
@@ -98,7 +101,8 @@ RRalc <- function(
   within_model = TRUE
 ) {
   
-  data_RRalc <- copy(data)
+  #data_RRalc <- copy(data)
+  data_RRalc <- data
   
   n <- nrow(data_RRalc)
   
@@ -115,24 +119,7 @@ RRalc <- function(
   # Initially set everyone's value to 1
   risk_indiv <- rep(1, n)
   
-  if(!isTRUE(getcurve)) {
-    
-    if(isTRUE(within_model)) {
-      
-      # Estimate the characteristics of single occasion drinking
-      # based on the coefficients from Hill-McManus et al 2014
-      
-      # new version of function - adapted to new STAPM modelling
-      data_RRalc <- tobalcepi::AlcBinge_stapm(data_RRalc)
-      
-    } else {
-      
-      # original version of function - replicated from SAPM modelling
-      data_RRalc <- tobalcepi::AlcBinge(data_RRalc)
-      
-    }
-    
-  }
+
   
   ################################################################################
   # Partial chronic--------
@@ -153,7 +140,7 @@ RRalc <- function(
   # Cancer of the oral cavity and pharynx----
   # BAGNARDI, V., ROTA, M., BOTTERI, E. et al. (2015) Alcohol consumption and site-specific cancer risk: a comprehensive dose-response meta-analysis, British Journal of Cancer, 112, 580-593
   
-  if(disease %in% c("Pharynx", "Oral_cavity", "Pharynx_and_Oral_cavity", "Oropharyngeal")) {
+  if(disease %fin% c("Pharynx", "Oral_cavity", "Pharynx_and_Oral_cavity", "Oropharyngeal")) {
     
     b1 <- 0.02474
     b2 <- 0.00004
@@ -165,7 +152,7 @@ RRalc <- function(
   # Cancer of the oesophagus----
   # BAGNARDI, V., ROTA, M., BOTTERI, E. et al. (2015) Alcohol consumption and site-specific cancer risk: a comprehensive dose-response meta-analysis, British Journal of Cancer, 112, 580-593
   
-  if(disease %in% c("Oesophagus", "Oesophageal", "Oesophageal_SCC")) {
+  if(disease %fin% c("Oesophagus", "Oesophageal", "Oesophageal_SCC")) {
     
     b1 <- 0.05593
     b2 <- 0.00789
@@ -204,7 +191,7 @@ RRalc <- function(
   # Cancer of the pancreas----
   # BAGNARDI, V., ROTA, M., BOTTERI, E. et al. (2015) Alcohol consumption and site-specific cancer risk: a comprehensive dose-response meta-analysis, British Journal of Cancer, 112, 580-593
   
-  if(disease %in% c("Pancreas", "Pancreatic")) {
+  if(disease %fin% c("Pancreas", "Pancreatic")) {
     
     b1 <- 0.002089
     
@@ -215,7 +202,7 @@ RRalc <- function(
   # Cancer of the larynx----
   # BAGNARDI, V., ROTA, M., BOTTERI, E. et al. (2015) Alcohol consumption and site-specific cancer risk: a comprehensive dose-response meta-analysis, British Journal of Cancer, 112, 580-593
   
-  if(disease %in% c("Larynx", "Laryngeal")) {
+  if(disease %fin% c("Larynx", "Laryngeal")) {
     
     b1 <- 0.01462
     b2 <- 0.00002
@@ -279,7 +266,7 @@ RRalc <- function(
   
   # Ischaemic heart disease----
   
-  if(tolower(disease) %in% c("ischaemic_heart_disease", "ischaemic_heart_disease_morb")) {
+  if(tolower(disease) %fin% c("ischaemic_heart_disease", "ischaemic_heart_disease_morb")) {
     
     # Mortality
     # REHM, J., SHIELD, K. D., ROERECKE, M. & GMEL, G. (2016) Modelling the impact of alcohol consumption on cardiovascular disease mortality for comparative risk assessments: an overview BMC Public Health, 16, 363
@@ -322,9 +309,9 @@ RRalc <- function(
       rr.m3 <- ifelse(x <= 60, rr.ma3, ifelse(x > 60 & x < 100, rr.mb3, rr.mc3))
       
       
-      rr.m <- ifelse(age %in% c("<16", "16-17", "18-24", "25-34"), rr.m1,
-                     ifelse(age %in% c("35-49", "50-64"), rr.m2,
-                            ifelse(age %in% c("65-74", "75-89"), rr.m3, NA)))
+      rr.m <- ifelse(age %fin% c("<16", "16-17", "18-24", "25-34"), rr.m1,
+                     ifelse(age %fin% c("35-49", "50-64"), rr.m2,
+                            ifelse(age %fin% c("65-74", "75-89"), rr.m3, NA)))
       
       # Female
       
@@ -354,9 +341,9 @@ RRalc <- function(
       rr.f3 <- ifelse(x < f6, rr.fa3, rr.fb3)
       
       
-      rr.f <- ifelse(age %in% c("<16", "16-17", "18-24", "25-34"), rr.f1,
-                     ifelse(age %in% c("35-49", "50-64"), rr.f2,
-                            ifelse(age %in% c("65-74", "75-89"), rr.f3, NA)))
+      rr.f <- ifelse(age %fin% c("<16", "16-17", "18-24", "25-34"), rr.f1,
+                     ifelse(age %fin% c("35-49", "50-64"), rr.f2,
+                            ifelse(age %fin% c("65-74", "75-89"), rr.f3, NA)))
       
       
       
@@ -437,7 +424,7 @@ RRalc <- function(
   # Haemorrhagic and other non-ischaemic stroke----
   # PATRA, J., TAYLOR, B., IRVING, H. et al. (2010) Alcohol consumption and the risk of morbidity and mortality for different stroke types--a systematic review and meta-analysis, BMC Public Health, 10, 258
   
-  if(tolower(disease) %in% c("haemorrhagic_stroke", "haemorrhagic_stroke_morb")) {
+  if(tolower(disease) %fin% c("haemorrhagic_stroke", "haemorrhagic_stroke_morb")) {
     
     # Mortality
     
@@ -504,7 +491,7 @@ RRalc <- function(
   
   # Ischaemic stroke----
   
-  if(tolower(disease) %in% c("ischaemic_stroke", "ischaemic_stroke_morb")) {
+  if(tolower(disease) %fin% c("ischaemic_stroke", "ischaemic_stroke_morb")) {
     
     # Mortality
     # REHM, J., SHIELD, K. D., ROERECKE, M. & GMEL, G. (2016) Modelling the impact of alcohol consumption on cardiovascular disease mortality for comparative risk assessments: an overview BMC Public Health, 16, 363
@@ -551,9 +538,9 @@ RRalc <- function(
       
       rr.m3 <- ifelse(x <= 1, rr.ma3, rr.mb3)
       
-      rr.m <- ifelse(age %in% c("<16", "16-17", "18-24", "25-34"), rr.m1,
-                     ifelse(age %in% c("35-49", "50-64"), rr.m2,
-                            ifelse(age %in% c("65-74", "75-89"), rr.m3, NA)))
+      rr.m <- ifelse(age %fin% c("<16", "16-17", "18-24", "25-34"), rr.m1,
+                     ifelse(age %fin% c("35-49", "50-64"), rr.m2,
+                            ifelse(age %fin% c("65-74", "75-89"), rr.m3, NA)))
       
       # Female
       
@@ -575,9 +562,9 @@ RRalc <- function(
       
       rr.f3 <- ifelse(x <= 1, rr.fa3, rr.fb3)
       
-      rr.f <- ifelse(age %in% c("<16", "16-17", "18-24", "25-34"), rr.f1,
-                     ifelse(age %in% c("35-49", "50-64"), rr.f2,
-                            ifelse(age %in% c("65-74", "75-89"), rr.f3, NA)))
+      rr.f <- ifelse(age %fin% c("<16", "16-17", "18-24", "25-34"), rr.f1,
+                     ifelse(age %fin% c("35-49", "50-64"), rr.f2,
+                            ifelse(age %fin% c("65-74", "75-89"), rr.f3, NA)))
       
       if(!isTRUE(getcurve)) {
         
@@ -644,7 +631,7 @@ RRalc <- function(
   # Fibrosis and cirrhosis of the liver----
   # REHM, J., TAYLOR, B., MOHAPATRA, S. et al. (2010) Alcohol as a risk factor for liver cirrhosis: a systematic review and meta-analysis, Drug and Alcohol Review, 29, 437-45
   
-  if(tolower(disease) %in% c("livercirrhosis", "livercirrhosis_morb")) {
+  if(tolower(disease) %fin% c("livercirrhosis", "livercirrhosis_morb")) {
     
     
     # Mortality
@@ -837,7 +824,7 @@ RRalc <- function(
   # Lower respiratory tract infections / Pneumonia----
   # SAMOKHVALOV, A. V., IRVING, H. M. & REHM, J. (2010) Alcohol consumption as a risk factor for pneumonia: systematic review and meta-analysis, Epidemiology and Infection, 138, 1789-1795
   
-  if(disease %in% c("Pneumonia", "Influenza_clinically_diagnosed", "Influenza_microbiologically_confirmed", "Lower_respiratory_tract_infections")) {
+  if(disease %fin% c("Pneumonia", "Influenza_clinically_diagnosed", "Influenza_microbiologically_confirmed", "Lower_respiratory_tract_infections")) {
     
     risk_indiv <- exp(0.4764038 * (x + 0.0399999618530273) / 100)
     
@@ -872,18 +859,35 @@ RRalc <- function(
   
     #tictoc::tic()
     
-    data_RRalc[ , rr := sapply(1:n, function(z) {
-      
-      tobalcepi::PArisk(
-        SODMean = mean_sod[z],
-        SODSDV = occ_sd[z],
-        SODFreq = drink_freq[z],
-        Weight = weight[z],
-        Widmark_r = rwatson[z],
-        cause = "Transport",
-        grams_ethanol_per_unit = grams_ethanol_per_unit
-      )
-    })]
+    # data_RRalc[ , rr := sapply(1:n, function(z) {
+    #   
+    #   tobalcepi::PArisk(
+    #     SODMean = mean_sod[z],
+    #     SODSDV = occ_sd[z],
+    #     SODFreq = drink_freq[z],
+    #     Weight = weight[z],
+    #     Widmark_r = rwatson[z],
+    #     cause = "Transport",
+    #     grams_ethanol_per_unit = grams_ethanol_per_unit
+    #   )
+    # })]
+    
+    
+    data_RRalc[ , rr := 1]
+    
+    data_RRalc[GPerDay > 0, rr :=  
+                 
+                 tobalcepi::PArisk(
+                   SODMean = mean_sod,
+                   SODSDV = occ_sd,
+                   SODFreq = drink_freq,
+                   Weight = weight,
+                   Widmark_r = rwatson,
+                   cause = "Transport",
+                   grams_ethanol_per_unit = grams_ethanol_per_unit
+                 )
+               
+    ]#    , by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
     
     #tictoc::toc()
     
@@ -898,17 +902,34 @@ RRalc <- function(
   
   if(disease == "Fall_injuries") {
     
-    data_RRalc[ , rr := sapply(1:n, function(z) {
-      tobalcepi::PArisk(
-        SODMean = mean_sod[z],
-        SODSDV = occ_sd[z],
-        SODFreq = drink_freq[z],
-        Weight = weight[z],
-        Widmark_r = rwatson[z],
-        cause = "Fall",
-        grams_ethanol_per_unit = grams_ethanol_per_unit
-      )
-    })]
+    # data_RRalc[ , rr := sapply(1:n, function(z) {
+    #   tobalcepi::PArisk(
+    #     SODMean = mean_sod[z],
+    #     SODSDV = occ_sd[z],
+    #     SODFreq = drink_freq[z],
+    #     Weight = weight[z],
+    #     Widmark_r = rwatson[z],
+    #     cause = "Fall",
+    #     grams_ethanol_per_unit = grams_ethanol_per_unit
+    #   )
+    # })]
+    
+    
+    data_RRalc[ , rr := 1]
+    
+    data_RRalc[GPerDay > 0, rr :=  
+                 
+                 tobalcepi::PArisk(
+                   SODMean = mean_sod,
+                   SODSDV = occ_sd,
+                   SODFreq = drink_freq,
+                   Weight = weight,
+                   Widmark_r = rwatson,
+                   cause = "Fall",
+                   grams_ethanol_per_unit = grams_ethanol_per_unit
+                 )
+               
+    ]# , by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
     
     risk_indiv <- data_RRalc[ , rr]
     
@@ -918,19 +939,35 @@ RRalc <- function(
   
   # Violence----
   
-  if(disease %in% c("Assault", "Other_intentional_injuries")) {
+  if(disease %fin% c("Assault", "Other_intentional_injuries")) {
     
-    data_RRalc[ , rr := sapply(1:n, function(z) {
-      tobalcepi::PArisk(
-        SODMean = mean_sod[z],
-        SODSDV = occ_sd[z],
-        SODFreq = drink_freq[z],
-        Weight = weight[z],
-        Widmark_r = rwatson[z],
-        cause = "Violence",
-        grams_ethanol_per_unit = grams_ethanol_per_unit
-      )
-    })]
+    # data_RRalc[ , rr := sapply(1:n, function(z) {
+    #   tobalcepi::PArisk(
+    #     SODMean = mean_sod[z],
+    #     SODSDV = occ_sd[z],
+    #     SODFreq = drink_freq[z],
+    #     Weight = weight[z],
+    #     Widmark_r = rwatson[z],
+    #     cause = "Violence",
+    #     grams_ethanol_per_unit = grams_ethanol_per_unit
+    #   )
+    # })]
+    
+    data_RRalc[ , rr := 1]
+    
+    data_RRalc[GPerDay > 0, rr :=  
+                 
+                 tobalcepi::PArisk(
+                   SODMean = mean_sod,
+                   SODSDV = occ_sd,
+                   SODFreq = drink_freq,
+                   Weight = weight,
+                   Widmark_r = rwatson,
+                   cause = "Violence",
+                   grams_ethanol_per_unit = grams_ethanol_per_unit
+                 )
+               
+               ]#, by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
     
     risk_indiv <- data_RRalc[ , rr]
     
@@ -940,19 +977,37 @@ RRalc <- function(
   
   # Other----
   
-  if(disease %in% c("Mechanical_forces", "Drowning", "Other_unintentional_injuries", "intentional_self_harm", "Accidental_poisoning", "Fire_injuries")) {
+  if(disease %fin% c("Mechanical_forces", "Drowning", "Other_unintentional_injuries", "intentional_self_harm", "Accidental_poisoning", "Fire_injuries")) {
     
-    data_RRalc[ , rr := sapply(1:n, function(z) {
-      tobalcepi::PArisk(
-        SODMean = mean_sod[z],
-        SODSDV = occ_sd[z],
-        SODFreq = drink_freq[z],
-        Weight = weight[z],
-        Widmark_r = rwatson[z],
-        cause = "Other",
-        grams_ethanol_per_unit = grams_ethanol_per_unit
-      )
-    })]
+    data_RRalc[ , rr := 1]
+    
+    data_RRalc[GPerDay > 0, rr :=  
+                 
+                 tobalcepi::PArisk(
+                   SODMean = mean_sod,
+                   SODSDV = occ_sd,
+                   SODFreq = drink_freq,
+                   Weight = weight,
+                   Widmark_r = rwatson,
+                   cause = "Other",
+                   grams_ethanol_per_unit = grams_ethanol_per_unit
+                 )
+    ]
+     #          , by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
+    
+    
+    
+    # data_RRalc[ , rr := sapply(1:n, function(z) {
+    #   tobalcepi::PArisk(
+    #     SODMean = mean_sod[z],
+    #     SODSDV = occ_sd[z],
+    #     SODFreq = drink_freq[z],
+    #     Weight = weight[z],
+    #     Widmark_r = rwatson[z],
+    #     cause = "Other",
+    #     grams_ethanol_per_unit = grams_ethanol_per_unit
+    #   )
+    # })]
     
     risk_indiv <- data_RRalc[ , rr]
     
@@ -967,7 +1022,7 @@ RRalc <- function(
   
   # Calculate the absolute rather than the relative risk
   
-  if(disease %in% c(
+  if(disease %fin% c(
     "Excessive_Blood_Level_of_Alcohol",
     "Toxic_effect_of_alcohol",
     "Alcohol_poisoning",
@@ -1003,16 +1058,35 @@ RRalc <- function(
     #grams_ethanol_per_unit = grams_ethanol_per_unit
     #alc_wholly_acute_thresholds = alc_wholly_acute_thresholds
     
-    data_RRalc[ , ar := sapply(1:n, function(z) {
+    data_RRalc[ , ar := 0]
+    
+    # data_RRalc[GPerDay > min(alc_wholly_acute_thresholds) * grams_ethanol_per_unit, ar := sapply(1:length(GPerDay), function(z) {
+    #   tobalcepi::WArisk_acute(
+    #     SODMean = mean_sod[z],
+    #     SODSDV = occ_sd[z],
+    #     SODFreq = drink_freq[z],
+    #     sex = sex[z],
+    #     grams_ethanol_per_unit = grams_ethanol_per_unit,
+    #     alc_wholly_acute_thresholds = alc_wholly_acute_thresholds
+    #   )
+    # })]
+    
+    
+    data_RRalc[GPerDay > min(alc_wholly_acute_thresholds) * grams_ethanol_per_unit, ar :=  
+      
       tobalcepi::WArisk_acute(
-        SODMean = mean_sod[z],
-        SODSDV = occ_sd[z],
-        SODFreq = drink_freq[z],
-        sex = sex[z],
+        SODMean = mean_sod,
+        SODSDV = occ_sd,
+        SODFreq = drink_freq,
+        sex = sex,
         grams_ethanol_per_unit = grams_ethanol_per_unit,
         alc_wholly_acute_thresholds = alc_wholly_acute_thresholds
       )
-    })]
+      
+    , by = seq_len(NROW(data_RRalc[GPerDay > min(alc_wholly_acute_thresholds) * grams_ethanol_per_unit]))]
+    
+    
+    
     
     risk_indiv <- 1e-16 + data_RRalc[ , ar] # add 1e-16 to remove 0/0 = Not a number error later
     
@@ -1026,7 +1100,7 @@ RRalc <- function(
   
   # Calculate the absolute rather than the relative risk
   
-  if(disease %in% c(
+  if(disease %fin% c(
     "Alcoholic_cardiomyopathy",
     "Alcoholic_gastritis",
     "Alcoholic_liver_disease",
@@ -1057,6 +1131,9 @@ RRalc <- function(
   
   
   #data[ , `:=`(mean_sod = NULL, occ_sd = NULL, drink_freq = NULL, weight = NULL, rwatson = NULL)]
+  
+  testthat::expect_equal(sum(!is.na(risk_indiv)), length(risk_indiv), info = "RRAlc: missing values in risk vector")
+  
   
   
   return(risk_indiv)

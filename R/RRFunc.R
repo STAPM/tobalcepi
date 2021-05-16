@@ -257,14 +257,14 @@ RRFunc <- function(
   alc_diseases_expanded <- c(alc_diseases, paste0(alc_mort_and_morb, "_morb"))
   
   alc_lag_diseases <- c("Pharynx", "Oral_cavity", "Oesophageal_SCC", "Colorectal", "Liver",
-    "Larynx", "Pancreas", "Breast", "Alcohol_induced_pseudoCushings_syndrome", "Degeneration", "Alcoholic_polyneuropathy",
-    "Alcoholic_myopathy", "Alcoholic_cardiomyopathy", "Maternal_care_for_suspected_damage_to_foetus_from_alcohol",
-    "LiverCirrhosis", "Chronic_Pancreatitis", "Acute_Pancreatitis",
-    "Acute_pancreatitis_alcohol_induced", "Chronic_pancreatitis_alcohol_induced",
-    "Alcoholic_liver_disease", "Diabetes", "HypertensiveHeartDisease", "Cardiac_Arrhythmias", 
-    "Ischaemic_heart_disease", "Haemorrhagic_Stroke", "Ischaemic_Stroke", "Epilepsy", "Alcoholic_gastritis", 
-    "Tuberculosis", "Influenza_clinically_diagnosed",
-    "Influenza_microbiologically_confirmed", "Pneumonia", paste0(alc_mort_and_morb, "_morb"))
+                        "Larynx", "Pancreas", "Breast", "Alcohol_induced_pseudoCushings_syndrome", "Degeneration", "Alcoholic_polyneuropathy",
+                        "Alcoholic_myopathy", "Alcoholic_cardiomyopathy", "Maternal_care_for_suspected_damage_to_foetus_from_alcohol",
+                        "LiverCirrhosis", "Chronic_Pancreatitis", "Acute_Pancreatitis",
+                        "Acute_pancreatitis_alcohol_induced", "Chronic_pancreatitis_alcohol_induced",
+                        "Alcoholic_liver_disease", "Diabetes", "HypertensiveHeartDisease", "Cardiac_Arrhythmias", 
+                        "Ischaemic_heart_disease", "Haemorrhagic_Stroke", "Ischaemic_Stroke", "Epilepsy", "Alcoholic_gastritis", 
+                        "Tuberculosis", "Influenza_clinically_diagnosed",
+                        "Influenza_microbiologically_confirmed", "Pneumonia", paste0(alc_mort_and_morb, "_morb"))
   
   if(substance == "alc") {
     
@@ -317,7 +317,7 @@ RRFunc <- function(
     # Update the stored relative risk file 
     # to retain only past relative risk trajectories for the individuals currently present in the simulation
     # this should help to minimise the memory usage
-    alc_indiv_risk_trajectories_store <- alc_indiv_risk_trajectories_store[ran_id %fin% data[ , ran_id]]
+    alc_indiv_risk_trajectories_store <- alc_indiv_risk_trajectories_store[ran_id %fin% data[ , ran_id] & year > (k_year - 20)]
     
   }
   
@@ -443,21 +443,21 @@ RRFunc <- function(
           by = "ran_id", sort = F)
         
       }
-
-
-#############################################################
-#############################################################
-
-
-# If the relative risk for alcohol does not need to feed forward
-# into a further calculation of joint relative risk for the disease being considered,
-# then the temporary name can be changed to be just the name of disease
-if(substance == "alc" | (substance == "tobalc" & !(d %fin% intersect(alc_diseases_expanded, tob_diseases)))) {
-  
-  data[ , (d) := get(d_alc)]
-  
-}
-
+      
+      
+      #############################################################
+      #############################################################
+      
+      
+      # If the relative risk for alcohol does not need to feed forward
+      # into a further calculation of joint relative risk for the disease being considered,
+      # then the temporary name can be changed to be just the name of disease
+      if(substance == "alc" | (substance == "tobalc" & !(d %fin% intersect(alc_diseases_expanded, tob_diseases)))) {
+        
+        data[ , (d) := get(d_alc)]
+        
+      }
+      
     }
     
     
@@ -562,6 +562,11 @@ if(substance == "alc" | (substance == "tobalc" & !(d %fin% intersect(alc_disease
       data[ , (d_tob) := NULL]
       
     }
+    
+    
+    kn <- NROW(data[get(d) < 0])
+    testthat::expect_equal(kn, 0, info = paste0("RRFunc: Negative values in ", d, " after calculations"))
+    
     
     if(isTRUE(show_progress)) {
       

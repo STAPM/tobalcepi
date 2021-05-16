@@ -25,6 +25,8 @@
 #' mortality and morbidity.
 #' @param substance Whether to compute relative risks for just alcohol ("alc"),
 #' just tobacco ("tob") or joint risks for tobacco and alcohol ("tobalc").
+#' @param smooth Logical - should the age patterns in average risk be smoothed with a moving average. 
+#' For use only if average risk is stratified by single years of age. Defaults to FALSE
 #'
 #' @return Returns a data table containing the subgroup specific summaries for each disease.
 #' 
@@ -100,7 +102,8 @@ subgroupRisk <- function(
   subgroups = c("sex", "age_cat"),
   mort_or_morb = "mort",
   alc_mort_and_morb = c("Ischaemic_heart_disease", "LiverCirrhosis", "Haemorrhagic_Stroke", "Ischaemic_Stroke"),
-  substance = c("alc", "tob", "tobalc")[3]
+  substance = c("alc", "tob", "tobalc")[3],
+  smooth = FALSE
 ) {
   
   out <- copy(data)
@@ -162,17 +165,26 @@ subgroupRisk <- function(
   # Standardise the relative risks by subtracting 1 and multiplying by the weight
   for (d in disease_names) {
     
-    if(d %in% abs_diseases) {
-      
-      # For absolute risk
-      out[, (paste0(d, "_z")) := weight * get(d)]
-      
-    } else {
-      
-      # For relative risk
-      out[, (paste0(d, "_z")) := weight * (get(d) - 1)]
-      
-    }
+    kn <- NROW(out[is.na(get(d)) | is.infinite(get(d))])
+    testthat::expect_equal(kn, 0, info = paste0("subgroupRisk: NA or infinite values in risk values for ", d, " input into function"))
+    
+    kn <- NROW(out[get(d) < 0])
+    testthat::expect_equal(kn, 0, info = paste0("subgroupRisk: negative values in risk values for ", d, " input into function"))
+    
+    #if(d %in% abs_diseases) {
+    
+    # For absolute risk
+    out[, (paste0(d, "_z")) := weight * get(d)]
+    
+    #} else {
+    
+    # For relative risk
+    #out[, (paste0(d, "_z")) := weight * (get(d) - 1)]
+    
+    #}
+    
+    # Fix - for later review - replace zeros with tiny amount
+    #out[get(paste0(d, "_z")), (paste0(d, "_z")) := 1e-16]
     
   }
   
@@ -204,6 +216,32 @@ subgroupRisk <- function(
       value.name = paste0("av_risk_", label)
     )
     
+    kn <- NROW(out_risk[is.na(get(paste0("av_risk_", label))) | is.infinite(get(paste0("av_risk_", label)))])
+    testthat::expect_equal(kn, 0, info = paste0("subgroupRisk: NA or infinite values in average risk values for ", d, " after calculation"))
+    
+    kn <- NROW(out_risk[get(paste0("av_risk_", label)) < 0])
+    testthat::expect_equal(kn, 0, info = paste0("subgroupRisk: negative values in average risk values for ", d, " after calculation"))
+    
+    # If the average relative risks should be smoothed over age
+    # for use when using single years of age
+    if(isTRUE(smooth)) {
+      
+      out_risk[ , (paste0("av_risk_", label)) := {
+        
+        kn <- 7 # the width in years of the moving average age window
+        
+        z <- TTR::SMA(get(paste0("av_risk_", label)), n = kn)
+        
+        z <- z[!is.na(z)]
+        
+        z[z < 0] <- 0
+        
+        c(rep(z[1], kn - 1), z)
+        
+      }
+      , by = c(subgroups[subgroups != "age"], "condition")]
+      
+    }
   }
   
   ############################################################

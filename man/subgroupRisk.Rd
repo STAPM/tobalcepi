@@ -16,7 +16,8 @@ subgroupRisk(
   mort_or_morb = "mort",
   alc_mort_and_morb = c("Ischaemic_heart_disease", "LiverCirrhosis",
     "Haemorrhagic_Stroke", "Ischaemic_Stroke"),
-  substance = c("alc", "tob", "tobalc")[3]
+  substance = c("alc", "tob", "tobalc")[3],
+  smooth = FALSE
 )
 }
 \arguments{
@@ -48,6 +49,9 @@ mortality and morbidity.}
 
 \item{substance}{Whether to compute relative risks for just alcohol ("alc"),
 just tobacco ("tob") or joint risks for tobacco and alcohol ("tobalc").}
+
+\item{smooth}{Logical - should the age patterns in average risk be smoothed with a moving average. 
+For use only if average risk is stratified by single years of age. Defaults to FALSE}
 }
 \value{
 Returns a data table containing the subgroup specific summaries for each disease.

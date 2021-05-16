@@ -46,7 +46,8 @@ Imports:
     Rdpack,
     lifecycle,
     crayon,
-    stapmr
+    stapmr,
+    TTR
 RdMacros: Rdpack, lifecycle
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1

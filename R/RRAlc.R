@@ -1088,7 +1088,7 @@ RRalc <- function(
     
     
     
-    risk_indiv <- 1e-16 + data_RRalc[ , ar] # add 1e-16 to remove 0/0 = Not a number error later
+    risk_indiv <- data_RRalc[ , ar] # add 1e-16 to remove 0/0 = Not a number error later
     
     data_RRalc[ , ar := NULL]
     
@@ -1123,7 +1123,7 @@ RRalc <- function(
     #data[diff > 0, ar := diff  * (7 / grams_ethanol_per_unit)]
     data_RRalc[diff > 0, ar := diff]
     
-    risk_indiv <- 1e-16 + data_RRalc[ , ar]
+    risk_indiv <- data_RRalc[ , ar]
     
     data_RRalc[ , `:=`(ar = NULL, threshold = NULL, diff = NULL)]
     
@@ -1133,7 +1133,7 @@ RRalc <- function(
   #data[ , `:=`(mean_sod = NULL, occ_sd = NULL, drink_freq = NULL, weight = NULL, rwatson = NULL)]
   
   testthat::expect_equal(sum(!is.na(risk_indiv)), length(risk_indiv), info = "RRAlc: missing values in risk vector")
-  
+  testthat::expect_equal(sum(risk_indiv >= 0), length(risk_indiv), info = "RRAlc: negative values in risk vector")
   
   
   return(risk_indiv)

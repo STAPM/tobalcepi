@@ -190,7 +190,9 @@ PArisk <- function(
     interval_prob <- apply(x, 2, diff)
     
     #interval_prob <- interval_prob / sum(interval_prob)
-    interval_prob <- interval_prob / matrix(colSums(interval_prob), nrow = kn - 1, ncol = ncol(interval_prob), byrow = T)
+    
+    # NOT SURE IF THE LINE BELOW IS NEEDED
+    #interval_prob <- interval_prob / matrix(colSums(interval_prob), nrow = kn - 1, ncol = ncol(interval_prob), byrow = T)
     
     interval_prob[is.na(interval_prob)] <- 0
     

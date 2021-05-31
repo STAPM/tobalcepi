@@ -102,7 +102,7 @@ WArisk_acute <- function(
   interval_prob <- diff(x)
   
   # NOT SURE IF THE LINE BELOW IS NEEDED
-  #interval_prob <- interval_prob / sum(interval_prob)
+  interval_prob <- interval_prob / sum(interval_prob)
   
   interval_prob[is.na(interval_prob)] <- 0
   

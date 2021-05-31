@@ -91,7 +91,7 @@ for each individual for experiencing each cause during one year." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.6</span>
       </span>
     </div>
 
@@ -110,13 +110,13 @@ for each individual for experiencing each cause during one year." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://gitlab.com/stapm/r-packages/tobalcepi">
-    <span class="fab fa fab fa-gitlab fa-lg"></span>
+    <span class="fab fa-gitlab fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://stapm.gitlab.io/software.html">
-    <span class="fa fa-code"></span>
+    <span class="fas fa-code"></span>
      
   </a>
 </li>
@@ -133,7 +133,7 @@ for each individual for experiencing each cause during one year." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Relative risks for alcohol-related injuries <a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a></h1>
+    <h1>Relative risks for alcohol-related injuries <a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></h1>
     
     <div class="hidden name"><code>PArisk.Rd</code></div>
     </div>
@@ -150,7 +150,6 @@ for each individual for experiencing each cause during one year.</p>
   Weight <span class='op'>=</span> <span class='cn'>NULL</span>,
   Widmark_r <span class='op'>=</span> <span class='cn'>NULL</span>,
   cause <span class='op'>=</span> <span class='st'>"Transport"</span>,
-  grams_ethanol <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>,
   grams_ethanol_per_unit <span class='op'>=</span> <span class='fl'>8</span>,
   grams_ethanol_per_std_drink <span class='op'>=</span> <span class='fl'>12.8</span>,
   liver_clearance_rate_h <span class='op'>=</span> <span class='fl'>0.017</span>,
@@ -163,16 +162,16 @@ for each individual for experiencing each cause during one year.</p>
     <tr>
       <th>SODMean</th>
       <td><p>Numeric vector - the average amount that each individual is expected to
-drink on a single drinking occassion.</p></td>
+drink on a single drinking occasion.</p></td>
     </tr>
     <tr>
       <th>SODSDV</th>
       <td><p>Numeric vector - the standard deviation of the amount that each individual is expected to
-drink on a single drinking occassion.</p></td>
+drink on a single drinking occasion.</p></td>
     </tr>
     <tr>
       <th>SODFreq</th>
-      <td><p>Numeric vector - the expected number of drinking occassions that
+      <td><p>Numeric vector - the expected number of drinking occasions that
 each individual has each week.</p></td>
     </tr>
     <tr>
@@ -188,11 +187,6 @@ See examples of use of the Widmark equation in Watson (1981) and Posey and Mozay
     <tr>
       <th>cause</th>
       <td><p>Character - the acute cause being considered.</p></td>
-    </tr>
-    <tr>
-      <th>grams_ethanol</th>
-      <td><p>Numeric vector - the range of grams of ethanol over which to compute relative risk. 
-Defaults to 1:100.</p></td>
     </tr>
     <tr>
       <th>grams_ethanol_per_unit</th>
@@ -219,10 +213,10 @@ the number of grams of ethanol in one standard drink.</p></td>
     <p>Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This calculation treats an ocassion as a single point in time and therefore does not detail
-about the rate of alcohol absorbtion (i.e. there is no alcohol absorbtion rate constant)
-or the time interval between drinks within an occassion. This could introduce inaccuracies if
- e.g. a drinking occassion lasted several hours. The methods to calculate the total time spent intoxicated
+    <p>This calculation treats an occasion as a single point in time and therefore does not detail
+about the rate of alcohol absorption (i.e. there is no alcohol absorption rate constant)
+or the time interval between drinks within an occasion. This could introduce inaccuracies if
+ e.g. a drinking occasion lasted several hours. The methods to calculate the total time spent intoxicated
  (with blood alcohol content greater than zero) are discussed in Taylor et al 2011
  and the discussion paper by Hill-McManus 2014. The relative risks for alcohol-related injuries
  are taken from Cherpitel et al 2015.</p>

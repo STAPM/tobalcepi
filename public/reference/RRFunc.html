@@ -93,7 +93,7 @@ to the alcohol only, tobacco only, or joint tobacco and alcohol contexts." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.6</span>
       </span>
     </div>
 
@@ -112,13 +112,13 @@ to the alcohol only, tobacco only, or joint tobacco and alcohol contexts." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://gitlab.com/stapm/r-packages/tobalcepi">
-    <span class="fab fa fab fa-gitlab fa-lg"></span>
+    <span class="fab fa-gitlab fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://stapm.gitlab.io/software.html">
-    <span class="fa fa-code"></span>
+    <span class="fas fa-code"></span>
      
   </a>
 </li>
@@ -135,7 +135,7 @@ to the alcohol only, tobacco only, or joint tobacco and alcohol contexts." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Individual relative risks of disease <a href='https://www.tidyverse.org/lifecycle/#maturing'><img src='figures/lifecycle-maturing.svg' alt='Maturing lifecycle'></a></h1>
+    <h1>Individual relative risks of disease <a href='https://lifecycle.r-lib.org/articles/stages.html#maturing'><img src='figures/lifecycle-maturing.svg' alt='[Maturing]' /></a></h1>
     
     <div class="hidden name"><code>RRFunc.Rd</code></div>
     </div>
@@ -152,7 +152,8 @@ to the alcohol only, tobacco only, or joint tobacco and alcohol contexts.</p>
   substance <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"tob"</span>, <span class='st'>"alc"</span>, <span class='st'>"tobalc"</span><span class='op'>)</span>,
   k_year <span class='op'>=</span> <span class='cn'>NULL</span>,
   alc_diseases <span class='op'>=</span> <span class='fu'>tobalcepi</span><span class='fu'>::</span><span class='va'><a href='alc_disease_names.html'>alc_disease_names</a></span>,
-  alc_mort_and_morb <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Ischaemic_heart_disease"</span>, <span class='st'>"LiverCirrhosis"</span><span class='op'>)</span>,
+  alc_mort_and_morb <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ischaemic_heart_disease"</span>, <span class='st'>"livercirrhosis"</span>,
+    <span class='st'>"haemorrhagic_stroke"</span>, <span class='st'>"ischaemic_stroke"</span><span class='op'>)</span>,
   alc_risk_lags <span class='op'>=</span> <span class='cn'>TRUE</span>,
   alc_indiv_risk_trajectories_store <span class='op'>=</span> <span class='cn'>NULL</span>,
   alc_protective <span class='op'>=</span> <span class='cn'>TRUE</span>,

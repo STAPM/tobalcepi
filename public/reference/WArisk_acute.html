@@ -92,7 +92,7 @@ that each individual experiences each acute consequence of drinking during one y
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.7</span>
       </span>
     </div>
 
@@ -217,7 +217,7 @@ We assume that each individual's risk is proportional to that value.</p>
 
 <span class='co'># Function called within RRAlc()</span>
 
-<span class='va'>data</span><span class='op'>[</span> , <span class='va'>ar</span> <span class='op'>:=</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='va'>n</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>z</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>data</span><span class='op'>[</span> , <span class='va'>ar</span> <span class='op'>:=</span> 
 <span class='fu'>tobalcepi</span><span class='fu'>::</span><span class='fu'>WArisk_acute</span><span class='op'>(</span>
   SODMean <span class='op'>=</span> <span class='va'>mean_sod</span><span class='op'>[</span><span class='va'>z</span><span class='op'>]</span>,
   SODSDV <span class='op'>=</span> <span class='va'>occ_sd</span><span class='op'>[</span><span class='va'>z</span><span class='op'>]</span>,
@@ -225,8 +225,7 @@ We assume that each individual's risk is proportional to that value.</p>
   sex <span class='op'>=</span> <span class='va'>sex</span><span class='op'>[</span><span class='va'>z</span><span class='op'>]</span>,
   grams_ethanol_per_unit <span class='op'>=</span> <span class='va'>grams_ethanol_per_unit</span>,
   alc_wholly_acute_thresholds <span class='op'>=</span> <span class='va'>alc_wholly_acute_thresholds</span>
-<span class='op'>)</span>
-<span class='op'>}</span><span class='op'>)</span><span class='op'>]</span>
+<span class='op'>)</span><span class='op'>]</span>
 
 <span class='va'>risk_indiv</span> <span class='op'>&lt;-</span> <span class='fl'>1</span> <span class='op'>+</span> <span class='va'>data</span><span class='op'>[</span> , <span class='va'>ar</span><span class='op'>]</span> <span class='co'># add 1 to remove 0/0 = Not a number error later</span>
 

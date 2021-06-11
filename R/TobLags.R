@@ -35,7 +35,10 @@
 #' @return Returns a data table with two columns - one for the years since consumption changed, and the other
 #' that gives the proportion by which the effect of a change in consumption
 #' on an individual's relative risk of disease has so far emerged.
-#' @importFrom data.table := setDT setnames
+#' 
+#' @importFrom data.table := setDT setnames data.table
+#' @importFrom stapmr %fin%
+#' 
 #' @export
 #'
 #'
@@ -78,15 +81,15 @@ TobLags <- function(
 
   ##################
 
-  if(disease_name %in% cancer_lags) {
+  if(disease_name %fin% cancer_lags) {
     lag_func <- lag_data[cause_group == "Cancers", excess_risk_percent]
   }
 
-  if(disease_name %in% cvd_lags) {
+  if(disease_name %fin% cvd_lags) {
     lag_func <- lag_data[cause_group == "CVD", excess_risk_percent]
   }
 
-  if(disease_name %in% copd_lags) {
+  if(disease_name %fin% copd_lags) {
     lag_func <- lag_data[cause_group == "COPD", excess_risk_percent]
   }
 
@@ -97,7 +100,7 @@ TobLags <- function(
   # Re-format so they show the cumulative proportion by which risk reduces over time
   # i.e. after 40 years, all excess risk has gone, so the cumulative proportion of risk reduction = 1
 
-  disease_lag_data <- data.table::data.table(
+  disease_lag_data <- data.table(
     time_since_quit = 0:n_years,
     prop_risk_reduction = 1 - lag_func
   )

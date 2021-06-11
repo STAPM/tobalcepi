@@ -192,6 +192,9 @@ PArisk <- function(
     #interval_prob <- interval_prob / sum(interval_prob)
     
     # NOT SURE IF THE LINE BELOW IS NEEDED
+    # the code makes values sum to 1
+    # discussion with Alan has concluded that it is needed because 
+    # the values are subsequently used in the computation of a weighted average
     interval_prob <- interval_prob / matrix(colSums(interval_prob), nrow = kn - 1, ncol = ncol(interval_prob), byrow = T)
     
     interval_prob[is.na(interval_prob)] <- 0
@@ -203,7 +206,12 @@ PArisk <- function(
     # freq_drinks * 52 * interval_prob * duration
     
     Time_intox <-
-      SODFreq * # expected number of weekly drinking occasions [number]
+      
+      # be careful about how the SODFreq vector is oriented by row or by col
+      # should be by row as each column is an individual
+      matrix(SODFreq, nrow = kn - 1, ncol = length(SODFreq), byrow = T) * #SODFreq * # expected number of weekly drinking occasions [number]
+      
+      
       52 * # multiply by the number of weeks in a year [number]
       interval_prob * # the probability that each level of alcohol is consumed on a drinking occasion [vector]
       Duration_h # the duration of intoxication (1 to 100g) for each amount of alcohol that could be drunk [vector]

@@ -106,7 +106,7 @@ subgroupRisk <- function(
   smooth = FALSE
 ) {
   
-  out <- copy(data)
+  out <- copy(data) # see if this can be removed from code as inefficient
   
   # To switch-out the mortality risk functions for the morbidity risk functions if necessary
   if(substance %fin% c("alc", "tobalc") & mort_or_morb == "morb" & !is.null(alc_mort_and_morb)) {
@@ -209,7 +209,7 @@ subgroupRisk <- function(
     
     setnames(out_risk, paste0(disease_names, "_z"), disease_names)
     
-    out_risk <- data.table::melt(
+    out_risk <- melt(
       out_risk,
       id.vars = c(subgroups, "year"),
       variable.name = "condition",
@@ -257,9 +257,9 @@ subgroupRisk <- function(
                     by =  c(subgroups, "year"),
                     .SDcols = paste0(disease_names, "_z")]
     
-    data.table::setnames(out_risk, paste0(disease_names, "_z"), disease_names)
+    setnames(out_risk, paste0(disease_names, "_z"), disease_names)
     
-    out_risk <- data.table::melt(
+    out_risk <- melt(
       out_risk,
       id.vars = c(subgroups, "year"),
       variable.name = "condition",

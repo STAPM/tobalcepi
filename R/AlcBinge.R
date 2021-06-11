@@ -247,7 +247,7 @@ AlcBinge <- function(
 
   data[ , age_temp := NULL]
 
-return(data[])
+return(data)
 }
 
 

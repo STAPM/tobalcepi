@@ -104,7 +104,7 @@ RRalc <- function(
   #data_RRalc <- copy(data)
   data_RRalc <- data
   
-  n <- nrow(data_RRalc)
+  n <- NROW(data_RRalc)
   
   x <- data_RRalc[ , get(av_weekly_grams_per_day_var)]
   #p <- data[ , get(peak_grams_per_day_var)] # old code when used peakday directly from HSE
@@ -1083,8 +1083,7 @@ RRalc <- function(
         alc_wholly_acute_thresholds = alc_wholly_acute_thresholds
       )
       
-    , by = seq_len(NROW(data_RRalc[GPerDay > min(alc_wholly_acute_thresholds) * grams_ethanol_per_unit]))]
-    
+    ]#, by = seq_len(NROW(data_RRalc[GPerDay > min(alc_wholly_acute_thresholds) * grams_ethanol_per_unit]))]
     
     
     

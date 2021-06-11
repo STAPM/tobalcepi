@@ -24,7 +24,10 @@
 #'
 #' @return Returns a numeric vector containing  of each individual's relative risks for the tobacco-related disease
 #' specified by "disease".
-#' @importFrom data.table := setDT setnames
+#' 
+#' @importFrom data.table := setDT setnames copy
+#' @importFrom stapmr %fin%
+#' 
 #' @export
 #' @references
 #' \insertRef{webster2018risk}{tobalcepi}  
@@ -54,7 +57,7 @@ TobAlcInt <- function(
 
   rr <- rr.data[Disease == disease]
 
-  dtmp <- data.table::copy(data[ , .(x.tob = get(tobacco_var), x.alc = get(alcohol_var))])
+  dtmp <- copy(data[ , list(x.tob = get(tobacco_var), x.alc = get(alcohol_var))])
 
   # Conditions with a tobacco alcohol interaction
   str1 <- c(
@@ -65,7 +68,7 @@ TobAlcInt <- function(
   )
 
   # Calculate the synergy index.
-  if(disease %in% str1) {
+  if(disease %fin% str1) {
 
     alc1_tob0 <- rr[ , alc1_tob0]
     alc0_tob1 <- rr[ , alc0_tob1]

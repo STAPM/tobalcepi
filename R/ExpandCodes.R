@@ -65,7 +65,7 @@ ExpandCodes <- function(lkup) {
     }
   }
 
-  data.table::setDT(lkup1)
+  setDT(lkup1)
 
 return(lkup1[])
 }

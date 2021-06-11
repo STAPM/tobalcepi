@@ -136,7 +136,7 @@ AlcBinge_stapm <- function(
   data[ , `:=`(age_cat = NULL, height = NULL)]
   
   
-  return(data[])
+  return(data)
 }
 
 

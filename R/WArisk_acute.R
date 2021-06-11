@@ -39,7 +39,9 @@
 #'  Defaults to 3 units/day for females and 4 units/day for males.   
 #'
 #' @return Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.
+#' 
 #' @importFrom data.table := setDT setnames
+#' 
 #' @export
 #' 
 #'
@@ -49,7 +51,7 @@
 #' 
 #' # Function called within RRAlc()
 #' 
-#' data[ , ar := sapply(1:n, function(z) {
+#' data[ , ar := 
 #' tobalcepi::WArisk_acute(
 #'   SODMean = mean_sod[z],
 #'   SODSDV = occ_sd[z],
@@ -57,8 +59,7 @@
 #'   sex = sex[z],
 #'   grams_ethanol_per_unit = grams_ethanol_per_unit,
 #'   alc_wholly_acute_thresholds = alc_wholly_acute_thresholds
-#' )
-#' })]
+#' )]
 #' 
 #' risk_indiv <- 1 + data[ , ar] # add 1 to remove 0/0 = Not a number error later
 #' 
@@ -75,65 +76,80 @@ WArisk_acute <- function(
   alc_wholly_acute_thresholds = c(3, 4)
 ) {
   
-  # SODMean <- 18
-  # SODSDV <- 14
-  # SODFreq <- 4
-  # sex <- "Male"
+  # SODMean <- c(18, 18, 18)
+  # SODSDV <- c(14, 14, 14)
+  # SODFreq <- c(4, 4.5, 4.7)
+  # sex <- c("Male", "Male", "Female")
   # grams_ethanol_per_unit <- 8
   # alc_wholly_acute_thresholds <- c(6, 8)
   
+  kn <- 600
   
+  grams_ethanol <- 1:kn
   
   # The amounts of alcohol (g ethanol) that could be consumed on an occasion
   # i.e. the mass of alcohol ingested
-  grams_ethanol <- 1:600 # units * ConvertToGramOfAlcohol#1:100
+  #grams_ethanol <- 1:600 # units * ConvertToGramOfAlcohol#1:100
   
   # Calculate the cumulative probability distribution of each amount of alcohol (1 to 100 g) 
   # being drunk on an occasion
-  x <- stats::pnorm(
-    grams_ethanol,
-    SODMean * grams_ethanol_per_unit, # mean
-    SODSDV * grams_ethanol_per_unit # variance
-  )
+  # x <- stats::pnorm(
+  #   grams_ethanol,
+  #   SODMean * grams_ethanol_per_unit, # mean
+  #   SODSDV * grams_ethanol_per_unit # variance
+  # )
+  
+  x <- t(sapply(grams_ethanol,
+                stats::pnorm, 
+                mean = SODMean * grams_ethanol_per_unit, # mean
+                sd = SODSDV * grams_ethanol_per_unit # variance
+  ))
   
   # Convert from the cumulative distribution to the
   # probability that each level of alcohol is consumed on a drinking occasion
   #interval_prob <- x - c(0, x[1:(length(x) - 1)])
-  interval_prob <- diff(x)
+  #interval_prob <- diff(x)
+  interval_prob <- apply(x, 2, diff)
   
-  # NOT SURE IF THE LINE BELOW IS NEEDED
-  interval_prob <- interval_prob / sum(interval_prob)
+  #interval_prob <- interval_prob / sum(interval_prob)
+  interval_prob <- interval_prob / matrix(colSums(interval_prob), nrow = kn - 1, ncol = ncol(interval_prob), byrow = T)
   
   interval_prob[is.na(interval_prob)] <- 0
   
   # Units consumed above the binge threshold
   
-  if(sex == "Female") {
-    threshold <- alc_wholly_acute_thresholds[1] # 6 units
-  }
+  # if(sex == "Female") {
+  #   threshold <- alc_wholly_acute_thresholds[1] # 6 units
+  # }
+  # 
+  # if(sex == "Male") {
+  #   threshold <- alc_wholly_acute_thresholds[2] # 8 units
+  # }
   
-  if(sex == "Male") {
-    threshold <- alc_wholly_acute_thresholds[2] # 8 units
-  }
+  threshold <- ifelse(sex == "Female", 
+                      alc_wholly_acute_thresholds[1], # 6 units
+                      alc_wholly_acute_thresholds[2]) # 8 units
   
   # Convert grams of ethanol back to units
-  units_vec <- grams_ethanol[1:(600 - 1)] / grams_ethanol_per_unit
+  units_vec <- grams_ethanol[1:(kn - 1)] / grams_ethanol_per_unit
   
   # Subtract the threshold and replace negative values with zero
-  units_vec <- units_vec - threshold
+  #units_vec <- units_vec - threshold
+  units_vec <- outer(units_vec, threshold, FUN = "-")
+  
   units_vec <- replace(units_vec, units_vec < 0, 0)
   
   
   # Calculate the total number of units drunk above the binge threshold
   
   units_above_threshold <-
-    SODFreq * # expected number of weekly drinking occasions [number]
+    matrix(SODFreq, nrow = kn - 1, ncol = length(SODFreq), byrow = T) * # expected number of weekly drinking occasions [number]
     52 * # multiply by the number of weeks in a year [number]
     interval_prob * # the probability that each level of alcohol is consumed on a drinking occasion [vector]
     units_vec # units that are above the threshold
   
   # Total annual units drunk above the binge threshold
-  units_above_threshold_sum <- sum(units_above_threshold)
+  units_above_threshold_sum <- colSums(units_above_threshold)
   
   
   

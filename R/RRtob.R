@@ -35,7 +35,10 @@
 #'
 #' @return Returns a numeric vector of each individual's relative risks for the tobacco-related disease
 #' specified by "disease".
-#' @importFrom data.table := setDT setnames
+#' 
+#' @importFrom data.table := setDT setnames copy
+#' @importFrom stapmr %fin%
+#' 
 #' @export
 #' 
 #'
@@ -73,7 +76,7 @@ RRtob <- function(
   rr <- rr_data[condition == disease]
 
   # Select the consumption, age and sex columns
-  data_temp <- data.table::copy(data[ , .(x = get(smoker_status_var), sex = get(sex_var), age = get(age_var))])
+  data_temp <- copy(data[ , .(x = get(smoker_status_var), sex = get(sex_var), age = get(age_var))])
 
   data_temp[ , ageband := c(
     "<35",
@@ -90,36 +93,36 @@ RRtob <- function(
   # Diseases where risk differs by sex and age (35-64, 65+)
   str3 <- c("Ischaemic_heart_disease")
 
-  if(disease %in% str3) {
+  if(disease %fin% str3) {
 
     # Assign risks for current smokers
 
-    data_temp[x == "current" & ageband %in% c("<35", "35-44", "45-54", "55-64") & sex == "Male",
+    data_temp[x == "current" & ageband %fin% c("<35", "35-44", "45-54", "55-64") & sex == "Male",
       rr_indiv := rr[sex == "Male" & age == "35-64", relative_risk]]
 
-    data_temp[x == "current" & ageband %in% c("65-74", "75+") & sex == "Male",
+    data_temp[x == "current" & ageband %fin% c("65-74", "75+") & sex == "Male",
       rr_indiv := rr[sex == "Male" & age == "65+", relative_risk]]
 
-    data_temp[x == "current" & ageband %in% c("<35", "35-44", "45-54", "55-64") & sex == "Female",
+    data_temp[x == "current" & ageband %fin% c("<35", "35-44", "45-54", "55-64") & sex == "Female",
       rr_indiv := rr[sex == "Female" & age == "35-64", relative_risk]]
 
-    data_temp[x == "current" & ageband %in% c("65-74", "75+") & sex == "Female",
+    data_temp[x == "current" & ageband %fin% c("65-74", "75+") & sex == "Female",
       rr_indiv := rr[sex == "Female" & age == "65+", relative_risk]]
 
     # Also assign the risks for current smoking to former smokers
     # as the risk for former smokers will subsequently be reduced according to the number of years
     # since these former smokers quit
 
-    data_temp[x == "former" & ageband %in% c("<35", "35-44", "45-54", "55-64") & sex == "Male",
+    data_temp[x == "former" & ageband %fin% c("<35", "35-44", "45-54", "55-64") & sex == "Male",
                     rr_indiv := rr[sex == "Male" & age == "35-64", relative_risk]]
 
-    data_temp[x == "former" & ageband %in% c("65-74", "75+") & sex == "Male",
+    data_temp[x == "former" & ageband %fin% c("65-74", "75+") & sex == "Male",
                     rr_indiv := rr[sex == "Male" & age == "65+", relative_risk]]
 
-    data_temp[x == "former" & ageband %in% c("<35", "35-44", "45-54", "55-64") & sex == "Female",
+    data_temp[x == "former" & ageband %fin% c("<35", "35-44", "45-54", "55-64") & sex == "Female",
                     rr_indiv := rr[sex == "Female" & age == "35-64", relative_risk]]
 
-    data_temp[x == "former" & ageband %in% c("65-74", "75+") & sex == "Female",
+    data_temp[x == "former" & ageband %fin% c("65-74", "75+") & sex == "Female",
                     rr_indiv := rr[sex == "Female" & age == "65+", relative_risk]]
 
   }
@@ -184,7 +187,7 @@ RRtob <- function(
     "Parkinson"
   )
 
-  if(disease %in% str4) {
+  if(disease %fin% str4) {
 
     # Assign risks for current smokers
 

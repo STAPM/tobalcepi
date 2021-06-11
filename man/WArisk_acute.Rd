@@ -66,7 +66,7 @@ We assume that each individual's risk is proportional to that value.
 
 # Function called within RRAlc()
 
-data[ , ar := sapply(1:n, function(z) {
+data[ , ar := 
 tobalcepi::WArisk_acute(
   SODMean = mean_sod[z],
   SODSDV = occ_sd[z],
@@ -74,8 +74,7 @@ tobalcepi::WArisk_acute(
   sex = sex[z],
   grams_ethanol_per_unit = grams_ethanol_per_unit,
   alc_wholly_acute_thresholds = alc_wholly_acute_thresholds
-)
-})]
+)]
 
 risk_indiv <- 1 + data[ , ar] # add 1 to remove 0/0 = Not a number error later
 

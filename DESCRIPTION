@@ -29,6 +29,7 @@ Description: Functions to assign relative risks of disease to individuals based 
 License: GPL-3
 URL: https://stapm.gitlab.io/r-packages/tobalcepi/
 Encoding: UTF-8
+ByteCompile: true
 LazyData: true
 Suggests: 
     knitr,

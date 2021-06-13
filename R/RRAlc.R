@@ -885,9 +885,21 @@ RRalc <- function(
                    Widmark_r = rwatson,
                    cause = "Transport",
                    grams_ethanol_per_unit = grams_ethanol_per_unit
-                 )
+                 ), 
                
-    ]#    , by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
+               by = c("sex", "imd_quintile")]
+    
+    
+    # tobalcepi::PArisk(
+    #   SODMean = data_RRalc[GPerDay > 0, mean_sod],
+    #   SODSDV = data_RRalc[GPerDay > 0, occ_sd],
+    #   SODFreq = data_RRalc[GPerDay > 0, drink_freq],
+    #   Weight = data_RRalc[GPerDay > 0, weight],
+    #   Widmark_r = data_RRalc[GPerDay > 0, rwatson],
+    #   cause = "Transport",
+    #   grams_ethanol_per_unit = grams_ethanol_per_unit
+    # )
+    # 
     
     #tictoc::toc()
     
@@ -927,9 +939,11 @@ RRalc <- function(
                    Widmark_r = rwatson,
                    cause = "Fall",
                    grams_ethanol_per_unit = grams_ethanol_per_unit
-                 )
+                 ), 
                
-    ]# , by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
+               by = c("sex", "imd_quintile")]
+               
+    #]# , by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
     
     risk_indiv <- data_RRalc[ , rr]
     
@@ -965,9 +979,11 @@ RRalc <- function(
                    Widmark_r = rwatson,
                    cause = "Violence",
                    grams_ethanol_per_unit = grams_ethanol_per_unit
-                 )
+                 ), 
                
-               ]#, by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
+               by = c("sex", "imd_quintile")]
+               
+               #]#, by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
     
     risk_indiv <- data_RRalc[ , rr]
     
@@ -991,8 +1007,10 @@ RRalc <- function(
                    Widmark_r = rwatson,
                    cause = "Other",
                    grams_ethanol_per_unit = grams_ethanol_per_unit
-                 )
-    ]
+                 ), 
+               
+               by = c("sex", "imd_quintile")]
+    #]
      #          , by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
     
     
@@ -1081,7 +1099,9 @@ RRalc <- function(
         sex = sex,
         grams_ethanol_per_unit = grams_ethanol_per_unit,
         alc_wholly_acute_thresholds = alc_wholly_acute_thresholds
-      )
+      )#, 
+      
+      #by = c("sex", "imd_quintile")]
       
     ]#, by = seq_len(NROW(data_RRalc[GPerDay > min(alc_wholly_acute_thresholds) * grams_ethanol_per_unit]))]
     

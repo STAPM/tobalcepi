@@ -35,7 +35,8 @@ Suggests:
     knitr,
     rmarkdown,
     roxygen2,
-    usethis
+    usethis,
+    stapmr
 Imports: 
     boot,
     VGAM,
@@ -47,7 +48,6 @@ Imports:
     Rdpack,
     lifecycle,
     crayon,
-    stapmr,
     TTR,
     Rfast
 RdMacros: Rdpack, lifecycle

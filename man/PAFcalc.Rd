@@ -16,7 +16,9 @@ PAFcalc(
   year_range = "all",
   pool = FALSE,
   subgroups = c("sex", "age_cat"),
-  tobalc_include_int = FALSE
+  tobalc_include_int = FALSE,
+  within_model = FALSE,
+  mort_or_morb = c("mort", "morb")[1]
 )
 }
 \arguments{
@@ -57,6 +59,12 @@ Weight variable must be called "wt_int".}
 should a (synergistic/multiplicative) interaction between exposure to tobacco and alcohol be included.
 Defaults to FALSE. If TRUE, then only interactive effects for oesophageal, pharynx, oral cavity and larynx cancers
 are considered.}
+
+\item{within_model}{Logical - is the function being used to calculate PAFs 
+from the results of a STAPM model simulation. Defaults to FALSE.}
+
+\item{mort_or_morb}{Character string - whether the risk functions for conditions with separate mortality and morbidity risk functions 
+should refer to mortality or morbidity. Values could be "mort" or "morb". Default is "mort".}
 }
 \value{
 Returns a data.table containing the estimated PAFs.

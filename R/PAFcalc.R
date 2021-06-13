@@ -21,8 +21,14 @@
 #'  should a (synergistic/multiplicative) interaction between exposure to tobacco and alcohol be included.
 #'  Defaults to FALSE. If TRUE, then only interactive effects for oesophageal, pharynx, oral cavity and larynx cancers
 #'  are considered.
+#' @param within_model Logical - is the function being used to calculate PAFs 
+#' from the results of a STAPM model simulation. Defaults to FALSE.
+#' @param mort_or_morb Character string - whether the risk functions for conditions with separate mortality and morbidity risk functions 
+#' should refer to mortality or morbidity. Values could be "mort" or "morb". Default is "mort".
 #' 
 #' @return Returns a data.table containing the estimated PAFs.
+#' 
+#' @importFrom data.table rbindlist setnames
 #' 
 #' @export
 #' 
@@ -53,29 +59,62 @@ PAFcalc <- function(
   year_range = "all",
   pool = FALSE,
   subgroups = c("sex", "age_cat"),
-  tobalc_include_int = FALSE
+  tobalc_include_int = FALSE,
+  within_model = FALSE,
+  mort_or_morb = c("mort", "morb")[1]
 ) {
   
-  # Add the relative risks to the data
-  data_rr <- tobalcepi::RRFunc(
-    data = data,
-    substance = substance,
-    tob_diseases = tobalcepi::tob_disease_names,
-    tob_include_risk_in_former_smokers = tob_include_risk_in_former_smokers,
-    alc_diseases = tobalcepi::alc_disease_names,
-    alc_mort_and_morb = c(
-      "Ischaemic_heart_disease", 
-      "LiverCirrhosis", 
-      "Haemorrhagic_Stroke",
-      "Ischaemic_Stroke"),
-    alc_risk_lags = FALSE,
-    alc_protective = alc_protective,
-    alc_wholly_chronic_thresholds = alc_wholly_chronic_thresholds,
-    alc_wholly_acute_thresholds = alc_wholly_acute_thresholds,
-    grams_ethanol_per_unit = grams_ethanol_per_unit,
-    show_progress = TRUE,
-    within_model = FALSE,
-    tobalc_include_int = tobalc_include_int)
+  years <- min(data$year):max(data$year)
+  
+  cat("Assigning relative risks\n")
+  
+  for(y in years) {
+    
+    #y <- years[1]
+    
+    cat("\t", y, "\n")
+    
+    # Add the relative risks to the data
+    data_rr <- tobalcepi::RRFunc(
+      data = data[year == y],
+      substance = substance,
+      tob_diseases = tobalcepi::tob_disease_names,
+      tob_include_risk_in_former_smokers = tob_include_risk_in_former_smokers,
+      alc_diseases = tobalcepi::alc_disease_names,
+      alc_mort_and_morb = c(
+        "Ischaemic_heart_disease", 
+        "LiverCirrhosis", 
+        "Haemorrhagic_Stroke",
+        "Ischaemic_Stroke"),
+      alc_risk_lags = FALSE,
+      alc_protective = alc_protective,
+      alc_wholly_chronic_thresholds = alc_wholly_chronic_thresholds,
+      alc_wholly_acute_thresholds = alc_wholly_acute_thresholds,
+      grams_ethanol_per_unit = grams_ethanol_per_unit,
+      show_progress = TRUE,
+      within_model = within_model,
+      tobalc_include_int = tobalc_include_int)
+    
+    if(y == years[1]) {
+      
+      data_rr_comb <- copy(data_rr)
+      
+    } else {
+      
+      data_rr_comb <- rbindlist(list(data_rr_comb, copy(data_rr)), use.names = T)
+      
+    }
+    
+  }
+  
+  
+  # If need morbidity relative risks
+  
+  if(mort_or_morb == "morb") {
+    data_rr_comb <- data_rr_comb[ , c("Ischaemic_heart_disease", "LiverCirrhosis", "Haemorrhagic_Stroke", "Ischaemic_Stroke") := NULL]
+    setnames(data_rr_comb, paste0(c("Ischaemic_heart_disease", "LiverCirrhosis", "Haemorrhagic_Stroke", "Ischaemic_Stroke"), "_morb"), c("Ischaemic_heart_disease", "LiverCirrhosis", "Haemorrhagic_Stroke", "Ischaemic_Stroke"))
+  }
+  
   
   # Calculate PAFs
   
@@ -84,7 +123,7 @@ PAFcalc <- function(
   if(substance == "tobalc") disease_names <- union(tobalcepi::tob_disease_names, tobalcepi::alc_disease_names)
   
   paf_data <- subgroupRisk(
-    data = data_rr,
+    data = data_rr_comb,
     af = TRUE,
     disease_names = disease_names,
     use_weights = use_weights,
@@ -92,7 +131,7 @@ PAFcalc <- function(
     subgroups = subgroups)
   
   
-  return(paf_data[])
+  return(paf_data)
 }
 
 

@@ -171,20 +171,22 @@ subgroupRisk <- function(
     kn <- NROW(out[get(d) < 0])
     testthat::expect_equal(kn, 0, info = paste0("subgroupRisk: negative values in risk values for ", d, " input into function"))
     
-    #if(d %in% abs_diseases) {
     
-    # For absolute risk
-    out[, (paste0(d, "_z")) := weight * get(d)]
+    # NEEDS MORE CHECKING TO ENSURE CONSISTENT WITH THE MATHEMATICS
     
-    #} else {
     
-    # For relative risk
-    #out[, (paste0(d, "_z")) := weight * (get(d) - 1)]
+    if(isTRUE(af)) {
+      
+      # For PAF
+      out[, (paste0(d, "_z")) := weight * (get(d) - 1)]
+      
+    } else {
+      
+      # For PIF
+      out[, (paste0(d, "_z")) := weight * get(d)]
+      
+    }
     
-    #}
-    
-    # Fix - for later review - replace zeros with tiny amount
-    #out[get(paste0(d, "_z")), (paste0(d, "_z")) := 1e-16]
     
   }
   
@@ -271,7 +273,8 @@ subgroupRisk <- function(
     
   }
   
-  return(out_risk[])
+  
+  return(out_risk)
 }
 
 

@@ -83,7 +83,7 @@ are considered.}
 
 \item{show_progress}{Logical - Should the progress of the loop through diseases be shown. Defaults to FALSE.}
 
-\item{within_model}{Logical - is the function being used within a new-style STAPM simulation. 
+\item{within_model}{Logical - is the function being used within a STAPM simulation. 
 Defaults to TRUE.}
 }
 \value{

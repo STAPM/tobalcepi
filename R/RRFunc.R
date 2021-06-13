@@ -97,7 +97,7 @@
 #'  are considered.
 #' @param tobalc_int_data Data table containing the disease-specific interactions between tobacco and alcohol.
 #' @param show_progress Logical - Should the progress of the loop through diseases be shown. Defaults to FALSE.
-#' @param within_model Logical - is the function being used within a new-style STAPM simulation. 
+#' @param within_model Logical - is the function being used within a STAPM simulation. 
 #' Defaults to TRUE.
 #' 
 #' @return Two data tables are returned:

@@ -32,7 +32,9 @@
 #' @param getcurve Logical - do you just want to look at the risk function curve?
 #'
 #' @return Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.
-#' @importFrom data.table := setDT setnames
+#' 
+#' @importFrom data.table := setDT setnames CJ
+#' 
 #' @export
 #'
 #'
@@ -163,7 +165,15 @@ PArisk <- function(
     liver_clearance_rate_m <- liver_clearance_rate_h / 60
     
     #Duration_m <- 100 * grams_ethanol[1:(kn - 1)] / (Widmark_r * Weight * 1000 * liver_clearance_rate_m)
-    Duration_m <- outer(100 * grams_ethanol[1:(kn - 1)], Widmark_r * Weight * 1000 * liver_clearance_rate_m, FUN = "/")
+    
+    
+    # Look for faster vectorised alternatives to outer
+    
+    x <- 100 * grams_ethanol[1:(kn - 1)]
+    y <- Widmark_r * Weight * 1000 * liver_clearance_rate_m
+    
+    Duration_m <- outer(x, y, FUN = "/")
+    
     
     # Convert to hours
     Duration_h <- Duration_m / 60

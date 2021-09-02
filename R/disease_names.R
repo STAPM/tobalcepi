@@ -36,7 +36,7 @@
 #' @format A data.table containing disease groupings following the schemes used in 
 #' the Royal College of Physicians report 'Hiding in Plain Sight' Chapter 3 \insertCite{RCP2018}{tobalcepi} 
 #' and \insertCite{Angus2018;textual}{tobalcepi}. 
-#' Also includes a column of formatted disease names.
+#' Also includes a column of formatted disease names and an indication of which diseases are related to tobacco only, alcohol only or both
 #'
 #' @references
 #' \insertRef{RCP2018}{tobalcepi}    

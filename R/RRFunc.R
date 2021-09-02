@@ -326,6 +326,23 @@ RRFunc <- function(
   
   cat(paste0("\t\tCalculating risk for ", dn, " conditions\n"))
   
+  ########
+  # for alcohol - 
+  # Note that these functions run slow for partially attributable acute conditions
+  # one way to speed the process up is to avoid running the calculations more than once 
+  # when the same result will be produced
+  # this occurs for 
+  # c("Assault", "Other_intentional_injuries") - which are both subject to the 'violence' risk function from Cherpitel 
+  # c("Mechanical_forces", "Drowning", "Other_unintentional_injuries", "intentional_self_harm", "Accidental_poisoning", "Fire_injuries") - which all use the 'other' risk function
+  # same is true for wholly attributable chronic and wholly attributable acute
+  
+  # Flag 0 or 1 if a risk function calculation for each of these groups has already occurred
+  pa_violence_flag <- 0
+  pa_other_flag <- 0
+  wa_chronic_flag <- 0
+  wa_acute_flag <- 0
+  ########
+  
   # Loop through each disease
   for (i in 1:dn) {
     
@@ -342,7 +359,9 @@ RRFunc <- function(
     #############################################################
     # Relative risks - alcohol
     
-    if(d %fin% alc_diseases_expanded & substance %fin% c("alc", "tobalc")) {
+    if(d %in% alc_diseases_expanded & substance %in% c("alc", "tobalc")) {
+      
+      # d <- "Fall_injuries"
       
       # Setup names of temporary variables
       d_alc <- paste0(d, "_alcx")
@@ -350,23 +369,189 @@ RRFunc <- function(
       
       alc_mort_or_morb <- ifelse(stringr::str_detect(d, "_morb"), "morb", "mort")
       
-      # Apply function that computes each individual's relative risk for a condition
-      alcrr <- tobalcepi::RRalc(
-        data = data,
-        disease = d,
-        mort_or_morb = alc_mort_or_morb,
-        alc_protective = alc_protective,
-        alc_wholly_chronic_thresholds = alc_wholly_chronic_thresholds,
-        alc_wholly_acute_thresholds = alc_wholly_acute_thresholds,
-        av_weekly_grams_per_day_var = "GPerDay",
-        sex_var = "sex",
-        age_var = "age",
-        grams_ethanol_per_unit = grams_ethanol_per_unit,
-        within_model = within_model
-      )
+      ##
+      # Partial acute - violence
+      if(d %in% c("Assault", "Other_intentional_injuries")) {
+        
+        if(pa_violence_flag == 0) {
+          
+          # Apply function that computes each individual's relative risk for a condition
+          alcrr <- tobalcepi::RRalc(
+            data = data,
+            disease = d,
+            mort_or_morb = alc_mort_or_morb,
+            alc_protective = alc_protective,
+            alc_wholly_chronic_thresholds = alc_wholly_chronic_thresholds,
+            alc_wholly_acute_thresholds = alc_wholly_acute_thresholds,
+            av_weekly_grams_per_day_var = "GPerDay",
+            sex_var = "sex",
+            age_var = "age",
+            grams_ethanol_per_unit = grams_ethanol_per_unit,
+            within_model = within_model
+          )
+          
+          pa_violence_flag <- 1
+          
+          violence_rr <- alcrr
+          
+        }
+        
+        data[ , (d_alc) := violence_rr]
+        
+      }
       
-      data[ , (d_alc) := alcrr]
+      ##
+      # Partial acute - other
+      if(d %in% c("Mechanical_forces", "Drowning", "Other_unintentional_injuries", "intentional_self_harm", "Accidental_poisoning", "Fire_injuries")) {
+        
+        if(pa_other_flag == 0) {
+          
+          # Apply function that computes each individual's relative risk for a condition
+          alcrr <- tobalcepi::RRalc(
+            data = data,
+            disease = d,
+            mort_or_morb = alc_mort_or_morb,
+            alc_protective = alc_protective,
+            alc_wholly_chronic_thresholds = alc_wholly_chronic_thresholds,
+            alc_wholly_acute_thresholds = alc_wholly_acute_thresholds,
+            av_weekly_grams_per_day_var = "GPerDay",
+            sex_var = "sex",
+            age_var = "age",
+            grams_ethanol_per_unit = grams_ethanol_per_unit,
+            within_model = within_model
+          )
+          
+          pa_other_flag <- 1
+          
+          other_rr <- alcrr
+          
+        }
+        
+        data[ , (d_alc) := other_rr]
+        
+      }
       
+      ##
+      # Wholly attributable chronic
+      if(d %in% c(
+        "Alcoholic_cardiomyopathy",
+        "Alcoholic_gastritis",
+        "Alcoholic_liver_disease",
+        "Acute_pancreatitis_alcohol_induced",
+        "Chronic_pancreatitis_alcohol_induced",
+        "Alcohol_induced_pseudoCushings_syndrome",
+        "Alcoholic_myopathy",
+        "Alcoholic_polyneuropathy",
+        "Maternal_care_for_suspected_damage_to_foetus_from_alcohol",
+        "Degeneration",
+        "Mental_and_behavioural_disorders_due_to_use_of_alcohol")
+      ) {
+        
+        if(wa_chronic_flag == 0) {
+          
+          # Apply function that computes each individual's relative risk for a condition
+          alcrr <- tobalcepi::RRalc(
+            data = data,
+            disease = d,
+            mort_or_morb = alc_mort_or_morb,
+            alc_protective = alc_protective,
+            alc_wholly_chronic_thresholds = alc_wholly_chronic_thresholds,
+            alc_wholly_acute_thresholds = alc_wholly_acute_thresholds,
+            av_weekly_grams_per_day_var = "GPerDay",
+            sex_var = "sex",
+            age_var = "age",
+            grams_ethanol_per_unit = grams_ethanol_per_unit,
+            within_model = within_model
+          )
+          
+          wa_chronic_flag <- 1
+          
+          wa_chronic_ar <- alcrr
+          
+        }
+        
+        data[ , (d_alc) := wa_chronic_ar]
+        
+      }
+      
+      ##
+      # Wholly attributable acute
+      if(d %in% c(
+        "Excessive_Blood_Level_of_Alcohol",
+        "Toxic_effect_of_alcohol",
+        "Alcohol_poisoning",
+        "Evidence_of_alcohol_involvement_determined_by_blood_alcohol_level",
+        "Acute_intoxication")
+      ) {
+        
+        if(wa_acute_flag == 0) {
+          
+          # Apply function that computes each individual's relative risk for a condition
+          alcrr <- tobalcepi::RRalc(
+            data = data,
+            disease = d,
+            mort_or_morb = alc_mort_or_morb,
+            alc_protective = alc_protective,
+            alc_wholly_chronic_thresholds = alc_wholly_chronic_thresholds,
+            alc_wholly_acute_thresholds = alc_wholly_acute_thresholds,
+            av_weekly_grams_per_day_var = "GPerDay",
+            sex_var = "sex",
+            age_var = "age",
+            grams_ethanol_per_unit = grams_ethanol_per_unit,
+            within_model = within_model
+          )
+          
+          wa_acute_flag <- 1
+          
+          wa_acute_ar <- alcrr
+          
+        }
+        
+        data[ , (d_alc) := wa_acute_ar]
+        
+      }
+      
+      ##
+      # all the other alcohol related conditions
+      if(!(d %in% c(
+        "Assault", "Other_intentional_injuries",
+        "Mechanical_forces", "Drowning", "Other_unintentional_injuries", "intentional_self_harm", "Accidental_poisoning", "Fire_injuries",
+        "Alcoholic_cardiomyopathy",
+        "Alcoholic_gastritis",
+        "Alcoholic_liver_disease",
+        "Acute_pancreatitis_alcohol_induced",
+        "Chronic_pancreatitis_alcohol_induced",
+        "Alcohol_induced_pseudoCushings_syndrome",
+        "Alcoholic_myopathy",
+        "Alcoholic_polyneuropathy",
+        "Maternal_care_for_suspected_damage_to_foetus_from_alcohol",
+        "Degeneration",
+        "Mental_and_behavioural_disorders_due_to_use_of_alcohol",
+        "Excessive_Blood_Level_of_Alcohol",
+        "Toxic_effect_of_alcohol",
+        "Alcohol_poisoning",
+        "Evidence_of_alcohol_involvement_determined_by_blood_alcohol_level",
+        "Acute_intoxication")
+      )) {
+        
+        # Apply function that computes each individual's relative risk for a condition
+        alcrr <- tobalcepi::RRalc(
+          data = data,
+          disease = d,
+          mort_or_morb = alc_mort_or_morb,
+          alc_protective = alc_protective,
+          alc_wholly_chronic_thresholds = alc_wholly_chronic_thresholds,
+          alc_wholly_acute_thresholds = alc_wholly_acute_thresholds,
+          av_weekly_grams_per_day_var = "GPerDay",
+          sex_var = "sex",
+          age_var = "age",
+          grams_ethanol_per_unit = grams_ethanol_per_unit,
+          within_model = within_model
+        )
+        
+        data[ , (d_alc) := alcrr]
+        
+      }
       
       #############################################################
       #############################################################
@@ -380,7 +565,7 @@ RRFunc <- function(
       
       if(isTRUE(alc_risk_lags) & !is.null(alc_indiv_risk_trajectories_store) & 
          
-         d %fin% alc_lag_diseases
+         d %in% alc_lag_diseases
          
       ) {
         
@@ -452,7 +637,7 @@ RRFunc <- function(
       # If the relative risk for alcohol does not need to feed forward
       # into a further calculation of joint relative risk for the disease being considered,
       # then the temporary name can be changed to be just the name of disease
-      if(substance == "alc" | (substance == "tobalc" & !(d %fin% intersect(alc_diseases_expanded, tob_diseases)))) {
+      if(substance == "alc" | (substance == "tobalc" & !(d %in% intersect(alc_diseases_expanded, tob_diseases)))) {
         
         data[ , (d) := get(d_alc)]
         
@@ -465,7 +650,7 @@ RRFunc <- function(
     # Relative risks - tobacco
     
     
-    if(d %fin% tob_diseases & substance %fin% c("tob", "tobalc")) {
+    if(d %in% tob_diseases & substance %in% c("tob", "tobalc")) {
       
       # Setup names of temporary variables
       d_tob <- paste0(d, "_tob")
@@ -513,7 +698,7 @@ RRFunc <- function(
       # If the relative risk for alcohol does not need to feed forward
       # into a further calculation of joint relative risk for the disease being considered,
       # then the temporary name can be changed to be just the name of disease
-      if(substance == "tob" | (substance == "tobalc" & !(d %fin% intersect(alc_diseases_expanded, tob_diseases)))) {
+      if(substance == "tob" | (substance == "tobalc" & !(d %in% intersect(alc_diseases_expanded, tob_diseases)))) {
         
         setnames(data, d_tob, d)
         
@@ -526,7 +711,7 @@ RRFunc <- function(
     # Relative risks - joint tobacco and alcohol risk
     
     
-    if(d %fin% intersect(alc_diseases, tob_diseases) & substance == "tobalc") {
+    if(d %in% intersect(alc_diseases, tob_diseases) & substance == "tobalc") {
       
       if(isTRUE(tobalc_include_int)) { # If synergy should be accounted for
         

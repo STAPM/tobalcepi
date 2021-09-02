@@ -119,7 +119,7 @@ RRalc <- function(
   # Initially set everyone's value to 1
   risk_indiv <- rep(1, n)
   
-
+  
   
   ################################################################################
   # Partial chronic--------
@@ -856,7 +856,7 @@ RRalc <- function(
     #             grams_ethanol_per_unit = grams_ethanol_per_unit)   
     #  
     # tictoc::toc()
-  
+    
     #tictoc::tic()
     
     # data_RRalc[ , rr := sapply(1:n, function(z) {
@@ -929,6 +929,16 @@ RRalc <- function(
     
     data_RRalc[ , rr := 1]
     
+    # tobalcepi::PArisk(
+    #   SODMean = data_RRalc[GPerDay > 0, mean_sod],
+    #   SODSDV = data_RRalc[GPerDay > 0, occ_sd],
+    #   SODFreq = data_RRalc[GPerDay > 0, drink_freq],
+    #   Weight = data_RRalc[GPerDay > 0, weight],
+    #   Widmark_r = data_RRalc[GPerDay > 0, rwatson],
+    #   cause = "Fall",
+    #   grams_ethanol_per_unit = grams_ethanol_per_unit
+    # )
+    
     data_RRalc[GPerDay > 0, rr :=  
                  
                  tobalcepi::PArisk(
@@ -942,7 +952,7 @@ RRalc <- function(
                  ), 
                
                by = c("sex", "imd_quintile")]
-               
+    
     #]# , by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
     
     risk_indiv <- data_RRalc[ , rr]
@@ -982,8 +992,8 @@ RRalc <- function(
                  ), 
                
                by = c("sex", "imd_quintile")]
-               
-               #]#, by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
+    
+    #]#, by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
     
     risk_indiv <- data_RRalc[ , rr]
     
@@ -1011,7 +1021,7 @@ RRalc <- function(
                
                by = c("sex", "imd_quintile")]
     #]
-     #          , by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
+    #          , by = seq_len(NROW(data_RRalc[GPerDay > 0]))]
     
     
     
@@ -1091,18 +1101,18 @@ RRalc <- function(
     
     
     data_RRalc[GPerDay > min(alc_wholly_acute_thresholds) * grams_ethanol_per_unit, ar :=  
-      
-      tobalcepi::WArisk_acute(
-        SODMean = mean_sod,
-        SODSDV = occ_sd,
-        SODFreq = drink_freq,
-        sex = sex,
-        grams_ethanol_per_unit = grams_ethanol_per_unit,
-        alc_wholly_acute_thresholds = alc_wholly_acute_thresholds
-      )#, 
-      
-      #by = c("sex", "imd_quintile")]
-      
+                 
+                 tobalcepi::WArisk_acute(
+                   SODMean = mean_sod,
+                   SODSDV = occ_sd,
+                   SODFreq = drink_freq,
+                   sex = sex,
+                   grams_ethanol_per_unit = grams_ethanol_per_unit,
+                   alc_wholly_acute_thresholds = alc_wholly_acute_thresholds
+                 )#, 
+               
+               #by = c("sex", "imd_quintile")]
+               
     ]#, by = seq_len(NROW(data_RRalc[GPerDay > min(alc_wholly_acute_thresholds) * grams_ethanol_per_unit]))]
     
     

@@ -99,8 +99,15 @@ WArisk_acute <- function(
   #   SODSDV * grams_ethanol_per_unit # variance
   # )
   
-  x <- t(sapply(grams_ethanol,
-                stats::pnorm, 
+  # x <- t(sapply(grams_ethanol,
+  #               stats::pnorm, 
+  #               mean = SODMean * grams_ethanol_per_unit, # mean
+  #               sd = SODSDV * grams_ethanol_per_unit # variance
+  # ))
+  
+  x <- t(vapply(X = grams_ethanol,
+                FUN = stats::pnorm, 
+                FUN.VALUE = numeric(length(SODMean)),
                 mean = SODMean * grams_ethanol_per_unit, # mean
                 sd = SODSDV * grams_ethanol_per_unit # variance
   ))

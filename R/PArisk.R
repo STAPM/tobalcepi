@@ -172,6 +172,9 @@ PArisk <- function(
     x <- 100 * grams_ethanol[1:(kn - 1)]
     y <- Widmark_r * Weight * 1000 * liver_clearance_rate_m
     
+    # x <- 1:600
+    # y <- 1:1e5
+    
     Duration_m <- outer(x, y, FUN = "/")
     
     
@@ -186,11 +189,30 @@ PArisk <- function(
     #   SODSDV * grams_ethanol_per_unit # variance
     # )
     
-    x <- t(sapply(grams_ethanol,
-                  stats::pnorm, 
+    # grams_ethanol <- 1:600
+    # SODMean <- 4
+    # SODSDV <- 2
+    # grams_ethanol_per_unit <- 8
+    # lb <- bench::mark(
+    # x <- t(sapply(grams_ethanol,
+    #               stats::pnorm, 
+    #               mean = SODMean * grams_ethanol_per_unit, # mean
+    #               sd = SODSDV * grams_ethanol_per_unit # variance
+    # ))
+    # ,
+    # 
+    
+    x <- t(vapply(X = grams_ethanol,
+                  FUN = stats::pnorm, 
+                  FUN.VALUE = numeric(length(SODMean)),
                   mean = SODMean * grams_ethanol_per_unit, # mean
                   sd = SODSDV * grams_ethanol_per_unit # variance
     ))
+    
+    # 
+    # )
+    # 
+    # lb
     
     #######################
     # Convert from the cumulative distribution to the
@@ -325,7 +347,13 @@ PArisk <- function(
     
     # Annual risk
     #Annual_risk <- min((Risk_sum + 1 * (365 * 24 - Time_intox_sum)) / (365 * 24), 365 * 24, na.rm = T)
-    Annual_risk <- sapply(1:length(Risk_sum), function(z) min((Risk_sum[z] + 1 * (365 * 24 - Time_intox_sum[z])) / (365 * 24), (365 * 24), na.rm = T))
+    Annual_risk <- vapply(
+      X = 1:length(Risk_sum), 
+      FUN = function(z) {
+        min((Risk_sum[z] + 1 * (365 * 24 - Time_intox_sum[z])) / (365 * 24), (365 * 24), na.rm = T)
+      },
+      FUN.VALUE = numeric(1)
+    )
     
     # 
     # rm(
@@ -335,8 +363,6 @@ PArisk <- function(
     # gc()
     # 
     # 
-    
-    
     
     
     return(Annual_risk)

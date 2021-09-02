@@ -122,7 +122,7 @@ PAFcalc <- function(
   if(substance == "alc") disease_names <- tobalcepi::alc_disease_names
   if(substance == "tobalc") disease_names <- union(tobalcepi::tob_disease_names, tobalcepi::alc_disease_names)
   
-  paf_data <- subgroupRisk(
+  paf_data <- tobalcepi::subgroupRisk(
     data = data_rr_comb,
     af = TRUE,
     disease_names = disease_names,

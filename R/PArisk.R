@@ -1,6 +1,6 @@
 
 
-#' Relative risks for alcohol-related injuries \lifecycle{stable}
+#' Relative risks for alcohol-related injuries
 #'
 #' Uses the 'new' binge model methods to calculate a relative risk
 #' for each individual for experiencing each cause during one year.
@@ -13,10 +13,8 @@
 #'  and the discussion paper by Hill-McManus 2014. The relative risks for alcohol-related injuries
 #'  are taken from Cherpitel et al 2015.
 #'
-#' @param SODMean Numeric vector - the average amount that each individual is expected to
-#' drink on a single drinking occasion.
-#' @param SODSDV Numeric vector - the standard deviation of the amount that each individual is expected to
-#' drink on a single drinking occasion.
+#' @param interval_prob_vec Column of vectors - the probabilities that each individual 
+#' drinks each amount of grams of ethanol (1:600) on a single drinking occasion.
 #' @param SODFreq Numeric vector - the expected number of drinking occasions that
 #' each individual has each week.
 #' @param Weight Numeric vector - each individual's body weight in kg.
@@ -33,7 +31,7 @@
 #'
 #' @return Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.
 #' 
-#' @importFrom data.table := setDT setnames CJ
+#' @importFrom data.table := setDT setnames
 #' 
 #' @export
 #'
@@ -137,8 +135,7 @@
 #' }
 #'
 PArisk <- function(
-  SODMean = NULL,
-  SODSDV = NULL,
+  interval_prob_vec = NULL,
   SODFreq = NULL,
   Weight = NULL,
   Widmark_r = NULL,
@@ -149,7 +146,14 @@ PArisk <- function(
   getcurve = FALSE
 ) {
   
-  kn <- 600
+  
+  # The max number of grams of ethanol per day drunk on a single drinking ocassion
+  # 600 is v large
+  # but this can influence the probability density
+  # but it makes things slow to have a large number
+  # try scaling back by 10%
+  kn <- 600 * 0.9
+  
   
   grams_ethanol <- 1:kn
   
@@ -181,55 +185,8 @@ PArisk <- function(
     # Convert to hours
     Duration_h <- Duration_m / 60
     
-    #######################
-    # Calculate the cumulative probability distribution of each amount of alcohol (1 to 100 g) being drunk on an occasion
-    # x <- stats::pnorm(
-    #   grams_ethanol,
-    #   SODMean * grams_ethanol_per_unit, # mean
-    #   SODSDV * grams_ethanol_per_unit # variance
-    # )
-    
-    # grams_ethanol <- 1:600
-    # SODMean <- 4
-    # SODSDV <- 2
-    # grams_ethanol_per_unit <- 8
-    # lb <- bench::mark(
-    # x <- t(sapply(grams_ethanol,
-    #               stats::pnorm, 
-    #               mean = SODMean * grams_ethanol_per_unit, # mean
-    #               sd = SODSDV * grams_ethanol_per_unit # variance
-    # ))
-    # ,
-    # 
-    
-    x <- t(vapply(X = grams_ethanol,
-                  FUN = stats::pnorm, 
-                  FUN.VALUE = numeric(length(SODMean)),
-                  mean = SODMean * grams_ethanol_per_unit, # mean
-                  sd = SODSDV * grams_ethanol_per_unit # variance
-    ))
-    
-    # 
-    # )
-    # 
-    # lb
-    
-    #######################
-    # Convert from the cumulative distribution to the
-    # probability that each level of alcohol is consumed on a drinking occasion
-    #interval_prob <- x - c(0, x[1:(length(x) - 1)])
-    #interval_prob <- diff(x)
-    interval_prob <- apply(x, 2, diff)
-    
-    #interval_prob <- interval_prob / sum(interval_prob)
-    
-    # NOT SURE IF THE LINE BELOW IS NEEDED
-    # the code makes values sum to 1
-    # discussion with Alan has concluded that it is needed because 
-    # the values are subsequently used in the computation of a weighted average
-    interval_prob <- interval_prob / matrix(colSums(interval_prob), nrow = kn - 1, ncol = ncol(interval_prob), byrow = T)
-    
-    interval_prob[is.na(interval_prob)] <- 0
+    # Convert the column of vectors back to a matrix
+    interval_prob <- matrix(unlist(interval_prob_vec), nrow = kn - 1, ncol = length(SODFreq), byrow = F)
     
     
     #######################
@@ -250,6 +207,8 @@ PArisk <- function(
     
     # Total annual time spent intoxicated over all levels of consumption
     Time_intox_sum <- colSums(Time_intox)
+    
+    rm(Duration_m, interval_prob, Duration_h, x, y)
     
   }
   
@@ -355,14 +314,8 @@ PArisk <- function(
       FUN.VALUE = numeric(1)
     )
     
-    # 
-    # rm(
-    #   grams_ethanol,
-    #   v, v1, logitp, p
-    # )
-    # gc()
-    # 
-    # 
+
+    
     
     
     return(Annual_risk)

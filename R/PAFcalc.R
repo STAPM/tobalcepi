@@ -1,5 +1,5 @@
 
-#' Calculate Population Attributable Fractions \lifecycle{maturing}
+#' Calculate Population Attributable Fractions
 #' 
 #' Uses \code{RRFunc()} and \code{subgroupRisk()} to 
 #' calculate population attributable fractions 
@@ -7,6 +7,9 @@
 #' 
 #' 
 #' @param data Data table of individual characteristics
+#' @param rrdata Optional - data table containing individual tobacco and alcohol consumption characteristics 
+#' with relative risks of disease already assigned. This could be useful for increasing efficiency - saving computer processing time. 
+#' Defaults to NULL.
 #' @param substance Whether to compute relative risks for just alcohol ("alc"),
 #' just tobacco ("tob") or joint risks for tobacco and alcohol ("tobalc").
 #' @param tob_include_risk_in_former_smokers Logical - whether the residual risks of smoking in former smokers
@@ -49,6 +52,7 @@
 #' 
 PAFcalc <- function(
   data,
+  rrdata = NULL,
   substance,
   tob_include_risk_in_former_smokers = TRUE,
   alc_protective = TRUE,
@@ -66,47 +70,57 @@ PAFcalc <- function(
   
   years <- min(data$year):max(data$year)
   
-  cat("Assigning relative risks\n")
-  
-  for(y in years) {
+  if(is.null(rrdata)) {
     
-    #y <- years[1]
+    cat("Assigning relative risks\n")
     
-    cat("\t", y, "\n")
-    
-    # Add the relative risks to the data
-    data_rr <- tobalcepi::RRFunc(
-      data = data[year == y],
-      substance = substance,
-      tob_diseases = tobalcepi::tob_disease_names,
-      tob_include_risk_in_former_smokers = tob_include_risk_in_former_smokers,
-      alc_diseases = tobalcepi::alc_disease_names,
-      alc_mort_and_morb = c(
-        "Ischaemic_heart_disease", 
-        "LiverCirrhosis", 
-        "Haemorrhagic_Stroke",
-        "Ischaemic_Stroke"),
-      alc_risk_lags = FALSE,
-      alc_protective = alc_protective,
-      alc_wholly_chronic_thresholds = alc_wholly_chronic_thresholds,
-      alc_wholly_acute_thresholds = alc_wholly_acute_thresholds,
-      grams_ethanol_per_unit = grams_ethanol_per_unit,
-      show_progress = TRUE,
-      within_model = within_model,
-      tobalc_include_int = tobalc_include_int)
-    
-    if(y == years[1]) {
+    for(y in years) {
       
-      data_rr_comb <- copy(data_rr)
+      #y <- years[1]
       
-    } else {
+      cat("\t", y, "\n")
       
-      data_rr_comb <- rbindlist(list(data_rr_comb, copy(data_rr)), use.names = T)
+      # Add the relative risks to the data
+      data_rr <- tobalcepi::RRFunc(
+        data = data[year == y],
+        substance = substance,
+        tob_diseases = tobalcepi::tob_disease_names,
+        tob_include_risk_in_former_smokers = tob_include_risk_in_former_smokers,
+        alc_diseases = tobalcepi::alc_disease_names,
+        alc_mort_and_morb = c(
+          "Ischaemic_heart_disease", 
+          "LiverCirrhosis", 
+          "Haemorrhagic_Stroke",
+          "Ischaemic_Stroke"),
+        alc_risk_lags = FALSE,
+        alc_protective = alc_protective,
+        alc_wholly_chronic_thresholds = alc_wholly_chronic_thresholds,
+        alc_wholly_acute_thresholds = alc_wholly_acute_thresholds,
+        grams_ethanol_per_unit = grams_ethanol_per_unit,
+        show_progress = TRUE,
+        within_model = within_model,
+        tobalc_include_int = tobalc_include_int)
+      
+      if(y == years[1]) {
+        
+        data_rr_comb <- copy(data_rr)
+        
+      } else {
+        
+        data_rr_comb <- rbindlist(list(data_rr_comb, copy(data_rr)), use.names = T)
+        
+      }
       
     }
     
-  }
   
+    
+    
+  } else {
+    
+    data_rr_comb <- copy(rrdata)
+    
+  }
   
   # If need morbidity relative risks
   
@@ -114,6 +128,7 @@ PAFcalc <- function(
     data_rr_comb <- data_rr_comb[ , c("Ischaemic_heart_disease", "LiverCirrhosis", "Haemorrhagic_Stroke", "Ischaemic_Stroke") := NULL]
     setnames(data_rr_comb, paste0(c("Ischaemic_heart_disease", "LiverCirrhosis", "Haemorrhagic_Stroke", "Ischaemic_Stroke"), "_morb"), c("Ischaemic_heart_disease", "LiverCirrhosis", "Haemorrhagic_Stroke", "Ischaemic_Stroke"))
   }
+
   
   
   # Calculate PAFs

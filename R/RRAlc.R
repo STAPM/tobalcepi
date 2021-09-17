@@ -38,7 +38,7 @@
 #' 
 #' @return Returns a numeric vector of each individual's relative risks for the alcohol related disease specified by "disease".
 #' 
-#' @importFrom data.table := setDT setnames
+#' @importFrom data.table := setDT setnames fifelse
 #' @importFrom stapmr %fin%
 #' 
 #' @export
@@ -243,7 +243,7 @@ RRalc <- function(
     rr.mb <- exp(m1 * x - m2 * (((x^3) - ((x - 21)^3 * 75) / 54) / (75^2)))
     rr.mc <- exp(m1 * x - m2 * ((x^3) - ((x - 21)^3 * 75 - (x - 75)^3 * 21) / 54) / (75^2))
     
-    rr.m <- ifelse(x < 21, rr.ma, ifelse(x >= 21 & x < 75, rr.mb, rr.mc))
+    rr.m <- fifelse(x < 21, rr.ma, fifelse(x >= 21 & x < 75, rr.mb, rr.mc))
     
     # Female
     f1 <- 0
@@ -255,10 +255,10 @@ RRalc <- function(
     rr.fb <- exp(-f2 * x + f3 * (x^3 - ((x - 10)^3 * 20 - (x - 20)^3 * 10) / 10) / 20^2)
     rr.fc <- exp(f4)
     
-    rr.f <- ifelse(x < 18.9517, rr.fa, ifelse(x >= 18.9517 & x < 75, rr.fb, rr.fc))
+    rr.f <- fifelse(x < 18.9517, rr.fa, fifelse(x >= 18.9517 & x < 75, rr.fb, rr.fc))
     
     # Combine
-    risk_indiv <- ifelse(sex == "Male", rr.m, ifelse(sex == "Female", rr.f, NA))
+    risk_indiv <- fifelse(sex == "Male", rr.m, fifelse(sex == "Female", rr.f, NA_real_))
     
   }
   
@@ -292,26 +292,26 @@ RRalc <- function(
       rr.mb1 <- exp(m3)
       rr.mc1 <- exp(m4 * (x - 100))
       
-      rr.m1 <- ifelse(x <= 60, rr.ma1, ifelse(x > 60 & x < 100, rr.mb1, rr.mc1))
+      rr.m1 <- fifelse(x <= 60, rr.ma1, fifelse(x > 60 & x < 100, rr.mb1, rr.mc1))
       
       # 35-64
       rr.ma2 <- exp(b2 * (-m1 * sqrt(y) + m2 * y^3))
       rr.mb2 <- exp(m3)
       rr.mc2 <- exp(m4 * (x - 100))
       
-      rr.m2 <- ifelse(x <= 60, rr.ma2, ifelse(x > 60 & x < 100, rr.mb2, rr.mc2))
+      rr.m2 <- fifelse(x <= 60, rr.ma2, fifelse(x > 60 & x < 100, rr.mb2, rr.mc2))
       
       # 65+
       rr.ma3 <- exp(b3 * (-m1 * sqrt(y) + m2 * y^3))
       rr.mb3 <- exp(m3)
       rr.mc3 <- exp(m4 * (x - 100))
       
-      rr.m3 <- ifelse(x <= 60, rr.ma3, ifelse(x > 60 & x < 100, rr.mb3, rr.mc3))
+      rr.m3 <- fifelse(x <= 60, rr.ma3, fifelse(x > 60 & x < 100, rr.mb3, rr.mc3))
       
       
-      rr.m <- ifelse(age %fin% c("<16", "16-17", "18-24", "25-34"), rr.m1,
-                     ifelse(age %fin% c("35-49", "50-64"), rr.m2,
-                            ifelse(age %fin% c("65-74", "75-89"), rr.m3, NA)))
+      rr.m <- fifelse(age %fin% c("<16", "16-17", "18-24", "25-34"), rr.m1,
+                     fifelse(age %fin% c("35-49", "50-64"), rr.m2,
+                            fifelse(age %fin% c("65-74", "75-89"), rr.m3, NA_real_)))
       
       # Female
       
@@ -326,29 +326,29 @@ RRalc <- function(
       rr.fa1 <- exp(b1 * (f1 * y + f2 * y * log(y)))
       rr.fb1 <- exp(f3 * (x - f6))
       
-      rr.f1 <- ifelse(x < f6, rr.fa1, rr.fb1)
+      rr.f1 <- fifelse(x < f6, rr.fa1, rr.fb1)
       
       # 35-64
       rr.fa2 <- exp(b2 * (f1 * y + f2 * y * log(y)))
       rr.fb2 <- exp(f4 * (x - f6))
       
-      rr.f2 <- ifelse(x < f6, rr.fa2, rr.fb2)
+      rr.f2 <- fifelse(x < f6, rr.fa2, rr.fb2)
       
       # 65+
       rr.fa3 <- exp(b3 * (f1 * y + f2 * y * log(y)))
       rr.fb3 <- exp(f5 * (x - f6))
       
-      rr.f3 <- ifelse(x < f6, rr.fa3, rr.fb3)
+      rr.f3 <- fifelse(x < f6, rr.fa3, rr.fb3)
       
       
-      rr.f <- ifelse(age %fin% c("<16", "16-17", "18-24", "25-34"), rr.f1,
-                     ifelse(age %fin% c("35-49", "50-64"), rr.f2,
-                            ifelse(age %fin% c("65-74", "75-89"), rr.f3, NA)))
+      rr.f <- fifelse(age %fin% c("<16", "16-17", "18-24", "25-34"), rr.f1,
+                     fifelse(age %fin% c("35-49", "50-64"), rr.f2,
+                            fifelse(age %fin% c("65-74", "75-89"), rr.f3, NA_real_)))
       
       
       
       # Combine
-      risk_indiv <- ifelse(sex == "Male", rr.m, ifelse(sex == "Female", rr.f, NA))
+      risk_indiv <- fifelse(sex == "Male", rr.m, fifelse(sex == "Female", rr.f, NA_real_))
       
       if(!isTRUE(getcurve)) {
         
@@ -376,7 +376,7 @@ RRalc <- function(
       rr.ma <- exp(-m1 * sqrt(x) + m2 * sqrt(x) * log(x))
       rr.mb <- exp(0)
       
-      rr.m <- ifelse(x < 60, rr.ma, rr.mb)
+      rr.m <- fifelse(x < 60, rr.ma, rr.mb)
       
       
       # Female
@@ -387,7 +387,7 @@ RRalc <- function(
       rr.f <- exp(-f1 * sqrt(x) + f2 * x)
       
       # Combine
-      risk_indiv <- ifelse(sex == "Male", rr.m, ifelse(sex == "Female", rr.f, NA))
+      risk_indiv <- fifelse(sex == "Male", rr.m, fifelse(sex == "Female", rr.f, NA_real_))
       
       if(!isTRUE(getcurve)) {
         
@@ -439,7 +439,7 @@ RRalc <- function(
       rr.ma <- exp(log(1 - x * (1 - m1)))
       rr.mb <- exp(m2 * ((x + m3) / 100))
       
-      rr.m <- ifelse(x <= 1, rr.ma, rr.mb)
+      rr.m <- fifelse(x <= 1, rr.ma, rr.mb)
       
       # Female
       
@@ -450,10 +450,10 @@ RRalc <- function(
       rr.fa <- exp(log(1 - x * (1 - f1)))
       rr.fb <- exp(f2 * ((x + f3) / 100))
       
-      rr.f <- ifelse(x <= 1, rr.fa, rr.fb)
+      rr.f <- fifelse(x <= 1, rr.fa, rr.fb)
       
       # Combine
-      risk_indiv <- ifelse(sex == "Male", rr.m, ifelse(sex == "Female", rr.f, NA))
+      risk_indiv <- fifelse(sex == "Male", rr.m, fifelse(sex == "Female", rr.f, NA_real_))
       
     }
     
@@ -476,7 +476,7 @@ RRalc <- function(
       rr.f <- exp(-f1 * sqrt(x) + f2 * sqrt(x) * log(x))
       
       # Combine
-      risk_indiv <- ifelse(sex == "Male", rr.m, ifelse(sex == "Female", rr.f, NA))
+      risk_indiv <- fifelse(sex == "Male", rr.m, fifelse(sex == "Female", rr.f, NA_real_))
       
     }
     
@@ -524,23 +524,23 @@ RRalc <- function(
       rr.ma1 <- 1 - x * (1 - exp(-e1))
       rr.mb1 <- exp(a1 * (m1 * sqrt(y) + m2 * sqrt(y) * log(y)))
       
-      rr.m1 <- ifelse(x <= 1, rr.ma1, rr.mb1)
+      rr.m1 <- fifelse(x <= 1, rr.ma1, rr.mb1)
       
       # 35-64
       rr.ma2 <- 1 - x * (1 - exp(-e2))
       rr.mb2 <- exp(a2 * (m1 * sqrt(y) + m2 * sqrt(y) * log(y)))
       
-      rr.m2 <- ifelse(x <= 1, rr.ma2, rr.mb2)
+      rr.m2 <- fifelse(x <= 1, rr.ma2, rr.mb2)
       
       # 65+
       rr.ma3 <- 1 - x * (1 - exp(-e3))
       rr.mb3 <- exp(a3 * (m1 * sqrt(y) + m2 * sqrt(y) * log(y)))
       
-      rr.m3 <- ifelse(x <= 1, rr.ma3, rr.mb3)
+      rr.m3 <- fifelse(x <= 1, rr.ma3, rr.mb3)
       
-      rr.m <- ifelse(age %fin% c("<16", "16-17", "18-24", "25-34"), rr.m1,
-                     ifelse(age %fin% c("35-49", "50-64"), rr.m2,
-                            ifelse(age %fin% c("65-74", "75-89"), rr.m3, NA)))
+      rr.m <- fifelse(age %fin% c("<16", "16-17", "18-24", "25-34"), rr.m1,
+                     fifelse(age %fin% c("35-49", "50-64"), rr.m2,
+                            fifelse(age %fin% c("65-74", "75-89"), rr.m3, NA_real_)))
       
       # Female
       
@@ -548,23 +548,23 @@ RRalc <- function(
       rr.fa1 <- 1 - x * (1 - exp(-e4))
       rr.fb1 <- exp(a1 * (-f1 * sqrt(y) + f2 * y))
       
-      rr.f1 <- ifelse(x <= 1, rr.fa1, rr.fb1)
+      rr.f1 <- fifelse(x <= 1, rr.fa1, rr.fb1)
       
       # 35-64
       rr.fa2 <- 1 - x * (1 - exp(-e5))
       rr.fb2 <- exp(a2 * (-f1 * sqrt(y) + f2 * y))
       
-      rr.f2 <- ifelse(x <= 1, rr.fa2, rr.fb2)
+      rr.f2 <- fifelse(x <= 1, rr.fa2, rr.fb2)
       
       # Female, 65+
       rr.fa3 <- 1 - x * (1 - exp(-e6))
       rr.fb3 <- exp(a3 * (-f1 * sqrt(y) + f2 * y))
       
-      rr.f3 <- ifelse(x <= 1, rr.fa3, rr.fb3)
+      rr.f3 <- fifelse(x <= 1, rr.fa3, rr.fb3)
       
-      rr.f <- ifelse(age %fin% c("<16", "16-17", "18-24", "25-34"), rr.f1,
-                     ifelse(age %fin% c("35-49", "50-64"), rr.f2,
-                            ifelse(age %fin% c("65-74", "75-89"), rr.f3, NA)))
+      rr.f <- fifelse(age %fin% c("<16", "16-17", "18-24", "25-34"), rr.f1,
+                     fifelse(age %fin% c("35-49", "50-64"), rr.f2,
+                            fifelse(age %fin% c("65-74", "75-89"), rr.f3, NA_real_)))
       
       if(!isTRUE(getcurve)) {
         
@@ -574,7 +574,7 @@ RRalc <- function(
       }
       
       # Combine
-      risk_indiv <- ifelse(sex == "Male", rr.m, ifelse(sex == "Female", rr.f, NA))
+      risk_indiv <- fifelse(sex == "Male", rr.m, fifelse(sex == "Female", rr.f, NA_real_))
       
     }
     
@@ -601,7 +601,7 @@ RRalc <- function(
       rr.f <- exp(-f1 * sqrt(x) + f2 * x)
       
       # Combine
-      risk_indiv <- ifelse(sex == "Male", rr.m, ifelse(sex == "Female", rr.f, NA))
+      risk_indiv <- fifelse(sex == "Male", rr.m, fifelse(sex == "Female", rr.f, NA_real_))
       
       if(!isTRUE(getcurve)) {
         
@@ -648,7 +648,7 @@ RRalc <- function(
       rr.ma <- exp(log(1 + x * (m1 - 1)))
       rr.mb <- exp(m2 * y)
       
-      rr.m <- ifelse(x <= 1, rr.ma, rr.mb)
+      rr.m <- fifelse(x <= 1, rr.ma, rr.mb)
       
       # Female
       
@@ -658,10 +658,10 @@ RRalc <- function(
       rr.fa <- exp(log(1 + x * (f1 - 1)))
       rr.fb <- exp(f2 * sqrt(y))
       
-      rr.f <- ifelse(x <= 1, rr.fa, rr.fb)
+      rr.f <- fifelse(x <= 1, rr.fa, rr.fb)
       
       # Combine
-      risk_indiv <- ifelse(sex == "Male", rr.m, ifelse(sex == "Female", rr.f, NA))
+      risk_indiv <- fifelse(sex == "Male", rr.m, fifelse(sex == "Female", rr.f, NA_real_))
       
     }
     
@@ -682,7 +682,7 @@ RRalc <- function(
       rr.f <- exp(f1 * sqrt(x))
       
       # Combine
-      risk_indiv <- ifelse(sex == "Male", rr.m, ifelse(sex == "Female", rr.f, NA))
+      risk_indiv <- fifelse(sex == "Male", rr.m, fifelse(sex == "Female", rr.f, NA_real_))
       
     }
     
@@ -712,14 +712,14 @@ RRalc <- function(
     rr.f4 <- exp(-f1 * x + f2 * (  ((x - 3)^3) - (  (  ((x - 15)^3) * (40 - 3) - ((x - 40)^3) * (15 - 3)  ) / (40 - 15)  )  ) / ((40 - 3)^2)  )
     rr.f5 <- exp(f3)
     
-    rr.f <- ifelse(x < 3, rr.f1,
-                   ifelse(x >= 3 & x < 15, rr.f2,
-                          ifelse(x >= 15 & x < 40, rr.f3,
-                                 ifelse(x >= 40 & x < 108, rr.f4,
-                                        ifelse(x >= 108, rr.f5, NA)))))
+    rr.f <- fifelse(x < 3, rr.f1,
+                   fifelse(x >= 3 & x < 15, rr.f2,
+                          fifelse(x >= 15 & x < 40, rr.f3,
+                                 fifelse(x >= 40 & x < 108, rr.f4,
+                                        fifelse(x >= 108, rr.f5, NA_real_)))))
     
     # Combine
-    risk_indiv <- ifelse(sex == "Male", rr.m, ifelse(sex == "Female", rr.f, NA))
+    risk_indiv <- fifelse(sex == "Male", rr.m, fifelse(sex == "Female", rr.f, NA_real_))
     
     if(!isTRUE(alc_protective)) {
       
@@ -778,7 +778,7 @@ RRalc <- function(
     rr.f <- exp(-f1 * sqrt(x) + f2 * x)
     
     # Combine
-    risk_indiv <- ifelse(sex == "Male", rr.m, ifelse(sex == "Female", rr.f, NA))
+    risk_indiv <- fifelse(sex == "Male", rr.m, fifelse(sex == "Female", rr.f, NA_real_))
     
     if(!isTRUE(alc_protective)) {
       
@@ -878,8 +878,7 @@ RRalc <- function(
     data_RRalc[GPerDay > 0, rr :=  
                  
                  tobalcepi::PArisk(
-                   SODMean = mean_sod,
-                   SODSDV = occ_sd,
+                   interval_prob_vec = interval_prob_vec,
                    SODFreq = drink_freq,
                    Weight = weight,
                    Widmark_r = rwatson,
@@ -890,16 +889,14 @@ RRalc <- function(
                by = c("sex", "imd_quintile")]
     
     
-    # tobalcepi::PArisk(
-    #   SODMean = data_RRalc[GPerDay > 0, mean_sod],
-    #   SODSDV = data_RRalc[GPerDay > 0, occ_sd],
-    #   SODFreq = data_RRalc[GPerDay > 0, drink_freq],
-    #   Weight = data_RRalc[GPerDay > 0, weight],
-    #   Widmark_r = data_RRalc[GPerDay > 0, rwatson],
-    #   cause = "Transport",
-    #   grams_ethanol_per_unit = grams_ethanol_per_unit
-    # )
-    # 
+    
+      # interval_prob_vec = data_RRalc[GPerDay > 0, interval_prob_vec]
+      # SODFreq = data_RRalc[GPerDay > 0, drink_freq]
+      # Weight = data_RRalc[GPerDay > 0, weight]
+      # Widmark_r = data_RRalc[GPerDay > 0, rwatson]
+      # cause = "Transport"
+      # grams_ethanol_per_unit = grams_ethanol_per_unit
+    
     
     #tictoc::toc()
     
@@ -942,8 +939,7 @@ RRalc <- function(
     data_RRalc[GPerDay > 0, rr :=  
                  
                  tobalcepi::PArisk(
-                   SODMean = mean_sod,
-                   SODSDV = occ_sd,
+                   interval_prob_vec = interval_prob_vec,
                    SODFreq = drink_freq,
                    Weight = weight,
                    Widmark_r = rwatson,
@@ -982,8 +978,7 @@ RRalc <- function(
     data_RRalc[GPerDay > 0, rr :=  
                  
                  tobalcepi::PArisk(
-                   SODMean = mean_sod,
-                   SODSDV = occ_sd,
+                   interval_prob_vec = interval_prob_vec,
                    SODFreq = drink_freq,
                    Weight = weight,
                    Widmark_r = rwatson,
@@ -1010,8 +1005,7 @@ RRalc <- function(
     data_RRalc[GPerDay > 0, rr :=  
                  
                  tobalcepi::PArisk(
-                   SODMean = mean_sod,
-                   SODSDV = occ_sd,
+                   interval_prob_vec = interval_prob_vec,
                    SODFreq = drink_freq,
                    Weight = weight,
                    Widmark_r = rwatson,
@@ -1103,8 +1097,7 @@ RRalc <- function(
     data_RRalc[GPerDay > min(alc_wholly_acute_thresholds) * grams_ethanol_per_unit, ar :=  
                  
                  tobalcepi::WArisk_acute(
-                   SODMean = mean_sod,
-                   SODSDV = occ_sd,
+                   interval_prob_vec = interval_prob_vec,
                    SODFreq = drink_freq,
                    sex = sex,
                    grams_ethanol_per_unit = grams_ethanol_per_unit,

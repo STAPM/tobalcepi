@@ -1,0 +1,2141 @@
+---
+title: "Use of disease risks in STAPM"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Use of disease risks in STAPM}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+bibliography: disease-risks.bib
+link-citations: yes
+citation_package: natbib
+biblio-style: vancouver
+urlcolor: blue
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include = FALSE, results = 'hide', warning = FALSE, eval = T}
+
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(VGAM))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(magrittr))
+suppressPackageStartupMessages(library(testthat))
+suppressPackageStartupMessages(library(tobalcepi))
+suppressPackageStartupMessages(library(readxl))
+suppressPackageStartupMessages(library(magrittr))
+suppressPackageStartupMessages(library(knitr))
+suppressPackageStartupMessages(library(kableExtra))
+suppressPackageStartupMessages(library(tobalcepi))
+suppressPackageStartupMessages(library(stapmr))
+suppressPackageStartupMessages(library(smktrans))
+suppressPackageStartupMessages(library(ggthemes))
+suppressPackageStartupMessages(library(RColorBrewer))
+suppressPackageStartupMessages(library(cowplot))
+
+```
+
+## Glossary of terms {-}
+
+```{r table1, eval = T, warning = F, echo=F, cache = F}
+
+df_table1 <- readxl::read_xlsx('inst/Glossary.xlsx','glossary')
+
+df_table1 %>%
+  kableExtra::kbl(booktabs = T, caption = "Explanation of terms.", label = "table1", linesep = "\\hline", escape = F, longtable = T) %>%
+  kableExtra::column_spec(column = 1, width = "5cm") %>%
+  kableExtra::column_spec(column = 2, width = "11cm") %>%
+  kableExtra::kable_styling(font_size = 8, latex_options = c("HOLD_position")) 
+
+```
+ 
+## Mathematical notation {-}
+
+```{r table2, eval = T, warning = F, echo=F, cache = F}
+
+df_table1 <- readxl::read_xlsx('inst/mathematical_notation.xlsx','STPM_desc')
+
+df_table1 %>%
+  kableExtra::kbl(booktabs = T, caption = "Overview of mathematical notation.", label = "table2", linesep = "\\hline", escape = F) %>%
+  kableExtra::column_spec(column = 1, width = "4cm") %>%
+  kableExtra::column_spec(column = 2, width = "10cm") %>%
+  kableExtra::kable_styling(font_size = 8, latex_options = c("HOLD_position"))
+
+``` 
+ 
+## Introduction
+Tobacco and alcohol are both leading causes of preventable disease in the UK and worldwide and of sociodemographic inequalities in health. In England, official statistics suggest that alcohol consumption causes xxx deaths, hospital care of xxx, and that alcohol causes ..    
+
+However, official statistics do not estimate the joint burden of tobacco and alcohol consumption, which is more complicated to do because it is necessary to determine the set of diseases that tobacco and alcohol both affect, and the extent to which tobacco and alcohol consumption correlates within individuals. For example, there is evidence worldwide that smoking rates tend to be higher among heavier consumers of alcohol, with a positive association between the number of cigarettes smoked and alcohol consumption. This suggests that the combined risk of disease in people who smoke and drink heavily would be higher. It also suggests that the benefits of removing smoking would be less for individuals who continue to drink heavily, as these individuals might continue to have mortality and morbidity from their alcohol consumption, and vice versa.    
+
+This report was written as part of a programme of work on the health economics of tobacco and alcohol that is based around the development of the Sheffield Tobacco and Alcohol Policy Modelling (STAPM), which aims to use comparable methodologies to evaluate the impacts of tobacco and alcohol policies, and investigate the consequences of clustering and interactions between tobacco and alcohol consumption behaviours.  This report describes how we use the relative risks of disease in STAPM.
+
+## Methods
+
+### Literature reviewing
+The list of diseases, their ICD-10 code definitions and the associated risk functions were collated from period reviews of the literature, drawing primarily on other existing reviews [@Angus2018;@webster2018risk]. Where necessary, expert opinion is sought and authors are contacted for additional information.  
+
+### Software development
+To organise the information on the relative risks of diseases in adults related to their own tobacco and alcohol consumption and to provide functions to easily work with these data in modelling, we built the `tobalcepi` R code package [@R-tobalcepi]. The R code functions are version controlled so that each project works with a specified version of the package, and error-fixes and new developments can be tracked. 
+
+`tobalcepi` is a package for predicting individual risk of disease due to tobacco and alcohol consumption based on published sources, and summarising that risk. The suite of functions within `tobalcepi` processes the published data on the relative risks of disease that stem from chronic and acute alcohol consumption, from smoking, and on the decline in risk after ceasing or reducing consumption. The package also includes functions to estimate population attributable fractions, and to explore the interaction between the disease risks that stem from tobacco and alcohol consumption.         
+
+The **inputs** are the published estimates of relative risk for each disease (sometimes stratified by population subgroup).   
+
+The **processes** applied by the functions in `tobalcepi` give options to estimate:
+
+1. The risk of injury or disease from acute alcohol consumption.  
+1. The risk of chronic disease based on the current amount of alcohol consumed.   
+1. The risk of chronic disease based on whether someone currently smokes, and how much they currently smoke.   
+1. The combined risk of disease in someone who smokes and drinks.  
+1. The change in risk of disease after someone ceases or reduces their consumption.  
+1. The population attributable fractions of disease to tobacco and/or alcohol (given suitable data on tobacco and alcohol consumption).   
+
+The **outputs** of these processes are datasets in which an individual's tobacco and/or alcohol consumption has been matched to their relative risks of certain diseases, and aggregated datasets that summarise the risks of disease within certain population subgroups.      
+
+#### Alcohol related code
+The high-level function for alcohol is `tobalcepi::RRalc()`, which calculates individual risks of diseases as follows:  
+
+1. **Alcohol - partially-attributable chronic conditions**: dose-response effects of current alcohol consumption on disease risk [@Angus2018] are hard-coded into the function `tobalcepi::RRalc()`. Updates to these risk functions must therefore be made by changing the function code.  
+1. **Alcohol - partially-attributable acute conditions**: dose-response effects of single-occasion alcohol consumption are hard coded into the function `tobalcepi::PArisk()`, which is called by `tobalcepi::RRalc()`.     
+1. **Alcohol - wholly-attributable acute conditions**: these are not based on published risk functions but are based on thresholds, in UK standard units of alcohol drunk on a single occasion, over which individuals begin to experience an elevated risk for acute diseases that are wholly attributable to alcohol. This is applied by the function `tobalcepi::WArisk_acute()`, which is called by `tobalcepi::RRalc()`.    
+1. **Alcohol - wholly-attributable chronic conditions**: these are also based on thresholds in UK standard units of alcohol drunk on average in a week, over which individuals begin to experience an elevated risk for chronic diseases that are wholly attributable to alcohol. This is applied by code within the function `tobalcepi::RRalc()`.    
+
+#### Tobacco related code
+1. `tobalcepi::RRtob()` takes a lookup table of the risks associated with current vs. never smoking and assigns these to individuals based on their smoking state, age and sex [@webster2018risk].   
+1. We are in the process of developing the function `tobalcepi::RRTobDR()` to stratify the risks of some cancers according to the amount smoked per day by current smokers. There is limited info on these dose-response effects, so we are gradually building up the epidemiological detail in this area as we review, critically appraise and integrate new risk data into our modelling.  
+
+#### Lag times
+Lag times are the information on the delay between a change to tobacco or alcohol consumption and the decline in the risk of disease associated with that consumption. The relevant functions are `tobalcepi::TobLags()` (which uses lags stored in `tobalcepi::tobacco_lag_times`) and `tobalcepi::AlcLags()` (which contains lags hard-coded into the function). 
+
+#### Tobacco - Alcohol risk interactions
+We use estimates of potential tobacco - alcohol risk interactions for:  
+
+- Oral cavity cancer  
+- Pharyngeal cancer    
+- Laryngeal cancer    
+- Oesophageal SCC cancer  
+
+These estimates are stored in `tobalcepi::tob_alc_risk_int`.  
+
+#### Package data
+Some useful, not risk-bearing, data is stored within the package and is installed onto your computer when you download and load the package. We use package data for data that is likely to be used across several projects, that it is important to keep standardised across projects, and is only likely to need updating after a long interval e.g. at least annually.   
+
+The types of data included in tobalcepi are:  
+
+- Lists of the names of the diseases that are related to tobacco and/or alcohol.   
+- Parameters used in the modelling of single occasion drinking.  
+- Tobacco relative risks of current vs. never smokers.
+- Tobacco lag times.  
+- Tobacco - alcohol risk interactions.  
+
+When these data need to be updated, the inputs and code in the package folder `data-raw` will need to be changed, and the package rebuild with a new version.  
+
+##### Example data
+In this study, we use data from the Health Survey for England [] to link tobacco and alcohol consumption, product preferences and sociodemographic characteristics. We describe smoking by current, former or never smoker and by three categories of the average number of cigarettes smoked per day, with product preferences divided into hand-rolled and factory-made cigarettes. We describe drinking by four categories of the average weekly number of UK standard units of alcohol consumed and whether or not an individual consumed heavily on any single drinking occasion (‘binge’ drank) in the last week, with product preferences divided into beers, cider, wines, spirits and RTDs. First, we identify typologies based on these descriptors of smoking and drinking behaviour. Second, we investigate the socio-demographic composition of the people who smoke and drink according to those styles. 
+
+We use the Health Survey for England (HSE), which is a nationally representative annual cross-sectional survey of households in England [19]. We used the last four years of data (2014 to 2017), which were selected as a balance between making our findings as up-to-date as possible and having a large enough sample size to reliably quantify the joint distribution of tobacco and alcohol consumption across the sociodemographic spectrum. We included individuals aged 16 to 89 years as these are the ages with data on amount smoked and beverage-specific quantity-frequency (QF) data on alcohol consumption. The sample size for analysis was xxxxx individuals. High-level descriptive statistics are shown in Table 1. 
+
+The Index of Multiple Deprivation is comprised of seven domains: income deprivation; employment deprivation; health deprivation and disability; education deprivation; crime deprivation; barriers to housing and services deprivation; and living environment deprivation. Based on the IMD score, LSOAs were divided evenly among five quintiles; quintile one is the most affluent, and quintile five the most deprived. 2) We constructed an 8-level metric of individual economic activity with the levels i) ‘in education’, ii) ‘looking after the home or family’, iii) ‘permanently unable to work because of long-term sickness or disability’, iv) ‘unemployed’, v) ‘routine and manual occupations’, vi) ‘intermediate occupations’, vii) ‘managerial and professional occupations’, viii) ‘retired’ (see Supplementary methods for variable definition). 
+
+We classified smoking according to whether someone was a current, former or never regular cigarette smoker and subdivided current smokers into ‘light’ (1¬–10 cigarettes per day), ‘moderate’ (11–20 cigarettes per day) and ‘heavy’ (20+ cigarettes per day). We categorised smokers by whether they mainly smoked hand-rolled or factory-made varieties. We described drinking in terms of the average weekly number of UK standard units of alcohol consumed (one unit is equivalent to 8g pure ethanol) calculated the number of units from QF questions considering the last 12 weeks of drinking. We categorised consumption into four types: abstainers, lower-risk drinkers (up to 14 units per week for men or women []), increasing-risk drinkers (from 14 to 50 units per week for men or from 14 to 35 units for women), and higher-risk drinkers (over 50 units per week for men and over 35 units for women). The current public health guidelines in England are for people to drink fewer than 14 units of alcohol per week []. We categorised beverages into four types: normal and strong beer (which includes cider), wine and sherry, spirits, and RTDs (see Table S1 for examples of products/brands included) and indexed individual preferences as ‘major consumers’ (one beverage comprising over half of their total alcohol consumption), ‘minor consumers’ or ‘non-consumers’. We also categorised whether an individual binge drank in the last week of drinking (more than 6 units on their heaviest drinking day for women, and more than 8 units for men []). The HSE also includes data on a range of socio-demographic indicators—we use sex, age, household income quintiles and occupation type as our individual-level indicators, and Index of Multiple Deprivation quintiles to stratify the population by socio-economic conditions [] (for consistency with the SAPM modelling). Some of the questions and coding in the HSE require pre-processing to produce the dataset that we use for analysis—details of the procedures and the specific definitions of the variables used are provided as Supplementary Material. 
+
+The approach we use has three main limitations. First, the HSE lacks some information on drinking and smoking that can be relevant for policy analysis e.g. whether the location of alcohol purchase was the on- or off-trade, brand, price paid and contextual information such as the setting of consumption and who the consumer was with. Second, our estimates of amount consumed are biased e.g. because the Health Survey for England uses a sampling methodology that includes a reliance on self-reported consumption. For example, in the UK only around 60% of all alcohol sold for consumption is accounted for in national drinking surveys []. Third, our findings might not generalise to other countries. England has a strong tobacco control climate and its own drinking culture; other countries will undoubtedly have different correlations among behaviours.
+Third, in selecting the socioeconomic variables with which to investigate the clustering of drinking and smoking we created an index of economic activity that described important details of individuals’ lives. For example, our category of being permanently unable to work due to sickness or disability likely related to complex issues around personal empowerment and wellbeing that could determine both drinking and smoking. We found that the combined rates of harmful drinking and smoking were particularly high in this group.
+
+
+### Example calculations
+
+To illustrate the use of the `tobalcepi` functions for different tasks, we have created example workflows. You can use these examples to help understand how the code works, run them to generate model inputs, or use them as a starting point for the development of a new project.    
+
+At the moment, these workflows are accessible only to the project team. To access them, you will need to be added to the STAPM Gitlab organisation.  
+
+The workflows are listed below:  
+
+- [Smoking and the risks of adult diseases report](https://gitlab.com/stapm/model-inputs/epi_tobacco_risk). A working Rmarkdown version of the published report.       
+- [Alcohol-attributable diseases and dose-response curves report](https://gitlab.com/stapm/model-inputs/epi_alcohol_risk). A working Rmarkdown version of the published report.       
+- [Population attributable fractions](https://gitlab.com/stapm/model-inputs/epi_pop_attrib_fractions). Working repo for our main project on the fractions of disease attributable to tobacco and/or alcohol.       
+- [Irish alcohol attributable fractions](https://gitlab.com/stapm/projects/irish-aafsr). A consultancy project in which we adapted the code in `tobalcepi` to suit alcohol survey data from Ireland.     
+
+### PAF viewer app
+There is a Shiny app that aims to make the estimates more accessible - this is still a work in progress. It is currently linked to an account on shinyapps.io owned by Duncan Gillespie - in future this might be transferred to a dedicated stapm email address so that the account doesn't depend on one person. Another option might be to move the account the the University of Sheffield's account on shinyapps.io.
+
+https://stapm.shinyapps.io/PAF_viewer/
+
+The app is updated by editing and then running the code in this repo - which updates the files in the PAF_viewer app folder, and then telling R studio to publish the updated version of the app. It can do this on Duncan's computer after the app has been linked to the account on shinyapps.io. See the tutorial here https://shiny.rstudio.com/tutorial/   
+
+The code to generate the many files for the app is in the folder `tobacco_and_alcohol_attributable_fractions`. Once the estimates files have been generated they will 
+need to be copied to the `PAF_viewer/estimates` folder ready to be deployed to the app server.  
+
+## Alcohol related risks of disease
+
+This document presents the list of health conditions related to alcohol which are included in the most recent version (4.0) of the Sheffield Alcohol Policy Model (SAPM). It also presents the corresponding dose-response curves (the mathematical relationships between volume of alcohol consumed and risk of morbidity/mortality) for all included conditions which are not wholly-attributable to alcohol. This is based on recent reviews by Rehm et al. [-@rehm2017risk;-@rehm2017relationship] and Sherk et al. [-@sherk2020international], as well as previous versions of the Sheffield Model [@meier2016estimated] supplemented with additional evidence as appropriate. Note that SAPM considers only conditions which affect the drinker and therefore several conditions related to alcohol, such as Foetal Alcohol Spectrum Disorders, are therefore not included.
+
+
+We used the cancers established as attributable to alcohol in The International Agency for Research on Cancer (IARC) monographs,6,7 which found sufficient evidence to conclude that alcohol plays a causal role in seven cancer sites – oral cavity, pharyngeal, laryngeal, oesophageal SCC, liver, and colorectal cancers (see Table 1 for ICD10 codes). We took the corresponding dose-response relationships of disease risk to alcohol consumption from the recent meta-analysis by Bagnardi et al.4 
+
+
+```{r alcdislist, eval = T, warning = F, echo=F}
+
+# Copy and paste the table from X:/ScHARR/PR_Disease_Risk_TA/Code/tables
+df_table1 <- readxl::read_xlsx('tables/Alcohol_disease_list.xlsx', 'Sheet1')
+
+df_table1 %>%
+  kableExtra::kbl(booktabs = T, caption = "List of alcohol-attributable diseases.", label = "alcdislist", longtable = TRUE) %>%
+  kableExtra::column_spec(column = 1, width = "2cm") %>%
+  kableExtra::column_spec(column = 2, width = "7cm") %>%
+  kableExtra::column_spec(column = 3, width = "4cm") %>%
+  kableExtra::column_spec(column = 4, width = "2cm") %>%
+  kableExtra::collapse_rows() %>%
+  kableExtra::kable_styling(font_size = 8, latex_options = c("HOLD_position", "repeat_header")) %>%
+  kableExtra::footnote(symbol = "100% conditions are those which are wholly-attributable to alcohol (i.e. which would not exist if nobody drank). Partial conditions are those which are partly attributable to alcohol but which would still exist, albeit with reduced prevalence, if nobody drank. Acute conditions are those which are related to intoxication. Chronic conditions are those which are related to chronic alcohol consumption in the longer term.", threeparttable = T)
+
+```
+
+
+
+
+### Chronic diseases partially attributable to alcohol
+
+#### Risk functions
+
+Relative risk of harm for drinkers at consumption level $x$, measured in grams of ethanol per day, versus lifetime abstainers. Due to small sample sizes, published risk functions are not stable above 150g/day, so we assume $RR(x)=RR(150)\;\forall\;x>150$ for all conditions. All risk functions are applied to both genders and for both mortality and morbidity except where stated otherwise.
+
+##### Cancers
+
+###### Oropharyngeal (C00-06, C09-10, C12-14)
+
+\begin{equation}
+\ln(RR(x)) = 0.02474x-0.00004x^2
+\end{equation}
+
+```{r oropharyngealcurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Oropharyngeal cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Oropharyngeal",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 18)
+
+```
+
+Source [@bagnardi2015alcohol]
+
+###### Oesophageal (C15)
+
+\begin{equation}
+\ln(RR(x)) = 0.05593x-0.00789x\ln(x)
+\end{equation}
+
+```{r oesophagealcurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Oesophageal cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Oesophageal",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 14)
+
+```
+
+Source [@bagnardi2015alcohol]
+
+Notes: Oesophageal cancer has two main histological types: Squamous Cell Carcinoma (SCC) and Adenocarcinoma (AC). Alcohol is only associated with SCC, not AC [@bagnardi2015alcohol]. The relative prevalence of SCC and AC varies widely between countries and within population subgroups [@Arnold2015] and it may therefore be necessary to apportion overall oesophageal cancer prevalence between SCC and AC using external data such as that from cancer registries.
+
+
+###### Colorectal (C18-C20)
+
+\begin{equation}
+\ln(RR(x)) = 0.006279x
+\end{equation}
+
+```{r colorectalcurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Colorectal cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Colorectal",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 3)
+
+```
+
+###### Liver and intrahepatic bile ducts (C22)
+
+\begin{equation}
+\ln(RR(x)) = 0.4100701(y-0.6728571429)+0.6101417(y^2-0.4527367347),
+\end{equation}
+
+where
+
+\begin{equation}
+y = \frac{x+12}{100}
+\end{equation}
+
+```{r livercurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Liver cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Liver",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 10)
+
+```
+
+Source [@chuang2015alcohol]
+
+Notes: Bagnardi et al. [-@bagnardi2015alcohol], which we use as the source for all other cancer risk curves do provide a curve for liver cancer, however this has extremely high Relative Risks at high levels of consumption (RR=45 at 150g/day), driven by high risks from a small number of case-control studies. Alternative meta-analyses from Chuang et al [-@chuang2015alcohol] and Turati et al [-@turati2014alcohol] have found lower risks at high levels of consumption [@chuang2015alcohol; @turati2014alcohol], however these risk curves are still quite divergent. It may therefore be advisable to present modelled estimates using several alternative sources to illustrate the impact of this uncertainty.
+
+###### Pancreatic (C25)
+
+\begin{equation}
+\ln(RR(x)) = 0.002089x
+\end{equation}
+
+
+```{r pancreascurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Pancreatic cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Pancreas",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 1.6)
+
+```
+
+Source [@bagnardi2015alcohol]
+
+
+###### Laryngeal (C32)
+
+\begin{equation}
+\ln(RR(x)) = 0.01462x-0.00002x^2
+\end{equation}
+
+
+```{r larynxcurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Laryngeal cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Laryngeal",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 7)
+
+```
+
+Source [@bagnardi2015alcohol]
+
+###### Breast (C50)
+
+\begin{equation}
+\ln(RR(x)) = 0.01018x
+\end{equation}
+
+
+```{r breastcurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Laryngeal cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Breast",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr), colour = "#6600cc") +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 5)
+
+```
+
+Source [@bagnardi2015alcohol]
+
+##### Cardiovascular diseases
+
+###### Hypertensive diseases (I10-I14)
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) =
+\begin{cases}
+  0.0150537x-0.0156155\frac{x^3}{75^2}, & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<21
+       \end{aligned}
+\\
+  0.0150537x-0.0156155\frac{x^3-\frac{(x-21)^3\times{75}}{(75-21)}}{75^2}, & \text{if }
+       \begin{aligned}[t]
+       21\leq{x}<75
+       \end{aligned}
+\\
+  0.0150537x-0.0156155\frac{x^3-\frac{(x-10)^3\times{20}-(x-20)^3\times{10}}{(75-21)}}{75^2}, & \text{if }
+       \begin{aligned}[t]
+       75\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) =
+\begin{cases}
+  0, & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<18.9517
+       \end{aligned}
+\\
+  -0.0154196x+0.0217586\frac{x^3-\frac{(x-10)^3\times{20}-(x-20)^3\times{10}}{(20-10)}}{20^2}, & \text{if }
+       \begin{aligned}[t]
+       18.9517\leq{x}<75
+       \end{aligned}
+\\
+  0.9649937, & \text{if }
+       \begin{aligned}[t]
+       75\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+```{r hypertensivecurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Hypertensive diseases by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = rep(0:150, 2),
+  sex = c(rep("Female", 151), rep("Male", 151)),
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "HypertensiveHeartDisease",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 3) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@rehm2017risk]
+
+
+###### Ischaemic heart disease (I20-I25)
+
+*Mortality*    
+
+\begin{equation}
+\textbf{Male, 16-34  }\ln(RR(x)) =
+\begin{cases}
+  1.111874(-0.4870068\sqrt{y}+1.550984y^3), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{60}
+       \end{aligned}
+\\
+  0, & \text{if }
+       \begin{aligned}[t]
+       60<{x}<100
+       \end{aligned}
+\\
+  0.012(x-100), & \text{if }
+       \begin{aligned}[t]
+       100\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Male, 35-64  }\ln(RR(x)) =
+\begin{cases}
+  1.035623(-0.4870068\sqrt{y}+1.550984y^3), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{60}
+       \end{aligned}
+\\
+  0, & \text{if }
+       \begin{aligned}[t]
+       60<{x}<100
+       \end{aligned}
+\\
+  0.012(x-100), & \text{if }
+       \begin{aligned}[t]
+       100\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Male, 65+  }\ln(RR(x)) =
+\begin{cases}
+  0.757104(-0.4870068\sqrt{y}+1.550984y^3), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{60}
+       \end{aligned}
+\\
+  0, & \text{if }
+       \begin{aligned}[t]
+       60<{x}<100
+       \end{aligned}
+\\
+  0.012(x-100), & \text{if }
+       \begin{aligned}[t]
+       100\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female, 16-34  }\ln(RR(x)) =
+\begin{cases}
+  1.111874(1.832441y+1.538557y\ln(y)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<{30.3814}
+       \end{aligned}
+\\
+  0.01(x-30.3814), & \text{if }
+       \begin{aligned}[t]
+       30.3814\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female, 35-64  }\ln(RR(x)) =
+\begin{cases}
+  1.035623(1.832441y+1.538557y\ln(y)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<{30.3814}
+       \end{aligned}
+\\
+  0.0093(x-30.3814), & \text{if }
+       \begin{aligned}[t]
+       30.3814\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female, 65+  }\ln(RR(x)) =
+\begin{cases}
+  0.757104(1.832441y+1.538557y\ln(y)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<{30.3814}
+       \end{aligned}
+\\
+  0.0068(x-30.3814), & \text{if }
+       \begin{aligned}[t]
+       30.3814\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}  
+
+where
+
+\begin{equation}
+y=\frac{x+0.0099999997764826}{100}
+\end{equation}
+
+
+```{r ihdmort, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for mortality from Ischaemic heart disease by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = c(16, 35, 65)
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "ischaemic_heart_disease",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex, linetype = as.factor(age))) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 3.5) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99")) +
+  scale_linetype_manual("Age", values = 1:3, labels = c("16-34", "35-64", "65+"))
+
+```
+
+Source [@rehm2016modelling]
+
+Notes: All protective effects are removed for drinkers who consume more than 60g in a single drinking occasion at least once per month, as per [@roerecke2010irregular]
+
+*Morbidity*     
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) =
+\begin{cases}
+  -0.1178113\sqrt{x}+0.0189\sqrt{x}\ln(x), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<{60}
+       \end{aligned}
+\\
+  0, & \text{if }
+       \begin{aligned}[t]
+       60\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) = -0.296842\sqrt{x}+0.0392805x
+\end{equation}
+
+
+```{r ihdmorb, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for mortality from Ischaemic heart disease by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "ischaemic_heart_disease",
+  mort_or_morb = "morb",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 12) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@roerecke2012cardioprotective]  
+
+Notes: All protective effects are removed for drinkers who consume more than 60g in a single drinking occasion at least once per month, as per [@roerecke2010irregular]
+
+###### Cardiac arrhythmias (I47-I49)
+
+\begin{equation}
+\ln(RR(x)) = 0.0575183\times\frac{(x+0.0499992370605469)}{10}
+\end{equation}
+
+```{r cardarrhyth, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for mortality from Cardiac arrhythmias by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Cardiac_Arrhythmias",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 2.5)
+
+```
+
+Source [@samokhvalov2010alcohol]
+
+###### Haemorrhagic and other non-ischaemic stroke (I60-I62)
+
+*Mortality*  
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-1.006943)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  0.6898937\times\frac{x+0.0028572082519531}{100}, & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-1.014815)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  1.466406\times\frac{x+0.0028572082519531}{100}, & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+```{r hstrokemort, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for mortality from Haemorrhagic and other non-ischaemic stroke by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "haemorrhagic_stroke",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 10) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@patra2010alcohol]
+
+*Morbidity*  
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) = 0.007695021x
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) = -0.340861\sqrt{x}+0.0944208\sqrt{x}\ln(x)
+\end{equation}
+
+```{r hstrokemorb, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for morbidity from Haemorrhagic and other non-ischaemic stroke by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "haemorrhagic_stroke",
+  mort_or_morb = "morb",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 6) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@patra2010alcohol]
+
+###### Ischaemic stroke (I63-I67)
+
+*Mortality*
+
+\begin{equation}
+\textbf{Male, 16-34  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-e^{-0.03521})), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  1.111874\times(0.4030081\sqrt{y}+0.3877538\sqrt{y}\ln(y)), & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Male, 35-64  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-e^{-0.03279})), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  1.035623\times(0.4030081\sqrt{y}+0.3877538\sqrt{y}\ln(y)), & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Male, 65+  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-e^{-0.02397})), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  0.757104\times(0.4030081\sqrt{y}+0.3877538\sqrt{y}\ln(y)), & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female, 16-34  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-e^{-0.37987})), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  1.111874\times(-2.48768\sqrt{y}+3.708724y), & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female, 35-64  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-e^{-0.35382})), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  1.035623\times(-2.48768\sqrt{y}+3.708724y), & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female, 65+  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-e^{-0.25866})), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  0.757104\times(-2.48768\sqrt{y}+3.708724y), & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+where
+
+\begin{equation}
+y=\frac{x+0.0028572082519531}{100}
+\end{equation}
+
+```{r istrokemort, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for mortality from Ischaemic stroke by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = c(16, 35, 65)
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "ischaemic_stroke",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex, linetype = as.factor(age))) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 18) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99")) +
+  scale_linetype_manual("Age", values = 1:3, labels = c("16-34", "35-64", "65+"))
+
+```
+
+Source [@rehm2016modelling]
+
+Notes: All protective effects are removed for drinkers who consume more than 60g in a single drinking occasion at least once per month, as per [@rehm2016modelling]
+
+*Morbidity*  
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) = -0.132894\sqrt{x}+0.03677422\sqrt{x}\ln(x)
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) = -0.114287\sqrt{x}+0.01680936x
+\end{equation}
+
+```{r istrokemorb, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for morbidity from Ischaemic stroke by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "ischaemic_stroke",
+  mort_or_morb = "morb",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 3.5) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@patra2010alcohol]  
+
+Notes: All protective effects are removed for drinkers who consume more than 60g in a single drinking occasion at least once per month, as per [@rehm2016modelling]
+
+##### Digestive diseases
+
+###### Cirrhosis of the liver (K70 (excl. K70.0-K70.4, K70.9), K73-K74)
+
+*Mortality*  
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1+x(1.033224-1)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  2.793524\times\frac{x+0.1699981689453125}{100}, & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1+x(1.421569-1)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  3.252035\times\frac{x+0.1699981689453125}{100}, & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+```{r livercirrmort, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for mortality from Cirrhosis of the liver by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "livercirrhosis",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 70) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+*Morbidity*  
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) = 0.01687111x
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) = 0.2351821\sqrt{x}
+\end{equation}
+
+```{r livercirrmorb, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for morbidity from Cirrhosis of the liver by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "livercirrhosis",
+  mort_or_morb = "morb",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 20) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@rehm2010alcohol]
+
+###### Acute pancreatitis (K85 (excl. K85.2, K85.3))
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) = 0.013x
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) =
+\begin{cases}
+  -0.0272886x, & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<3
+       \end{aligned}
+\\
+  -0.0272886x+0.0611466\times\frac{(x-3)^3}{(40-3)^2}, & \text{if }
+       \begin{aligned}[t]
+        3\leq{x}<15
+       \end{aligned}
+\\
+  -0.0272886x+0.0611466\times\frac{(x-3)^3-\frac{(x-15)^3\times(40-3)}{40-15}}{(40-3)^2}, & \text{if }
+       \begin{aligned}[t]
+        15\leq{x}<40
+       \end{aligned}
+\\
+  -0.0272886x+0.0611466\times\frac{(x-3)^3-\frac{(x-15)^3\times(40-3)-(x-40)^3\times(15-3)}{40-15}}{(40-3)^2}, & \text{if }
+       \begin{aligned}[t]
+        40\leq{x}<108
+       \end{aligned}
+\\
+  2.327965, & \text{if }
+       \begin{aligned}[t]
+        108\leq{x}
+       \end{aligned}       
+\end{cases}
+\end{equation}
+
+```{r acutepanc, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Acute pancreatitis by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Acute_Pancreatitis",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 12) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@samokhvalov2015alcohol]
+
+###### Chronic pancreatitis (K86 (excl. K86.0))
+
+\begin{equation}
+\ln(RR(x)) = 0.018x
+\end{equation}
+
+```{r chronicpanc, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Acute pancreatitis by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Chronic_Pancreatitis",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 16)
+
+```
+
+Source [@samokhvalov2015alcohol]
+
+##### Endocrine diseases
+
+###### Diabetes mellitus (type II) (E11)
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) = 0.00001763703x^2-0.0000000728256x^3
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) = -0.1313991\sqrt{x}+0.01014239x
+\end{equation}
+
+```{r diabetes, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Diabetes mellitus (type II) by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Diabetes",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 1.4) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@knott2015alcohol]
+
+##### Diseases of the nervous system
+
+###### Epilepsy and status epilepticus (G40-G41)
+
+\begin{equation}
+\ln(RR(x)) = 1.22861\times\frac{x+0.5}{100}
+\end{equation}
+
+```{r epilepsy, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Epilepsy and status epilepticus by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Epilepsy",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 7)
+
+```
+
+Source [@samokhvalov2010alcoholepi]
+
+##### Respiratory diseases
+
+###### Tuberculosis (A15-A19)
+
+\begin{equation}
+\ln(RR(x)) = 0.0179695x
+\end{equation}
+
+```{r tuberc, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Tuberculosis by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Tuberculosis",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 16)
+
+```
+
+Source [@imtiaz2017alcohol]
+
+###### Lower respiratory tract infections (J09-J18)
+
+\begin{equation}
+\ln(RR(x)) = 0.4764038\times\frac{x+0.0399999618530273}{100}
+\end{equation}
+
+```{r loweresp, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Lower respiratory tract infections by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Pneumonia",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 2.5)
+
+```
+
+Source [@samokhvalov2010alcoholpneumonia]
+
+
+
+### Acute diseases partially attributable to alcohol
+
+#### Risk functions
+
+
+Relative risk of harm for drinkers at consumption level $x$, measured in grams of ethanol consumed *on a single drinking occasion*, versus non-drinkers. All risk functions are applied to both genders and for both mortality and morbidity except where stated otherwise.
+
+##### Transport Injuries (V01-V98, Y85.0)
+
+\begin{equation}
+RR(x) = \frac{e^{0.837637\times(ln(y)+3.973538882)+1.018824\times(y^3-0.00000665184)}}{0.370731\times(1+e^{0.837637\times(\ln(y)+3.973538882)+1.018824\times(y^3-0.00000665184)})}
+\end{equation}
+
+where  
+
+\begin{equation}
+y = \frac{\frac{x}{12.8}+1}{100}
+\end{equation}
+
+
+```{r transport, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for transport injuries by the amount of alcohol consumed on an occassion.", cache = F, fig.align = "center"}
+
+data <- data.table(grams_ethanol = 0:160)
+
+data[ , rr := tobalcepi::PArisk(
+  cause = "Transport",
+  grams_ethanol = data$grams_ethanol,
+  grams_ethanol_per_std_drink = 12.8,
+  getcurve = TRUE
+)]
+
+ggplot(data) +
+  geom_line(aes(x = grams_ethanol, y = rr)) +
+  theme_minimal() +
+  xlab("Consumption on occassion (g)") +
+  ylab("Relative risk") +
+  ylim(0, 2.5)
+
+```
+
+Source [@cherpitel2015relative]
+
+##### Violent injuries (X85-Y09, Y87.1 & Y35)
+
+\begin{equation}
+RR(x) = \frac{e^{-0.42362\times\left(\frac{1}{\sqrt{y}-5.084489629}\right)+0.562549\times(y^3-0.0000578783)}}{0.110872\times(1+e^{-0.42362\times\left(\frac{1}{\sqrt{y}}-5.084489629\right)+0.562549\times(y^3-0.0000578783)})}
+\end{equation}
+
+where  
+
+\begin{equation}
+y = \frac{\frac{x}{12.8}+1}{100}
+\end{equation}
+
+```{r violence, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for violence by the amount of alcohol consumed on an occassion.", cache = F, fig.align = "center"}
+
+data <- data.table(grams_ethanol = 0:160)
+
+data[ , rr := tobalcepi::PArisk(
+  cause = "Violence",
+  grams_ethanol = data$grams_ethanol,
+  grams_ethanol_per_std_drink = 12.8,
+  getcurve = TRUE
+)]
+
+ggplot(data) +
+  geom_line(aes(x = grams_ethanol, y = rr)) +
+  theme_minimal() +
+  xlab("Consumption on occassion (g)") +
+  ylab("Relative risk") +
+  ylim(0, 7)
+
+```
+
+Source [@cherpitel2015relative]
+
+##### Falls (W00-W19)
+
+\begin{equation}
+RR(x) = \frac{e^{17.84434\times(\sqrt{y}-0.1398910338)-17.6229\times(y-0.0195695013)}}{0.367446\times(1+e^{17.84434\times(\sqrt{y}-0.1398910338)-17.6229\times(y-0.0195695013)})}
+\end{equation}
+
+where  
+
+\begin{equation}
+y = \frac{\frac{x}{12.8}+1}{100}
+\end{equation}
+
+```{r falls, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for falls by the amount of alcohol consumed on an occassion.", cache = F, fig.align = "center"}
+
+data <- data.table(grams_ethanol = 0:160)
+
+data[ , rr := tobalcepi::PArisk(
+  cause = "Fall",
+  grams_ethanol = data$grams_ethanol,
+  grams_ethanol_per_std_drink = 12.8,
+  getcurve = TRUE
+)]
+
+ggplot(data) +
+  geom_line(aes(x = grams_ethanol, y = rr)) +
+  theme_minimal() +
+  xlab("Consumption on occassion (g)") +
+  ylab("Relative risk") +
+  ylim(0, 3)
+
+```
+
+Source [@cherpitel2015relative]
+
+##### Other injuries (W20-W52, W65-W74, Y21, X00-X09, Y26, W75-W99, X10-X33, Y20, Y22-Y25, Y27-Y29, Y31-Y34, X60-X84 (excl. X65), Y87.0)
+
+\begin{equation}
+RR(x) = \frac{e^{-0.28148\times\left(\frac{1}{\sqrt{y}}-0.1398910338\right)-2.00946\times(y-0.015761462)}}{0.363279\times(1+e^{-0.28148\times\left(\frac{1}{\sqrt{y}}-0.1398910338\right)-2.00946\times(y-0.015761462)})}
+\end{equation}
+
+where  
+
+\begin{equation}
+y = \frac{\frac{x}{12.8}+1}{100}
+\end{equation}
+
+```{r otherinj, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for other injuries by the amount of alcohol consumed on an occassion.", cache = F, fig.align = "center"}
+
+data <- data.table(grams_ethanol = 0:160)
+
+data[ , rr := tobalcepi::PArisk(
+  cause = "Other",
+  grams_ethanol = data$grams_ethanol,
+  grams_ethanol_per_std_drink = 12.8,
+  getcurve = TRUE
+)]
+
+ggplot(data) +
+  geom_line(aes(x = grams_ethanol, y = rr)) +
+  theme_minimal() +
+  xlab("Consumption on occassion (g)") +
+  ylab("Relative risk") +
+  ylim(0, 2.5)
+
+```
+
+Source [@cherpitel2015relative]
+
+
+
+
+
+#### Use in STAPM
+
+
+
+Here we describe the approach taken in STAPM to model the health harms that are partially-attributable to level of acute alcohol intake on a single occasion (i.e. intoxication). The health harms that we consider could be intentional or unintentional, e.g. traffic accidents, assault or falls. "Partially-attributable acute" means that the harm can occur without alcohol but the risk of occurrence changes with intoxication.    
+
+The Health Survey for England (HSE) data provide the basis for our analysis (see the [hseclean R package](https://stapm.gitlab.io/hseclean/) for details of how we process the HSE data).   
+
+We build on the method used to model the health harms due to intoxication in the Sheffield Alcohol Policy Model (SAPM). The methods used for this module of SAPM have evolved over time. Originally, the risk of harm was inferred from external information on the alcohol attributable fractions of traffic accidents, assaults, falls etc (described in the Purshouse et al. modelling report for NICE [-@purshouse2009nice]). The method was updated to allow SAPM to model individual exposure to the risk of harm from each drinking occassion, e.g. for how long is someone intoxicated after drinking and what is their risk of a fall injury when intoxicated -- this new method is described in two papers by Hill-McManus et al. [-@hill2014estimation;-@Hill-McManus2014]. Most recently, the method was updated to incorporate new estimates of the risk of health harms due to intoxication by Cherpitel et al. [-@cherpitel2015relative] -- these are described in our alcohol risk functions report [@Angus2018] and we have used them in our [alcohol attributable fractions report](https://figshare.shef.ac.uk/articles/Alcohol_attributable_fractions_for_England/8181845).    
+
+In this vignette, we first describe the latest SAPM method for modelling the health harms due to intoxication, and then describe how we adapt the method to suit STAPM.   
+
+##### The latest SAPM method
+
+###### Number of drinking occassions
+The first step is to estimate the number of drinking occassions that an individual has in a year and we have two sources of information on this.   
+
+*Source of information 1*. The HSE asks repondents about the frequency they drank alcoholic drinks in the last 12 months (in the variable `dnoft`), offering the responses: Almost every day, Five or six days a week, Three or four days a week, Once or twice a week, Once or twice a month, Once every couple of months, Once or twice a year. For interval frequencies, we take the mid point value. We convert yearly frequencies to weekly frequency. For example, Three or four days a week becomes 3.5 times a week. This processing is done by the function `hseclean::alc_drink_now_allages()` that calls the function `hseclean::alc_drink_freq()`.      
+
+*Source of information 2*. Hill-McManus et al. [-@hill2014estimation] developed a method to estimate the number of drinking occassions per year using data from detailed diaries in the National Diet and Nutrition Survey (NDNS) 2000/2001. Using the regression coefficients from this study, it is possible to predict each individual's expected number of drinking occasions across the year, the average amount they drunk on an occasion, the variability in the amount drunk among occasions, and how these vary socio-demographically. Hill-McManus et al. use a negative binomial regression model for the number of weekly drinking occasions (see their Table 3). The explanatory variables for the number of weekly drinking occassions were: log weekly mean consumption, age, income (in poverty or not), ethnicity (white/non-white), age left education, number of children, social class (manual/nonmanual). From the regression coefficients we calculate the expected number of weekly drinking occasions for each individual in the HSE data (implemented in the STAPM code by the function `tobalcepi::AlcBinge()`). Note that this model was fitted to a population sample aged below 65 years, but we assume the effect at 55--65 years applies at older ages too.     
+
+###### Amount drunk on drinking occassions
+The second step is to estimate the distribution of the amounts that each individual drinks on their drinking occassions. The HSE does not provide this information -- it asks questions on the number of units that each individual drank on their heaviest drinking day in the last seven days but this does not tell us about the distribution of amounts drunk across all drinking occassions in a year.    
+
+SAPM uses the method developed by Hill-McManus et al. [-@hill2014estimation] -- there are two parts to the process of estimating the distribution of amount drunk.   
+
+First, estimate the average quantity of alcohol that we expect each individual to consume on a drinking occasion. Hill-McManus et al. estimated regression coefficients (their Table 4) that allow predictions of the average amount consumed. The predictors of average amount consumed were: log weekly mean consumption, age, sex, ethnicity (non-white/white), and an interaction between sex and log weekly mean consumption (indicating that men and women differ in the number of drinking occassions required to achieve the same level of weekly consumption). Note that an estimate of the average quantity of alcohol consumed on a drinking occasion can also be obtained from the HSE data by dividing average weekly consumption by the number of weekly drinking occasions.    
+
+Second, estimate the individual-level variability in the amount consumed across their drinking occassions. To do this, Hill-McManus et al. fitted two Heckman regression models to the NDNS data:   
+
+*Model 1* was a Heckman selection model designed to correct the analysis for the problem that the NDNS data only provides a seven-day snapshot of each individual's annual drinking, and at least three data points per individual are needed to estimate the variability in amount drunk. The Heckman selection model estimated the probability that an individual drank on at least three separate occasions during the diary period (see their Table 5). The results were used to correct the estimates of variability for selection bias via the [Inverse Mills Ratio](https://en.wikipedia.org/wiki/Mills_ratio#Inverse_Mills_ratio). The predictors of an individual drinking on at least three separate occassions during the diary period were: log weekly mean consumption, age, income (in poverty or not), employed/not-employed, ethnicity (non-white/white), age left education, number of children, social class (manual/non-manual).    
+
+*Model 2* was a Heckman outcome regression fitted to the standard deviation of the quantity of alcohol consumed in a drinking occasion (see their Table 6). The predictors of the standard deviation in the quantity of alcohol consumed in a drinking occasion were: log weekly mean consumption, income (in poverty or not), and the Inverse Mills ratio.    
+
+In the STAPM code, the function `tobalcepi::AlcBinge()` uses the HSE data and the regression coefficients from Hill-McManus et al. to infer the mean and standard deviation of amount drunk on each drinking occassion by individuals who drink. From these two parameters, we then calculate individual-specific probability density functions of the amount of alcohol consumed on a drinking occasion (in the STAPM code, this is done within the function `tobalcepi::PArisk()`).   
+
+###### Time spent intoxicated
+The third step is to estimate each individual's annual exposure to the risk of health harms due to intoxication, as defined by the amount of time that they spend intoxicated during a year (here we use 'intoxicated' to mean having a percentage blood alcohol content (\%BAC) greater than zero). The method that we use to estimate the time that each individual spends intoxicated over a year is described in Hill-McManus et al. [-@Hill-McManus2014], who drew on Taylor et al. [-@taylor2011combining].     
+
+The expected duration of intoxication for each amount of alcohol drunk on an occassion is defined in terms of the time, in hours, after a drinking occassion that it would take for an individual's \%BAC to drop to zero. The calculation of this time considers:   
+
+- an individual's sex, height and weight;   
+
+- Widmark's $r$ (the fraction of the body mass in which alcohol would be present if it were distributed at concentrations equal to that in blood - see examples of use of the Widmark equation in Watson [-@watson1981prediction] and Posey and Mozayani [-@Posey2007]);   
+
+- the rate at which the liver clears alcohol from the body (we assume this is 0.017 \%BAC per hour).   
+
+To simplify the calculation, we do not consider the rate of alcohol absorbtion (i.e. there is no alcohol absorbtion rate constant) or the time interval between drinks within a drinking occassion.    
+
+The calculation of the time that each individual spends intoxicated in a year multiplies the probability that each level of alcohol is consumed on a drinking occassion by the expected duration of intoxication for each amount of alcohol that could be drunk on an occassion. This is then multiplied by the expected number of drinking occasions per week and by 52 weeks in a year. Finally, the time spent intoxicated is summed to give the expected time spent intoxicated in a year (in the STAPM code, this is implemented by the function `tobalcepi::PArisk()`).     
+
+###### The annual relative risk of partially-attributable acute conditions
+The relative risks for alcohol-related injuries are taken from Cherpitel et al. [-@cherpitel2015relative] and described in our alcohol risk functions report [@Angus2018]. Note that Cherpitel et al. report relative risks by the number of standard drinks consumed (we assume 1 Std. drink = 16ml (12.8g) of ethanol). The risk functions in Cherpital differ by four causes of health harm, which we map onto our disease list as follows:       
+
+- Traffic   
+- Violence: "Assault", "Other_intentional_injuries"   
+- Falls  
+- Other: "Mechanical_forces", "Drowning", "Other_unintentional_injuries", "intentional_self_harm", "Accidental_poisoning", "Fire_injuries".   
+
+To calculate the annual relative risk for each condition, we do the following:   
+
+- match each amount drunk on a drinking occassion to the associated relative risk (e.g. the relative risk of violence after a drinking occassion where 6 standard drinks were consumed);   
+
+- multiply the relative risk associated with each drinking occassion by the expected amount of time spent intoxicated following that drinking occassion;    
+
+- sum the relative risk associated with the time during the year that is spent intoxicated (the remaining time in the year that is not spent intoxicated has a relative risk of 1).   
+
+The final estimate of each individual's annual relative risk of a partially-attributable acute condition is the average risk considering time spent intoxicated and time not spent intoxicated (in the STAPM code the calculations are implemented by the function `tobalcepi::PArisk()`).     
+
+##### Adaptation to suit STAPM
+*The problem*  
+STAPM uses a different method of modelling to SAPM in that STAPM tracks individuals as they age (the within-cohort dynamics) but SAPM does not -- instead SAPM models changes over time (in one-year time steps) to repeated cross-sectional samples of individuals from the HSE. The method described above is easily applied to a sample of individuals from the HSE (the SAPM method), because the HSE contains the necessary covariate (i.e. in the HSE sample there is also data on ethnicity, income, number of children etc.). For STAPM to use the method, would require it to also track the individual age trajectories of traits such as income -- and this is beyond the current scope of the STAPM modelling.    
+
+*The solution*  
+The STAPM modelling tracks the individual age trajectories of the average weekly amount of alcohol consumed -- the dynamics of these trajectories are stratified by sex and Index of Multiple Deprivation (IMD) quintiles. We therefore need to adapt the method to predict the number of drinking occassions and the distribution of amount consumed as a function of the average weekly amount of alcohol consumed, age, sex and IMD quintile. The simplest way to do this is to assign the parameter values from Hill-McManus et al. [-@hill2014estimation] to each individual in a sample of the HSE, and then to average these values by age, sex and IMD quintile (the IMD quintile averages will then reflect the variation among IMD quintiles in the distribution of ethnicity, income, number of children etc.).    
+
+*Implementing in the STAPM code*   
+The code to average the parameter values from Hill-McManus et al is in the folder `data-raw/binge_params` within the `tobalcepi` package. This code also averages individual height and weight by age, sex and IMD quintile, for use in the calculations of time spent intoxicated. A new function `tobalcepi::AlcBinge_stapm()` has been written to implement the calculations using these averaged parameter values. The functions `tobalcepi::RRAlc()` and `tobalcepi::PArisk()` have also had minor edits so that they work with the `tobalcepi::AlcBinge_stapm()` function.    
+
+
+
+### Chronic diseases wholly attributable to alcohol
+
+Here we describe the approach taken in STAPM to model the chronic health harms that are wholly-attributable to long-term high levels of alcohol consumption. The health harms that we consider in this category are: Alcoholic cardiomyopathy, Alcoholic gastritis, Alcoholic liver disease, Acute pancreatitis alcohol induced, Chronic pancreatitis alcohol induced, Alcohol induced pseudo-cushings syndrome, Alcoholic myopathy, Alcoholic polyneuropathy, Maternal care for suspected damage to foetus from alcohol, Degeneration, Mental and behavioural disorders due to use of alcohol [@Angus2018]. "Wholly-attributable" means that these conditions cannot occur without alcohol (i.e. all cases are due to alcohol consumption).    
+
+#### The SAPM method
+We build on the method used to model the chronic health harms that are wholly-attributable to alcohol in the Sheffield Alcohol Policy Model (SAPM). The main issue is that there is minimal available evidence on the relationship between the level of long-term alcohol consumption and the risk of chronic harms that were wholly attributable to alcohol. Assumptions are therefore needed about the shape of the risk function that links alcohol consumption to the risk of wholly alcohol attributable chronic conditions (the approach taken is described on page 28 in the Purshouse et al. modelling report for NICE [-@purshouse2009nice]).    
+
+When the UK healthy drinking guidelines were revised, the thresholds used were revised to 2 units/day for females and males (14 units/week). Figure 1 shows the shape of the risk function currently used in SAPM.         
+
+```{r wa_chronic_risk_function, eval = T, echo = F, fig.align="left", warning = F, out.extra='', fig.pos = "h", fig.width = 5, fig.height = 3, fig.cap = "**Figure 1.** Illustrative linear absolute risk function for a wholly-attributable chronic harm. It is assumed that people are not at risk of harm unless they drink to levels above the UK health drinking guidelines of 2 units/day on average (14 units/week). Above these thresholds, it is assumed that risk increases linearly with the amount drunk."}
+
+threshold_male <- 2
+threshold_female <- 2
+
+data <- data.table(units = seq(0, 40, length.out = 1e4), risk = seq(0, 40, length.out = 1e4))
+data <- rbindlist(list(copy(data)[ , sex := "Male"], copy(data)[ , sex := "Female"]), use.names = T)
+
+data[sex == "Male", risk := risk - threshold_male]
+data[sex == "Female", risk := risk - threshold_female]
+
+data[risk < 0, risk := 0]
+
+ggplot(data) +
+  geom_line(aes(x = units, y = risk, colour = sex)) + 
+  theme_minimal() +
+  xlab("Average units drunk per day") + ylab("Absolute risk") +
+  scale_colour_manual(name = "Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+#### Implementing in the STAPM code  
+The SAPM method is implemented unchanged in the STAPM code, within the function `tobalcepi::RRalc()`.   
+
+
+### Acute diseases wholly attributable to alcohol
+Here we describe the approach taken in STAPM to model the health harms that are wholly-attributable to level of acute alcohol intake on a single occasion. The health harms that we consider in this category are conditions associated with the effects of excessive blood level of alcohol, toxic effects of alcohol, alcohol poisoning, and acute intoxication. "Wholly-attributable acute" means that these conditions cannot occur without alcohol (i.e. all cases are due to alcohol consumption) and the risk of these conditions changes with acute exposure to alcohol.    
+
+#### The SAPM method
+We build on the method used to model the acute health harms that are wholly-attributable to alcohol in the Sheffield Alcohol Policy Model (SAPM).   
+
+The main issue to be overcome in the development of SAPM was that there was no available evidence on the relationship between the level of acute exposure to alcohol within a single drinking ocassion and the risk of acute harms that were wholly attributable to this acute exposure. Assumptions therefore needed to be made about the shape of the risk function that links the level of single ocassion drinking to the risk of acute harms (the approach taken is described on page 29 in the Purshouse et al. modelling report for NICE [-@purshouse2009nice]).   
+
+In addition, due to the harms being wholly-attributable to alcohol, no cases are expected in people who consume below a certain threshold of alcohol on a single ocassion, i.e. there are no cases in the non-exposed reference group. One of the consequences of this is that it is not possible to calculate relative risk; instead, the relationship between single ocassion drinking and acute harm must be represented by an absolute risk function, e.g. in terms of the expected number of deaths or hospitalisations if a certain number of people were to drink a certain number of units of alcohol on a single ocassion. Figure 1 shows the shape of the risk function currently used in SAPM.         
+
+```{r wa_acute_risk_function, eval = T, echo = F, fig.align="left", warning = F, out.extra='', fig.pos = "h", fig.width = 5, fig.height = 3, fig.cap = "**Figure 1.** Illustrative linear absolute risk function for a wholly-attributable acute harm. It is assumed that males are not at risk of acute harm unless they drink over 4 units on a single occassion, and that females are not at risk unless they drink over 3 units on a single ocassion. Above these thresholds, it is assumed that risk increases linearly with the amount drunk. SAPM uses data from the Health Survey for England on the amount drunk on the heaviest drinking day in the last 7 days."}
+
+threshold_male <- 4
+threshold_female <- 3
+
+data <- data.table(units = seq(0, 40, length.out = 1e4), risk = seq(0, 40, length.out = 1e4))
+data <- rbindlist(list(copy(data)[ , sex := "Male"], copy(data)[ , sex := "Female"]), use.names = T)
+
+data[sex == "Male", risk := risk - threshold_male]
+data[sex == "Female", risk := risk - threshold_female]
+
+data[risk < 0, risk := 0]
+
+ggplot(data) +
+  geom_line(aes(x = units, y = risk, colour = sex)) + 
+  theme_minimal() +
+  xlab("Units drunk on heaviest drinking day of the week") + ylab("Absolute risk") +
+  scale_colour_manual(name = "Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+#### Adaptation to suit STAPM
+
+*The problem*  
+The main difference between SAPM and STAPM is that STAPM simulates the individual lifecourse dynamics of the average weekly amount of alcohol consumed - STAPM does not simulate the dynamics of the amount drunk on the heaviest drinking day. This means that for STAPM, we need to develop a method to link the risk of acute harms that are wholly-attributable to alcohol consumption to average weekly alcohol consumption.      
+
+*The solution*  
+The solution is to draw on the methods described in `vignette("alc_partially_attrib_acute")`, which uses parameter values from Hill-McManus et al. [-@hill2014estimation] to infer the characteristics of single ocassion drinking from average weekly alcohol consumption and a range of individual-level covariates. Using the method in `tobalcepi::AlcBinge_stapm()` we can calculate the average parameter values by age, sex and IMD quintile. Using these parameter values, we can translate each individual's average weekly alcohol consumption to their expected number of weekly drinking ocasions, and the distribution of the amounts that each individual drinks on their drinking ocassions. For each individual, we can then calculate the total number of units per year that are drunk after each individual has already exceeded the single ocassion drinking thresholds of 4 units/day for men and 3 units/day for women.    
+
+*Implementing in the STAPM code*   
+A new function `tobalcepi::WArisk_acute()` has been created to calculate the total number of units that each individual is expected to drink above the single ocassion binge drinking thresholds. This function is called from within the function `tobalcepi::RRalc()` and uses the parameters outputs by `tobalcepi::AlcBinge_stapm()`.   
+
+
+### Lags in the effect of changes in alcohol consumption on disease risk
+
+
+
+
+
+
+
+
+
+## Tobacco related risks of disease
+
+In the Sheffield Tobacco Policy Model (STPM), we consider 52 adult diseases related to smoking and the corresponding relative risks of developing these diseases in current vs. never smokers, and in former smokers according to the time since they quit [@Webster2018]. For current smokers, we assume that the relative risks of disease are the same for all smokers regardless of the amount currently smoked and the length of time as a smoker. We limit ourselves to diseases that affect the consumer themselves e.g. excluding secondary effects of smoking.  
+
+
+STPM considers 52 adult diseases related to smoking (Table \@ref(tab:diseaselist)) and the corresponding relative risks of these diseases in current vs. never smokers, and in former smokers according to the time since they quit [@Webster2018]. We limit ourselves to diseases that affect adult smokers, i.e. we do not consider passive smoking effects on adults and children. The main simplifying assumption in this version of STPM is that the relative risks of disease are the same for all smokers regardless of the amount that they currently smoke and the length of time that they have spent as a smoker. The relative risks that we use are generally not stratified (i.e. are constant across age, sex and socio-economic conditions), except for Ischaemic Heart Disease, which is stratified by age and sex [@Rostron2012], and Stroke, which is stratified by sex [@Peters2013].   
+
+We arrived at our disease list and the corresponding International Classification of Diseases version 10 (ICD-10) definitions (Table \@ref(tab:diseaselist)) through a process of reviewing the diseases considered by previous health economic models of smoking, and reviewing reports and papers that reviewed the disease risks of smoking [@Pokhrel2013;@Callum2004;@Digital2018;@General2014;@Carter2015;@RCP2018;@Brown2018]. The STPM disease list was influenced heavily by our involvement in Chapter 2 of the RCP report 'Hiding in plain sight' [@RCP2018]. We were further influenced by discussions within our research group relating to updates to the list of diseases related to alcohol, their ICD-10 code definitions and the published sources of relative risk estimates. As part of these discussions for alcohol we made contact with the authors of the CRUK paper [@Brown2018]. Discussions focused particularly on the ICD-10 definitions of head and neck cancers, and oesophageal cancers. The result of these discussions was an updated list of alcohol related diseases for the Sheffield Alcohol Policy Model (SAPM) v4.0 [@Angus2018]. In producing our list of smoking related diseases we sought to harmonise our ICD-10 definitions with those used in our alcohol modelling. Our resulting list is mainly consistent with the RCP report, with most deviations being for cancers, where we have been influenced by CRUK's work and our alcohol modelling. We explain the choices we made in the report where we initially presented our disease list [@Webster2018].  
+
+The notable omissions from our list are:   
+
+- *Breast cancer*---due to a small and statistially uncertain effect of smoking;  
+- *Prostate cancer*---due to a lack of published evidence for current smokers;  
+- *Ovarian cancer*---for which smoking only carries a risk for fully malignant mucinous ovarian cancers (13\% of ovarian cancers are mucinous, and of these 57\% are fully malignant), which made it difficult to identify the cases attributable to smoking using the ICD-10 definitions recorded in mortality and hospital episode data.  
+
+For oesophageal cancer, our discussions with CRUK concluded that we should distinguish between adenocarcinoma (AC) and squamous cell carcinoma (SCC). However, it is not possible to distinguish these subtypes from the routinely recorded ICD-10 codes. We therefore settled on the following approach: We apportion overall oesophageal cancer prevalence between AC and SCC using estimates of percentage prevalence by age and sex shared with us by CRUK; these data are for 2014 for England and derive from UK cancer registry on the number of oesophageal SCCs.  
+
+
+### Relative risks of disease
+
+This document presents our list of **52** adult diseases related to smoking and the corresponding relative risks of disease due to smoking, explaining our choices of disease definitions and risk sources. Figure \@ref(fig:smkrelrisks) shows the variation in disease-specific risks. We focus on the risks of current smoking and limit ourselves to diseases that affect the consumer themselves e.g. excluding secondary effects of smoking on children. We assume the equivalence of relative risks and odds ratios. Our starting point was the Royal College of Physician's (RCP) report “Hiding in plain sight: Treating tobacco dependency in the NHS” [@RCP2018], which reviewed smoking–disease associations to produce an updated list of diseases that are caused by smoking and updated risk sources. We mainly keep to the RCP report's disease list, with any deviations from the RCP list and risk sources being for one of two reasons:   
+
+1. There are often slightly conflicting ICD-10 code definitions used for some conditions and we have sought to harmonise these consistently across both tobacco and alcohol, based on the Sheffield Alcohol Policy Model (SAPM) v4.0 disease list [@Angus2018];   
+
+1. Since publication of the RCP report, Cancer Research UK (CRUK) produced their own disease list and risk sources for cancers attributable to modifiable risk factors, including tobacco and alcohol [@Brown2018]. Discussions with CRUK shaped the disease definitions in our updated Sheffield disease list for alcohol. Where there are differences in the risk sources used in the RCP report and CRUK's work, we take the estimate that matches most closely to our disease definitions, or the more recent estimate.  
+
+
+```{r smkrelrisks, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 8, fig.height = 10, fig.cap = "Relative risks and 95 percent confidence intervals in current smokers for 52 conditions attributable to smoking.", cache = F, fig.align = "center"}
+
+readRDS("output/tobacco_riskplot.rds")
+
+```
+
+
+
+(ref:tobcurnevrisk-ref1) [@Maasland2014]  
+(ref:tobcurnevrisk-ref2) [@Gandini2008]  
+(ref:tobcurnevrisk-ref3) [@Jayes2016]  
+(ref:tobcurnevrisk-ref4) [@Gandini2008]  
+(ref:tobcurnevrisk-ref5) [@Zuo2017]  
+(ref:tobcurnevrisk-ref6) [@Tramacere2011]  
+(ref:tobcurnevrisk-ref7) [@Prabhu2013]  
+(ref:tobcurnevrisk-ref8) [@Ordonez-Mena2016]  
+(ref:tobcurnevrisk-ref9) [@Ordonez-Mena2016]  
+(ref:tobcurnevrisk-ref10) [@Lee2009]  
+(ref:tobcurnevrisk-ref11) [@Ordonez-Mena2016]  
+(ref:tobcurnevrisk-ref12) [@Cumberbatch2016]  
+(ref:tobcurnevrisk-ref13) [@Gandini2008]  
+(ref:tobcurnevrisk-ref14) [@Osch2016]  
+(ref:tobcurnevrisk-ref15) [@Gandini2008]  
+(ref:tobcurnevrisk-ref16) [@Colamesta2016]  
+(ref:tobcurnevrisk-ref17) [@Rostron2012]  
+(ref:tobcurnevrisk-ref18) [@Peters2013]  
+(ref:tobcurnevrisk-ref19) [@Peters2013]  
+(ref:tobcurnevrisk-ref20) [@Lu2014]  
+(ref:tobcurnevrisk-ref21) [@Cornuz2004]  
+(ref:tobcurnevrisk-ref22) [@Cheng2013]  
+(ref:tobcurnevrisk-ref23) [@Jayes2016]  
+(ref:tobcurnevrisk-ref24) [@Jayes2016]  
+(ref:tobcurnevrisk-ref25) [@Jayes2016]  
+(ref:tobcurnevrisk-ref26) [@Jayes2016]  
+(ref:tobcurnevrisk-ref27) [@RCP2018]  
+(ref:tobcurnevrisk-ref28) [@RCP2018]  
+(ref:tobcurnevrisk-ref29) [@RCP2018]  
+(ref:tobcurnevrisk-ref30) [@Taskar2006]  
+(ref:tobcurnevrisk-ref31) [@Pan2015]  
+(ref:tobcurnevrisk-ref32) [@Zhong2015]  
+(ref:tobcurnevrisk-ref33) [@Zhang2016]  
+(ref:tobcurnevrisk-ref34) [@Breckenridge2016]  
+(ref:tobcurnevrisk-ref35) [@Zhong2015]  
+(ref:tobcurnevrisk-ref36) [@Zhong2015]  
+(ref:tobcurnevrisk-ref37) [@Luger2014]  
+(ref:tobcurnevrisk-ref38) [@RCP2018]  
+(ref:tobcurnevrisk-ref39) [@Gurillo2015]  
+(ref:tobcurnevrisk-ref40) [@Solmi2016]  
+(ref:tobcurnevrisk-ref41) [@Jiang2015]  
+(ref:tobcurnevrisk-ref42) [@Shiri2010]  
+(ref:tobcurnevrisk-ref43) [@DiGiuseppe2014]  
+(ref:tobcurnevrisk-ref44) [@Armstrong2014]  
+(ref:tobcurnevrisk-ref45) [@Chakravarthy2010]  
+(ref:tobcurnevrisk-ref46) [@Ye2012]  
+(ref:tobcurnevrisk-ref47) [@Mahid2006]  
+(ref:tobcurnevrisk-ref48) [@Dias2015]  
+(ref:tobcurnevrisk-ref49) [@Shen2015]  
+(ref:tobcurnevrisk-ref50) [@Xia2017]  
+(ref:tobcurnevrisk-ref51) [@Xia2017]  
+(ref:tobcurnevrisk-ref52) [@Nomura2005]  
+
+
+```{r tobcurnevrisk, eval = T, warning = F, echo=F}
+
+# Copy and paste the table from X:/ScHARR/PR_Disease_Risk_TA/Code/tables
+df_table1 <- readxl::read_xlsx('tables/Tobacco_current_vs_never_disease_risk.xlsx', 'Sheet1')
+
+df_table1 %>%
+  kableExtra::kbl(booktabs = T, caption = "Disease definitions and risk functions (with 95 percent confidence intervals) for current vs. never smoking.", label = "tobcurnevrisk", longtable = TRUE) %>%
+  kableExtra::column_spec(column = 1, width = "2cm") %>%
+  kableExtra::column_spec(column = 2:4, width = "3cm") %>%
+  kableExtra::column_spec(column = 5, width = "4cm") %>%
+  kableExtra::collapse_rows() %>%
+  kableExtra::kable_styling(font_size = 8, latex_options = c("HOLD_position", "repeat_header"))
+
+```
+
+
+
+#### Cancers
+We include all cancers attributable to tobacco as mentioned by CRUK [@Brown2018], except ovarian cancer. Smoking only carries a risk for fully malignant mucinous ovarian cancers (13\% of ovarian cancers are mucinous, and of these 57\% are fully malignant). We excluded ovarian cancer due to the uncertainty involved in identifying the cases attributable to smoking based on the ICD-10 definitions used in our mortality data and hospital episode statistics.  
+
+Below we itemise each cancer type and explain how we have synthesised the definitions of cancers and the sources for the relative risk of smoking among the Sheffield alcohol disease list [@Angus2018], RCP report [@RCP2018], and CRUK's paper [@Brown2018].  
+
+##### Oral cavity (C00–C06), and pharyngeal (C09, C10, C12–C14)
+Gandini et al. [-@Gandini2008] estimated the relative risk of smoking for cancer in the oral cavity as 3.43 (95\% Confidence Interval 2.37–4.94), and pharyngeal cancers as 6.76 (CI 2.86–16.0). Following Gandini, the RCP report associated the relative risk from Gandini for oral cavity (RR 3.43) with ICD10 code C10, and relative risk for pharyngeal cancer (RR 6.76) with ICD10 code C14. But in line with CRUK, we instead use the risk that Gandini associated with oral cavity cancer (RR 3.43) for pharyngeal cancers with ICD10 codes C09, C10, C12–C14. For oral cavity, we use the risk from Maasland et al. [-@Maasland2014] of 1.91 (CI 1.06–3.42) with ICD10 codes C00–C06.  
+
+##### Oesophageal (C15)
+Gandini et al. [-@Gandini2008] estimated the relative risks of smoking for cancer of the oesophagus as 2.50 (CI 2.00–3.13). Differing from the RCP report but in-line with CRUK, we split oesophageal cancer into its two main histological types: Squamous Cell Carcinoma (SCC) and Adenocarcinoma (AC). CRUK use different relative risks of smoking for each subtype: following CRUK, for SCC, we use the risk from Prabhu et al. [-@Prabhu2013] of 4.21 (CI 3.13–5.66); for AC, we use the risk from Tramacere et al. [-@Tramacere2011] of 2.32 (CI 1.96–2.75). We apportion overall oesophageal cancer prevalence between AC and SCC using data on percentage prevalence by age and sex from cancer registries, supplied to us by CRUK.    
+
+##### Colorectal (C18–C20)
+The RCP report used the CHANCES consortium [@Ordonez-Mena2016] estimate of the relative risk of smoking for colorectal cancer of 1.20 (CI 1.07–1.34). CRUK instead use the estimates of Cheng et al. [@Cheng2015], who produce two separate risks of smoking for cancer of the colon and rectum (RR 1.11, 1.44). To align with the SAPM disease list, we define colorectal cancer as a single disease and use the CHANCES risk estimate in-line with the RCP report.   
+
+##### Liver (C22)
+The RCP report used Lee et al.'s [-@Lee2009] estimate of the risk of smoking for liver cancer of 1.51 (CI 1.37–1.67). CRUK use the same source but take the sex-specific effects: 1.61 (CI 1.38–1.89) for males and 1.86 (CI 1.33–2.60) for females. Due to the substantial overlap between the sex-specific confidence intervals, we use the overall estimate.  
+
+##### Pancreatic (C25)
+CRUK used Bosetti et al.'s [-@Bosetti2011] estimate from the PanC4 study that the risk of smoking for pancreatic cancer is 2.20 (CI 1.71–2.83). The RCP report used the CHANCES consortium [@Ordonez-Mena2016] estimate of 1.90 (CI 1.48–2.43), and we use this more recent estimate.  
+
+
+##### Laryngeal (C32)
+The RCP report used Gandini et al.'s [-@Gandini2008] estimate for the relative risks of smoking for cancer of the larynx of 6.98 (CI 3.14–15.52). CRUK used the more recent estimate by Zuo et al. [-@Zuo2017] of 7.01 (CI 5.56–8.85). We use the estimate of Zuo.   
+
+##### Stomach (C16)
+CRUK used the estimate of Ladeiras-Lopes et al. [@Ladeiras-Lopes2008] that put the relative risk of stomach cancer among smokers at 1.62 (CI 1.50–1.75) for males and 1.20 (CI 1.01–1.43) for females. The RCP report used the CHANCES consortium [@Ordonez-Mena2016] estimate of 1.74 (CI 1.50–2.02), and estimates from Gandini et al. [-@Gandini2008] are similar. We use the CHANCES estimate.   
+
+##### Lung (C33–C34)
+CRUK used Gandini et al.'s [-@Gandini2008] estimate of the relative risk of lung cancer among smokers of 8.96 (CI 6.73–12.11). The RCP report used the more recent 2016 meta-analysis by Jayes et al. [-@Jayes2016] estimates the risk to be 10.92 (CI 8.28–14.40). We use the Jayes estimate.   
+
+##### Cervical (C53)
+Both CRUK and the RCP report use Gandini et al.'s [-@Gandini2008] estimate of the relative risk of cervix cancer among smokers of 1.83 (CI 1.51–2.21).  
+
+##### Kidney (C64)
+The RCP report used Gandini et al.'s [-@Gandini2008] estimate of the relative risk of kidney cancer among smokers of 1.52 (CI 1.33–1.74). CRUK use the more recent meta-analysis by Cumberbatch et al. [-@Cumberbatch2016] of 1.35 (CI 1.13–1.60) but associate this with ICD10 codes C64–C66, C68. We use the Cumberbatch estimate for C64.   
+
+##### Lower urinary tract (C65–C66)
+In-line with the RCP report, we use Gandini et al.'s [-@Gandini2008] estimate of the relative risk of lower urinary tract (renal pelvis, bladder and ureter) cancer of 2.77 (CI 2.17–3.54).  
+ 
+
+##### Bladder (C67)
+The RCP report used the estimate by van Osch et al. [-@Osch2016] for the risk of bladder cancer among smokers of 3.14 (CI 2.53–3.75). CRUK used the same source but took the sex-specific estimates of 3.44 (CI 2.67–4.22) for males, and 3.56 (CI 2.76–4.36) for females. We use the overall estimate.   
+
+##### Acute myeloid leukaemia (C92)
+CRUK used Fircanis et al.'s [-@Fircanis2014] estimate of the relative risk of acute myeloid leukaemia among smokers of 1.47 (CI 1.08–1.98) but associate it with ICD10 codes C90–C95. The RCP report used the more recent meta-analysis by Colamesta et al. [-@Colamesta2016], which produced a similar estimate of 1.36 (CI 1.11–1.66). In-line with the RCP report, we use the Colamesta estimate and associate it with ICD10 code C92.  
+
+##### Nasal-sinuses and nasopharynx (C11, C30–C31)
+The RCP report and CRUK both used Gandini et al.'s [-@Gandini2008] estimate of the relative risk of smoking for nasopharyngeal (C11) and sino-nasal (C30, C31) cancers of 1.95 (CI 1.31–2.91).   
+
+
+#### Cardiovascular conditions
+Our cardiovascular disease list and risk sources are all in-line with the RCP report, which discusses the sources available. To align with the Sheffield alcohol disease list, we split stroke into haemorrhagic (I60–I62) and ischaemic (I63–I67) but use the same smoking risk for each.
+
+#### Respiratory conditions
+Our respiratory disease list and risk sources are all in-line with the RCP report. We expand the definition of ‘Lower respiratory tract infections’ (J09-J18) from the Sheffield alcohol disease list to accommodate the different risks of smoking that the RCP report identified for pneumonia (J12-J18), Influenza – clinically diagnosed (J11), and Influenza – microbiologically confirmed (J09, J10).
+
+
+#### Mental health 
+Our mental health disease list and risk sources are all in-line with the RCP report.
+
+#### Other adult diseases 
+We include 13 further diseases in-line with the RCP report.
+
+#### Conditions less common among smokers
+We include 2 diseases in-line with the RCP report.
+
+
+### Dose-response risk functions for smoking
+
+
+
+
+
+
+
+
+### Decline in risk over time after quitting smoking
+To estimate the risk of disease for former smokers we used the findings of Kontis et al. [-@Kontis2014], who re-analysed the change in risk after smoking in the ACS-CPS II study from Oza et al.[-@Oza2011], producing three functions to describe the decline in risk after quitting for each of cancers, CVD and COPD (Figure \@ref(fig:smklags)). The estimates were informed by data on former smokers with known quit dates who were disease-free at baseline. The results show the proportion of excess relative risk remaining at each time-point since cessation. A cross-check showed that the figures for cancers were broadly consistent with the findings of the International Agency for Research on Cancer's (IARC) 2007 review of the decline in risk after quitting smoking [@IARCWHO2007].     
+
+The remaining question is how risk declines after quitting smoking for diseases that are not cancers, CVD or COPD. Kontis et al. [-@Kontis2014] state that “Randomised trials also indicate that the benefits of behaviour change and pharmacological treatment on diabetes risk occur within a few years, more similar to the CVDs than cancers [@Knowler2002]. Therefore, we used the CVD curve for diabetes.” In-line with Kontis, we apply the rate of decline in risk of CVD after quitting smoking to type 2 diabetes. For other diseases, we assume that the relative risk reverts to 1 immediately after quitting i.e. an immediate rather than a gradual decline in risk.    
+
+```{r smklags, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 8, fig.height = 3, fig.cap = "The proportion of remaining risk after quitting.", cache = F, fig.align = "center"}
+
+readRDS("output/tobacco_lag_times.rds")
+
+```
+
+
+### Risk in former smokers {#formersmokerrisk}
+To estimate the risk of disease for former smokers we used the findings of Kontis et al. [-@Kontis2014], who re-analysed the change in risk after smoking in the ACS-CPS II study from Oza et al.[-@Oza2011], producing three functions to describe the decline in risk after quitting for each of cancers, cardiovascular disease (CVD) and chronic obstructive pulmonary disease (COPD) (Figure \@ref(fig:toblags)). The estimates were informed by data on former smokers with known quit dates who were disease-free at baseline. The results show the proportion of excess relative risk remaining at each time-point since cessation.  
+
+However, since Kontis et al. [-@Kontis2014] only provide estimates for cancers, CVD or COPD, we must decide how to specify the rates of decline in the risks due to smoking after quitting for other diseases. Kontis et al. [-@Kontis2014] consider this issue for type II diabetes, stating that "Randomised trials also indicate that the benefits of behaviour change and pharmacological treatment on diabetes risk occur within a few years, more similar to the CVDs than cancers [@Knowler2002]. Therefore, we used the CVD curve for diabetes." In-line with Kontis et al. [-@Kontis2014], we apply the rate of decline in risk of CVD after quitting smoking to type II diabetes.  
+
+We have to make further assumptions about how the risk due to smoking declines after quitting for other diseases (these assumptions are under review and their influence on model findings can be tested with sensitivity analyses). Our default is to assume that the decline in risk for all respiratory conditions follows Kontis et al.'s [-@Kontis2014] estimates for COPD. For other diseases, we might assume that the decline in relative risk follows the cancer curve (the slowest decline in risk), that the additional risk from smoking disappears immediately following quitting (the fastest decline in risk), or that the risk immediately falls to the average risk in former smokers identified from meta-analyses (potentially a middle-ground option, although these estimates will be influenced by differences in study design e.g. in average length of follow-up). The default option in the current version of STPM is to apply the most conservative option that the decline in risk for other diseases follows the cancer curve.    
+
+To estimate the risk of disease in former smokers, they are initially assigned the relative risk for each disease associated with current smoking. This risk is then scaled downwards according to the time since quitting, using the equation  
+
+\begin{equation}
+r_{former}=1+[r_{current}-1][1-p(f)],  (\#eq:formerlag)
+\end{equation}
+
+in which the relative risk ($r$) associated with current smoking is scaled according to our estimates of the proportional reduction in the risk ($p$) associated with their number of years ($f$) as a former smoker. After someone has been quit for 40 years, we assume their risk reverts back to be the same as a never smoker.  
+
+
+### Use of relative risks in STPM
+The functions to assign relative risks to each individual based on their current or former smoking status are in the `tobalcepi` R package, which is part of the set of R packages containing the code that underlies STPM.  
+
+The function `RRFunc()` does the job of assigning the relative risks of each disease to a sample of individuals according to their current tobacco consumption status. Since STPM is a part of our joint programme of modelling across tobacco and alcohol, `RRFunc()` has options that can tailor it to assign risks based on tobacco consumption only, alcohol consumption only, or both tobacco and alcohol consumption.  
+
+For tobacco, the relative risk for each individual is calculated based on whether they are a current, former or never smoker. Currently, all current smokers have the same relative risk regardless of the amount they currently smoke or have smoked in the past. Former smokers are initially given the relative risk associated with current smokers, which we then scale according to a disease-specific function that describes how risk declines after quitting smoking.  
+
+The first step carried out by `RRFunc()` is to assign both current and former smokers the relative risk for each disease associated with current smoking. It does this using the function `RRTob()`. For former smokers, we estimate the risk in former smokers using the equation  
+
+\begin{equation}
+R_{former}=1+[R_{current}-1][1-p(t)],  
+\end{equation}
+
+in which the relative risk ($R$) associated with current smoking is scaled according to our estimates of the proportional reduction in the risk ($p$) associated with their number of years ($t$) as a former smoker. After someone has been quit for 40 years, we assume their risk reverts back to be the same as a never smoker.  
+
+The current version of STPM models the individual-level dynamics of smoking and the associated risks of disease, but it links these to the population-level trends in the rates of morbidity and mortality from each disease. In other words, STPM models the direct link between smoking and disease prevalence rather than modelling the link between smoking and disease incidence (which would then have a knock-on effect to prevalence).  
+
+We define the effect of an intervention on the rates of disease morbidity and mortality in terms of a proportional change, stratified by year, age, sex and quintiles of the Index of Multiple Deprivation. The proportional change is the ratio of the average risks in each of these subgroups in the treatment compared to the control arms of the model (see the STPM vignette for further details). This proportional change is also known as the 'potential impact fraction' (*PIF = ratio of weighted average revised risk given a policy to the weighted average baseline risk given current consumption levels*). The PIF approach to updating the population-level rates of morbidity and mortality originated in the *PREVENT* model [@Gunningschepers1989] and was extend to underlie the Sheffield Alcohol Policy Model [@Brennan2015].  
+
+Thus, after assigning each individual ($i$) a relative risk for each disease ($h$) based on their current smoking status, we then calculate the average risk ($\bar{R}$) across the $N$ individuals in each subgroup ($s$)  
+
+\begin{equation}
+\bar{R}_s^h= \frac{1}{N_s}\sum_{i\in{s}}R^h_i.  
+\end{equation}
+
+This average risk is calculated by the function `subgroupRisk()`. The functon `UpdateHarm()` in the `stapmr` R package calculates and applies the PIF.  
+
+The `tobalcepi` package contains data on smoking from the Health Survey for England, 2001-2016 in `hse_data_smoking`. To illustrate, we take a subset of 10,000 individuals from these data, assign them their smoking attributable relative risks for laryngeal cancer, and calculate the average risk for males and females.  
+
+
+### Code development
+To integrate dose-response risk functions into our modelling, we have started to develop a new function to replace `RRtob()`. The function `RRTobDR` estimates each individual in the data their dose-response relative risk based on the number of cigarettes they consume per day. This function has not yet been integrated into the function `RRFunc()`.    
+
+
+
+## Tobacco–Alcohol interactions in disease risk
+
+Cancers present in both lists, i.e. oral cavity, pharyngeal, laryngeal, oesophageal, liver, colorectal, and female breast cancers, were taken to be attributable to both alcohol and tobacco. We used the most recent meta-analytic evidence to inform the presence of interaction effects on disease risk of smoking and drinking for oral cavity, pharyngeal, laryngeal and oesophageal cancer,8,9 i.e. effects that describe the extent to which an individual who both smokes and drinks has a greater risk of disease than the simple addition or multiplication of risk would suggest.
+
+
+There is evidence that when the same person consumes tobacco and alcohol, the substances interact within the individual to increase their risk of disease (especially for head, neck and oesophageal cancers [4,5]). 
+
+There is limited evidence for the risk of disease in someone who consumes both tobacco and alcohol ($RR_{ta}$) being higher than would be expected from combining the independent risks from tobacco ($RR_t$) and alcohol ($RRa$). This additional risk due to tobacco-alcohol interaction (over and above the combination of the independent contributions to risk from tobacco and alcohol) can be expressed as a "synergy factor" (1) [@Prabhu2014;@Hashibe2009].   
+
+\begin{equation}
+SF = \frac{RR_{ta}}{(RR_t - 1) + (RR_a - 1)}
+\end{equation}
+
+We conducted a scoping review across all diseases for which tobacco and alcohol are causal factors to ascertain the extent of evidence on interaction effects. We include only interactions with a meta-analysis of effect size. The only diseases for which we have found suitable meta-analyses to inform the tobacco–alcohol interaction in risk are cancers of the oral cavity, pharynx, larynx and oesophagus. To evaluate the interaction between tobacco and alcohol and the risk of cancer of the oral cavity, pharynx and larynx, Hashibe et al. [-@Hashibe2009] conducted a pooled analysis within the INHANCE consortium. For the oral cavity and pharynx, the SF was estimated to be 3.09 (CI 1.82–5.23) i.e. smoking and drinking together causes around a 3-fold increase in the risk of head and neck cancers over and about the independent contributions of tobacco and alcohol. For cancer of the larynx, Hashibe et al. [-@Hashibe2009] estimate the SF to be 1.62 (CI 0.85–3.09). For cancer of the oesophagus, Prabhu et al. [@Prabhu2014] estimated the increase in risk of Squamous Cell Carcinoma in people who both smoke and drink to be characterised by a synergy factor of 1.85 (CI 1.45–2.38).   
+
+
+In our mathematical approach to examining cancer risks, we defined RRct as the relative risk of cancer type c in a current smoker compared to a never smoker. We defined RRca as the relative risk of a particular intake of alcohol compared to abstention from drinking. We also defined RRcta as the relative risk measured of people who both drink and smoke compared to people who are non-smoking alcohol abstainers.
+
+For oral cavity, pharyngeal, laryngeal and oesophageal cancers we incorporated the interaction effects of tobacco and alcohol on the risk of disease. We did this in terms of the Synergy Factor (SF),8,9 which is the ratio between the relative risk measured in people who both drink and smoke (RRcta) and the product of the relative risk measured in people who drink (RRca) or smoke (RRct).32 Synergy factors from previous studies were used and combined with the risk of alcohol and the risk of tobacco to calculate the combined risk of alcohol and tobacco, shown in equation 2 (synergy factors in Supplementary table S3). 8,9
+
+RRcta = SF (RRct * RRca).		
+
+
+
+## Population attributable fractions of disease
+
+This methodology report sets out a description of how we estimate the fraction of disease cases attributable to tobacco and alcohol. It is currently limited to a brief description and critique of the mathematical approach commonly taken.  
+
+ 
+Tobacco and alcohol are risk factors for a broad range of health conditions, but the relationship between smoking, drinking and some health conditions is complex. Whilst some conditions, such as alcohol liver disease, are caused solely by alcohol, there are many other conditions for which alcohol is a contributory, but not the only, risk factor. Estimating the proportions of these partially alcohol-attributable and tobacco-attributable conditions that are due to smoking and drinking is critical in understanding the burden which tobacco and alcohol place upon health and healthcare services [@nhs2019statisticsALC;@nhs2019statistics]. These proportions, known generally as *Population Attributable Fractions* (PAFs) or specifically *Alcohol Attributable Fractions* (AAFs) and *Smoking Attributable Fractions* (SAFs), are defined as the proportion of the cases of a partially attributable disease or injury that would be prevented if exposure to alcohol or tobacco was eliminated [@mansournia2018population;@rosen2013intuitive].   
+
+
+
+https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/958648/RELATI_1-1.pdf
+
+
+### Population attributable fraction theory
+We can subsequently attribute a fraction of the deaths from each cancer type to risk factors such as smoking and drinking by calculating a Population Attributable Fraction (PAF).24-26 PAFs are the proportion of a disease outcome that is attributable to an individual being exposed to a specified risk factor, e.g. alcohol and/or tobacco, in a given population
+#### Preamble
+The population attributable fraction (PAF) is the proportion by which the cases of a disease would be reduced if the population were not exposed to a certain factor. In our case, we define the exposure as either tobacco smoking, alcohol consumption, or a combination of the two. The PAF is defined as  
+
+\begin{equation}
+PAF = \frac{A_{\text{exposed}}(h)}{A_{\text{total}}(h)},\label{pafbasic}
+\end{equation}
+
+where $A_{exposed}(h)$ is the number of individuals who have disease $h$ because of the exposure, and $A_{total}(h)$ is the total number of people with disease $h$. It should be obvious that for chronic diseases related to tobacco and alcohol, the number of individuals who have the disease in any year $y$ is strongly influenced by how their history of exposure to tobacco and alcohol consumption over many years has affected disease incidence, recovery, relapse and survival. However, it turns out that it is difficult to incorporate this complex chain of causality into PAF estimates. This means that when we consider the methodology of PAF calculation, part of our aim is to understand how our chosen method might bias the PAF estimates.       
+
+#### The commonly used formula
+There are a range of alternative methods to calculate PAFs (e.g. see a comparison of methods for estimating smoking attributable fractions [@Oza2011]). The method that we consider, which we term the "prevalence-based method", is based on the use of cross-sectional survey data on tobacco and alcohol consumption. It does not make a direct link between an individual's tobacco and alcohol consumption and their development of disease using these data. Instead, it makes use of published statistical estimates that show how the relative risk of disease varies with exposure to tobacco and alcohol consumption. It is commonly used to estimate the disease morbidity and mortality attributable to tobacco and alcohol consumption in England [@nhs2019statisticsALC;@nhs2019statistics;@RCP2018;@jones2008alcohol]. It is defined for each disease as  
+
+\begin{equation}
+PAF = \frac{\sum_{u}\theta(u)[rr(u)-1]}{1+\sum_{u}\theta(u)[rr(u)-1]},\label{pafmain}
+\end{equation}
+
+where $u$ is an index of exposure, which in our case might be defined in terms of current and past consumption of tobacco and/or alcohol, and $rr$ is the relative risk of disease. PAFs might be estimated using (\ref{pafmain}) separately for particular calendar years, ages or various definitions of population strata.  
+
+\bigskip
+
+```{=tex}
+\begin{tcolorbox}[colframe=blue!50!black,colback=white,colupper=red!50!black,
+fonttitle=\bfseries,nobeforeafter, title = Bias notes]
+\begin{itemize}
+\item Estimates will depend on the extent to which the survey data records each individual's current and past tobacco and alcohol consumption, and most cross-sectional survey datasets have limited information on individual consumption histories.      
+\item Estimates also depend on the nature of the statistical estimates that link individual tobacco and alcohol consumption to their relative risk of disease. Meta-analyses are used where possible, but primary studies vary in influential factors such as: population context; how they have defined exposure to tobacco and alcohol; how they have defined disease end-points, e.g. incidence, prevalence or death; study design, e.g. cohort or case-control; and the factors controlled for in statistical analysis.
+\end{itemize}
+\end{tcolorbox}
+```
+
+\bigskip
+
+#### Derivation for chronic disease incidence
+The derivation of (\ref{pafmain}) in terms of the incidence of a chronic disease, such as a particular type of cancer, is as follows:      
+
+1. Considering a particular year and age, write the number of new cases of the disease, $X(h)$, in terms of: population size, $A$; the proportion of people with each level of exposure, $\theta(u)$; the relative increase in the risk of disease incidence at that level of exposure, $rr(u, h)$; and the probability that people who are not exposed get the disease, $P_{\text{incidence}}(h | u = \text{not exposed})$. \begin{equation}
+X(h) = A\times{}\sum_{u}P_{\text{incidence}}(h | u = \text{not exposed})\times{}\theta(u)\times{}rr(u, h),\label{der1}
+\end{equation} noting that \begin{equation}
+rr(u, h) = 1 + z,\label{rrz}
+\end{equation} where $z$ is the proportional increase in risk due to the exposure such that $z = 0$ for individuals who are not exposed.      
+
+\bigskip
+
+2. Re-write (\ref{der1}) in terms of $z$ to give \begin{equation}
+X(h) = A\times{}\sum_{u}P_{\text{incidence}}(h | u = \text{not exposed})\times{}\theta(u)\times{}[1+z(u, h)].\label{der2}
+\end{equation} For the numerator, expand the brackets and retain only the terms that give the number of new disease cases that are due to exposure \begin{align}
+X_{\text{exposed}}(h) = A\times{}\sum_{u}\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})\times{}z(u, h).
+\end{align} For the denominator, use the full expanded version, i.e. the total new disease cases, and apply (\ref{pafbasic}) to give \begin{equation}
+PAF = \frac{A\times{}\sum_{u}\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})\times{}z(u, h)}{A\times{}\sum_{u}\left[\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})+\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})\times{}z(u, h)\right]},
+\end{equation} which simplifies to \begin{equation}
+PAF = \frac{\sum_{u}\theta(u)\times{}z(u,h)}{1+\sum_{u}\theta(u)\times{}z(u,h)},
+\end{equation} and then substituting with (\ref{rrz}) becomes (\ref{pafmain}).   
+
+
+\bigskip
+
+```{=tex}
+\begin{tcolorbox}[colframe=blue!50!black,colback=white,colupper=red!50!black,
+fonttitle=\bfseries,nobeforeafter, title = Bias notes]
+\begin{itemize}
+\item The PAFs associated with the prevalence and mortality rates from chronic diseases for a particular age will be a function of the PAFs associated with disease incidence for previous ages within the same birth-cohort.   
+\item The function will be a weighted average, where the weights indicate the distribution of ages of disease incidence for the individuals who are currently alive and have the disease.   
+\item If (\ref{pafmain}) is applied to the prevalence and mortality rates from chronic diseases, then this makes the strong assumption that exposure is constant across ages within a birth-cohort.
+\end{itemize}
+\end{tcolorbox}
+```
+
+\bigskip
+
+#### Protective effects
+For some diseases, the relative risks indicate that some levels of exposure to tobacco or alcohol consumption protect against the disease, i.e. people who smoke or drink are less likely to get the disease. Protective effects are defined by $rr(u,h) < 1$, which when (\ref{pafmain}) is applied results in negative PAFs. Negative PAFs can be understood by defining the relationship between the observed lower number of disease cases with the exposure $A_\text{observed exposure}(h)$ and the hypothetically higher number of disease cases without the exposure $A_\text{no exposure}(h)$ as:   
+
+\begin{equation}
+A_\text{no exposure}(h) \times{} [1+PAF] = A_\text{observed exposure}(h).
+\end{equation}
+
+
+The convention with tobacco is that the calculation of PAFs considers the disease risk of current smokers, and the residual disease risk of former smokers (see Oza et al.28 for a comparison of methods). However, in this study, for both tobacco and alcohol we focused on the burden of disease which is attributable to current consumption only, as this relates directly to the potential for future prevention to reduce the health losses attributable to drinking and smoking.
+
+In Table 2 we estimated three versions of attributable fraction: the fraction of new cancer incidence at each site that is attributable to alcohol only (alcohol attributable fractions), tobacco only (smoking attributable fractions), or to the combined effects of alcohol and tobacco (alcohol and smoking attributable fractions). We estimated these fractions for population subgroups defined by age-group, sex and IMD quintile. The formulation we use is an extension of the standard approach to alcohol attributable fractions. 27 Equation (3) shows how it is a function of two pieces of information: i) Px, the proportion of individuals within a subgroup; ii) RRcx, the combined relative risk of cancer at each site due to tobacco and alcohol, i.e. the result of equation (2). For alcohol, x is continuous and ranges from 0 to 150 grams per day. For smoking, x is binary with x=1 if they are a smoker.
+
+PAF=  (∑_x▒〖P_x ( RR〗_x^c -1))/(∑_x▒〖P_x (〖RR〗_x^c 〗-1) +1)                                                                       (3)
+
+We estimated Px using survey weights in the HSE. 
+
+Table 3 shows the attributable fractions for smoking and alcohol split by sex, and between the least and most deprived quintiles. Our estimated alcohol attributable fractions decrease with increasing levels of deprivation, but then increased again for the most deprived quintile (detail for each age/IMD by cancer site given in supplementary table S3). Our estimated smoking attributable fractions increased with increasing levels of deprivation (Table S3). Variation in PAFs by age-group, sex and IMD quintile reflects variation in consumption of tobacco and alcohol, and this is most clear for cancer sites at which the relative risk of incidence risk rises more steeply with increasing consumption. 
+
+
+
+
+## Change to morbidity and mortality rates
+STPM estimates the proportional changes to the rates of cause-specific mortality that would be expected from a change in the distribution of individuals among smoking states. The methodology to do this is based on the mathematical framework of the Sheffield Alcohol Policy Model [@Brennan2015], which in turn is based on the methodology of the PREVENT model presented by Gunning-Schepers [-@Gunningschepers1989]. Below we describe how changes to smoking behaviour are linked mathematically to changes in mortality rates, and how mortality rates are used by the model to simulate individual survival.    
+
+
+
+### Disease attributable to smoking
+A [separate report](https://stapm.gitlab.io/model-inputs/epi_tobacco_risk/Smoking_and_the_risks_of_adult_diseases.pdf) describes the smoking-related diseases and the corresponding relative risks of smoking for disease that we consider. A [further report](https://stapm.gitlab.io/model-inputs/epi_pop_attrib_fractions/PAF_methodology_report.pdf) describes how disease cases are attributed to smoking in terms of the *population attributable fraction* or *smoking attributable fraction (SAF)*.   
+
+\textcolor{teal}{It makes no sense to a new reader for the disease maths and estimation from data to be in a separate document (let alobe two separate documents) - an option is to incorporate it here instead. I can see the point of having a separate document for estimating attributable franctions from data as a paper - but the maths and concepts defintely need to be incorporated here.}
+
+### Taking into account time since quitting in former smokers
+The time since quitting in former smokers is taken into account by tracking the number of years following quitting within the model simulation (Figure \@ref(fig:transdiag)). The model uses continuous functions of decline in the relative risk of each smoking-related disease over time after quitting smoking, with the primary source being an analysis of cancer, CVD and COPD risk in former smokers in the ACS-CPS II study [@Kontis2014;@Oza2011] (see the [relative risks of smoking-related diseases report](https://stapm.gitlab.io/model-inputs/epi_tobacco_risk/Smoking_and_the_risks_of_adult_diseases.pdf)). Following Kontis [-@Kontis2014], we assume that the decline in the risk of Type II diabetes follows the CVD curve. For other diseases we test a range of assumptions about how disease risk might change after quitting smoking. Our basecase is to assume that the decline in risk for all respiratory conditions follows Kontis et al.'s [-@Kontis2014] estimates for COPD. For other diseases, we might assume that the decline in relative risk follows the cancer curve (the slowest decline in risk), that the additional risk from smoking disappears immediately following quitting (the fastest decline in risk), or that the risk immediately falls to the average risk in former smokers identified from meta-analyses (potentially a middle-ground option, although these estimates will be influenced by differences in study design e.g. in average length of follow-up). The default option in the current version of STPM is to apply the most conservative option that the decline in risk for other diseases follows the cancer curve. To estimate the risk of disease in former smokers, they are initially assigned the relative risk for each disease associated with current smoking. This risk is then scaled downwards according to the time since quitting, using the equation  
+
+\begin{equation}
+rr_{former}=1+[rr_{current}-1][1-X(quityears)],
+\end{equation}
+
+in which the relative risk ($rr$) associated with current smoking is scaled according to our estimates of the proportional reduction in the risk ($X$) associated with their number of years ($quityears$) as a former smoker. After someone has been quit for 40 years, we assume their risk reverts back to be the same as a never smoker.  
+
+
+### Changes to cause-specific mortality after changes to smoking
+To model change to the rates of cause-specific mortality after a change to the distribution of individuals among smoking states uses a methodology that estimates the proportional change to mortality rates that would result from a small change to the distribution of individuals among smoking states [@Gunningschepers1989]. This methodology is related to that used for SAF calculation and has two versions:   
+
+- The **potential impact fraction** ($PIF$) is used to describe the effect of a policy or intervention vs. a counterfactual scenario.   
+- The **trend impact fraction** ($TIF$) is used to describe the effects of ongoing trends in smoking.   
+
+Here the focus is on explaining the use of the $TIF$ in STPM to update mortality rates to correspond to the modelled changes over time in the distribution of individuals among smoking states. The $TIF$ for a particular period, population subgroup and disease can be written as  
+
+\begin{equation}
+TIF(y) = \frac{\sum_{u}\theta(u, y)[rr(u)-1] - \sum_{u}\theta(u,y+1)[rr(u)-1]}{1+\sum_{u}\theta(u)[rr(u)-1]},\label{pafmain}
+\end{equation}
+
+The $TIF$ can then be applied to update the trends in the rates of cause-specific mortality ($m(h)$) over time according to  
+
+\begin{align}
+m(h,y+1) &= m(h,y)[1 - TIF(h,y)].
+\end{align}  
+
+
+
+
+
+
+
+## Discussion
+
+
+
+
+Beard et al [] looked at the changing relationship between drinking and smoking during a monthly time-series between 2014 and 2016 in England and found the change in prevalence of smoking was positively associated with prevalence of high-risk drinking. 
+
+
+Cancer mortality attributable to tobacco, and mortality and potential life years lost to alcohol have both previously been calculated in England showing massive burdens of 79,000 deaths attributable to smoking in 2015, and 14,277 deaths were attributable to alcohol consumption in 2010.11,27 There is now strong evidence that tobacco and alcohol cluster with other risk factors for cancer and that this clustering concentrates in more deprived individuals. This raises the question of how risk factors for cancers are associated with cancer morbidity and mortality within different socioeconomic groups.19,34. Previous analyses did not measure the burden of both substances together nor the health inequalities surrounding these unhealthy behaviours, and so this evidence is less useful for priority setting for cancer prevention. For example, a recent report showed that mortality rates for many cancers were greater in the most deprived group compared to the least deprived group,35 however this only considers overall mortality rates, without looking at how risk factors contribute to these mortality rates. Our estimates go beyond these previous investigations by incorporating meta-analytic evidence on how the interaction of simultaneous tobacco and alcohol use further increases cancer risk, calculating the attributable mortality and respective life years lost from these two substances to uncover how they both, individually and together, contribute to the higher mortality and lower life expectancy among the most deprived.
+
+Our study has two key strengths. First, we used the most up-to-date epidemiological evidence. We combined relative risks across drinking and smoking at the individual level, which allowed us to incorporate the interactive effects on risk in individuals who both drink and smoke. However, the estimates that we used for these interactive effects did not differentiate between different levels of consumption of tobacco or alcohol. Second, each of our data sources were stratified by IMD and this allowed us to combine the effects of different socioeconomic differentials in consumption and mortality, incorporating the modifying effects of certain subgroups having on average shorter remaining lifespans, which is important as these might interact and cancel each other out etc. 
+
+Our study has three main limitations. First, our method is restricted to estimating the fractions of cancers attributable to drinking and smoking without considering in detail the causal effects of other risk factors e.g. HPV infection for head and neck cancer.36 Variation in the clustering of risk factors across socioeconomic groups could modify our estimates of the socioeconomic differentials in cancer attribution to drinking and smoking as recently suggested for alcohol.37 Second, our estimates might be biased due to under-estimation of alcohol consumption within the Health Survey for England. For example, in the UK only around 60% of all alcohol sold for consumption is accounted for in national drinking surveys,38 although similar underreporting may be present in the epidemiological studies from which the dose-response relationships are derived. Third, our estimates of the number of life years lost to cancer due to drinking and smoking is sensitive to our choice of cancers that we consider attributable to drinking and/or smoking. We based our choice of 16 cancers on recent reviews of clear causal attribution.4 However, other epidemiological investigations have shown statistical relationships between drinking and/or smoking and cancer at other sites such as prostate cancer and malignant melanoma.39 We excluded nasal cavity and middle ear cancer from our estimations, despite evidence to suggest it is smoking attributable (RCP report), this is because there were only 63 deaths from nasal cavity and middle ear in 2015 in England. Estimates of the life years lost to cancer due to drinking and smoking are therefore subject to update if new evidence emerges and consensus is reached on further additions to the direct causal list. Analysis for this study can be easily updated to accommodate for these changes. 
+
+Since cancer prevalence remains high in England and especially so in poorer socioeconomic groups, our findings add to the evidence available to support decisions on more effectively targeting primary prevention measures. This evidence will help policymakers and practitioners to identify the population groups who will receive the largest health benefits from reducing or stopping use of tobacco and alcohol, and to whom interventions to assist in adopting healthy behaviours can be targeted. This method is also applicable to use for other risk factors such as obesity, salt consumption, and physical activity, where there is evidence of how individual risk factors impact disease mortality, but less understanding of how different risk factors combined impact disease mortality. The analytical framework proposed in this study can also be applied to other population settings, such as other localities or countries, where population consumption surveys and ICD10 based mortality data are available. This study can be used to inform the design of other countries prevention policies. 
+
+
+
+
+
+
+## References
+
+
+
+

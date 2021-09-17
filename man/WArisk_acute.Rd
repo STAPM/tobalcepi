@@ -5,8 +5,7 @@
 \title{Risk of acute conditions wholly-attributable to alcohol \lifecycle{stable}}
 \usage{
 WArisk_acute(
-  SODMean,
-  SODSDV,
+  interval_prob_vec,
   SODFreq,
   sex,
   grams_ethanol_per_unit = 8,
@@ -14,11 +13,8 @@ WArisk_acute(
 )
 }
 \arguments{
-\item{SODMean}{Numeric - the average amount that each individual is expected to
-drink on a single drinking occasion.}
-
-\item{SODSDV}{Numeric - the standard deviation of the amount that each individual is expected to
-drink on a single drinking occasion.}
+\item{interval_prob_vec}{Column of vectors - the probabilities that each individual 
+drinks each amount of grams of ethanol (1:600) on a single drinking occasion.}
 
 \item{SODFreq}{Numeric - the expected number of drinking occasions that
 each individual has each week.}
@@ -63,6 +59,8 @@ We assume that each individual's risk is proportional to that value.
 \examples{
 
 \dontrun{
+
+# example needs updating
 
 # Function called within RRAlc()
 

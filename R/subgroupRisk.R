@@ -201,19 +201,29 @@ subgroupRisk <- function(
   
   if(!isTRUE(af)) {
     
+    if(!("year" %in% subgroups) & "year" %in% colnames(out)) {
+      subgroups <- c(subgroups, "year")
+    }
+    
     # calculate average relative risk
     out_risk <- out[,
                     lapply(.SD, function(x) {
                       sum(x, na.rm = T)
                     }),
-                    by =  c(subgroups, "year"),
+                    by =  subgroups,
                     .SDcols = paste0(disease_names, "_z")]
+    
+    # if(any(disease_names %in% colnames(out))) {
+    #   out[ , (disease_names[disease_names %in% colnames(out)]) := NULL]
+    # }
     
     setnames(out_risk, paste0(disease_names, "_z"), disease_names)
     
+
+    
     out_risk <- melt(
       out_risk,
-      id.vars = c(subgroups, "year"),
+      id.vars = subgroups,
       variable.name = "condition",
       value.name = paste0("av_risk_", label)
     )
@@ -251,19 +261,29 @@ subgroupRisk <- function(
   
   if(isTRUE(af)) {
     
+    
+    if(!("year" %in% subgroups) & "year" %in% colnames(out)) {
+      subgroups <- c(subgroups, "year")
+    }
+    
     # calculate attributable fractions, considering residual risk in former smokers
     out_risk <- out[,
                     lapply(.SD, function(x) {
                       sum(x, na.rm = T) / (sum(x, na.rm = T) + 1)
                     }),
-                    by =  c(subgroups, "year"),
+                    by =  subgroups,
                     .SDcols = paste0(disease_names, "_z")]
     
+    # if(any(disease_names %in% colnames(out_risk))) {
+    #   out_risk[ , (disease_names[disease_names %in% colnames(out_risk)]) := NULL]
+    # }
+    
     setnames(out_risk, paste0(disease_names, "_z"), disease_names)
+
     
     out_risk <- melt(
       out_risk,
-      id.vars = c(subgroups, "year"),
+      id.vars = subgroups,
       variable.name = "condition",
       value.name = "af"
     )

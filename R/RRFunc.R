@@ -288,9 +288,15 @@ RRFunc <- function(
   
   dn <- length(diseases)
   
-  if(substance %fin% c("alc", "tobalc")) {
+  
+  #########################################
+  # Extra setup for alcohol related risk
+  
+  if(substance %in% c("alc", "tobalc")) {
     
     if(isTRUE(within_model)) {
+      
+      # Calculate 'binge model' parameters
       
       # Estimate the characteristics of single occasion drinking
       # based on the coefficients from Hill-McManus et al 2014
@@ -310,7 +316,22 @@ RRFunc <- function(
     data[GPerDay >= 150, GPerDay := 150]
     #data[ , peakday_grams := peakday * grams_ethanol_per_unit]
     
+    # for model running efficiency,
+    # use the binge model parameters to calculate a column of vectors
+    # for the probability that each individual will drink each amount of grams of ethanol on a single drinking occasion
+    
+    sod_probs <- tobalcepi::intervalprob(grams_ethanol = 1:(600 * 0.9),
+                                         SODMean = data[ , mean_sod],
+                                         SODSDV = data[ , occ_sd],
+                                         SODFreq = data[ , drink_freq],
+                                         grams_ethanol_per_unit = grams_ethanol_per_unit)
+    
+    # might be able to avoid this step of converting to a list
+    data[ , interval_prob_vec := lapply(seq_len(ncol(sod_probs)), function(i) sod_probs[ , i])]
+    
   }
+  
+  # Set up store for alcohol risk trajectories
   
   if(!is.null(alc_indiv_risk_trajectories_store)) {
     
@@ -346,7 +367,7 @@ RRFunc <- function(
   # Loop through each disease
   for (i in 1:dn) {
     
-    #i <- 24
+    #i <- 4
     
     d <- as.character(diseases[i])
     
@@ -600,7 +621,7 @@ RRFunc <- function(
           # the proportional reductions in relative risk
           tobalcepi::AlcLags(d), 
           
-          by = c("years_since_change"), all.x = T, all.y = F, sort = F)
+          by = "years_since_change", all.x = T, all.y = F, sort = F)
         
         # Adjust the relative risk for the current year
         # to take into account the individual's past trajectory of relative risk
@@ -795,9 +816,9 @@ RRFunc <- function(
     
   }
   
-  if(substance %fin% c("alc", "tobalc")) {
+  if(substance %in% c("alc", "tobalc")) {
     
-    alc_vars <- c("drink_freq", "occ_sd", "mean_sod", "weight", "rwatson", "GPerDay")
+    alc_vars <- c("drink_freq", "occ_sd", "mean_sod", "weight", "rwatson", "GPerDay", "interval_prob_vec")
     
     
     # Remove the variables that give alcohol consumption in grams

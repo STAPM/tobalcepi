@@ -24,10 +24,8 @@
 #' We assume that each individual's risk is proportional to that value.  
 #' 
 #'
-#' @param SODMean Numeric - the average amount that each individual is expected to
-#' drink on a single drinking occasion.
-#' @param SODSDV Numeric - the standard deviation of the amount that each individual is expected to
-#' drink on a single drinking occasion.
+#' @param interval_prob_vec Column of vectors - the probabilities that each individual 
+#' drinks each amount of grams of ethanol (1:600) on a single drinking occasion.
 #' @param SODFreq Numeric - the expected number of drinking occasions that
 #' each individual has each week.
 #' @param sex Character - individual sex (Male or Female).
@@ -40,7 +38,7 @@
 #'
 #' @return Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.
 #' 
-#' @importFrom data.table := setDT setnames
+#' @importFrom data.table := setDT setnames fifelse
 #' 
 #' @export
 #' 
@@ -48,6 +46,8 @@
 #' @examples
 #' 
 #' \dontrun{
+#' 
+#' # example needs updating
 #' 
 #' # Function called within RRAlc()
 #' 
@@ -68,8 +68,7 @@
 #' }
 #' 
 WArisk_acute <- function(
-  SODMean,
-  SODSDV,
+  interval_prob_vec,
   SODFreq,
   sex,
   grams_ethanol_per_unit = 8,
@@ -83,45 +82,8 @@ WArisk_acute <- function(
   # grams_ethanol_per_unit <- 8
   # alc_wholly_acute_thresholds <- c(6, 8)
   
-  kn <- 600
-  
+  kn <- 600 * 0.9
   grams_ethanol <- 1:kn
-  
-  # The amounts of alcohol (g ethanol) that could be consumed on an occasion
-  # i.e. the mass of alcohol ingested
-  #grams_ethanol <- 1:600 # units * ConvertToGramOfAlcohol#1:100
-  
-  # Calculate the cumulative probability distribution of each amount of alcohol (1 to 100 g) 
-  # being drunk on an occasion
-  # x <- stats::pnorm(
-  #   grams_ethanol,
-  #   SODMean * grams_ethanol_per_unit, # mean
-  #   SODSDV * grams_ethanol_per_unit # variance
-  # )
-  
-  # x <- t(sapply(grams_ethanol,
-  #               stats::pnorm, 
-  #               mean = SODMean * grams_ethanol_per_unit, # mean
-  #               sd = SODSDV * grams_ethanol_per_unit # variance
-  # ))
-  
-  x <- t(vapply(X = grams_ethanol,
-                FUN = stats::pnorm, 
-                FUN.VALUE = numeric(length(SODMean)),
-                mean = SODMean * grams_ethanol_per_unit, # mean
-                sd = SODSDV * grams_ethanol_per_unit # variance
-  ))
-  
-  # Convert from the cumulative distribution to the
-  # probability that each level of alcohol is consumed on a drinking occasion
-  #interval_prob <- x - c(0, x[1:(length(x) - 1)])
-  #interval_prob <- diff(x)
-  interval_prob <- apply(x, 2, diff)
-  
-  #interval_prob <- interval_prob / sum(interval_prob)
-  interval_prob <- interval_prob / matrix(colSums(interval_prob), nrow = kn - 1, ncol = ncol(interval_prob), byrow = T)
-  
-  interval_prob[is.na(interval_prob)] <- 0
   
   # Units consumed above the binge threshold
   
@@ -133,7 +95,7 @@ WArisk_acute <- function(
   #   threshold <- alc_wholly_acute_thresholds[2] # 8 units
   # }
   
-  threshold <- ifelse(sex == "Female", 
+  threshold <- fifelse(sex == "Female", 
                       alc_wholly_acute_thresholds[1], # 6 units
                       alc_wholly_acute_thresholds[2]) # 8 units
   
@@ -146,6 +108,8 @@ WArisk_acute <- function(
   
   units_vec <- replace(units_vec, units_vec < 0, 0)
   
+  # Convert the column of vectors back to a matrix
+  interval_prob <- matrix(unlist(interval_prob_vec), nrow = kn - 1, ncol = length(SODFreq), byrow = F)
   
   # Calculate the total number of units drunk above the binge threshold
   
@@ -159,17 +123,12 @@ WArisk_acute <- function(
   units_above_threshold_sum <- colSums(units_above_threshold)
   
   
-  
-  # rm(
-  #   grams_ethanol, 
-  #   x,
-  #   interval_prob,
-  #   threshold,
-  #   units_vec,
-  #   units_above_threshold
-  # )
-  # gc()
-  
+  rm(kn,
+     grams_ethanol,
+     threshold,
+     units_vec,
+     interval_prob,
+     units_above_threshold)
   
   
   return(units_above_threshold_sum)

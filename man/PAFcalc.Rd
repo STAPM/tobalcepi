@@ -2,10 +2,11 @@
 % Please edit documentation in R/PAFcalc.R
 \name{PAFcalc}
 \alias{PAFcalc}
-\title{Calculate Population Attributable Fractions \lifecycle{maturing}}
+\title{Calculate Population Attributable Fractions}
 \usage{
 PAFcalc(
   data,
+  rrdata = NULL,
   substance,
   tob_include_risk_in_former_smokers = TRUE,
   alc_protective = TRUE,
@@ -23,6 +24,10 @@ PAFcalc(
 }
 \arguments{
 \item{data}{Data table of individual characteristics}
+
+\item{rrdata}{Optional - data table containing individual tobacco and alcohol consumption characteristics 
+with relative risks of disease already assigned. This could be useful for increasing efficiency - saving computer processing time. 
+Defaults to NULL.}
 
 \item{substance}{Whether to compute relative risks for just alcohol ("alc"),
 just tobacco ("tob") or joint risks for tobacco and alcohol ("tobalc").}

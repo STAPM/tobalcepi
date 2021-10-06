@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   tobalcepi: tobalcepi.html
   use_of_disease_risks_in_stapm: use_of_disease_risks_in_stapm.html
-last_built: 2021-10-06T16:00Z
+last_built: 2021-10-06T17:53Z
 urls:
   reference: https://stapm.gitlab.io/r-packages/tobalcepi//reference
   article: https://stapm.gitlab.io/r-packages/tobalcepi//articles

@@ -1,5 +1,8 @@
 ---
 title: "Use of disease risks in STAPM"
+subtitle: "Vignette version number 1.1.0"
+date: "Last reviewed 06/10/21"
+author: "Duncan Gillespie, Laura Webster, Colin Angus & Alan Brennan"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Use of disease risks in STAPM}
@@ -8,7 +11,7 @@ vignette: >
 bibliography: disease-risks.bib
 link-citations: yes
 citation_package: natbib
-biblio-style: vancouver
+biblio-style: apalike
 urlcolor: blue
 editor_options: 
   chunk_output_type: console

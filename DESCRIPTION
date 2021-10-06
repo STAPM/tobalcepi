@@ -48,7 +48,8 @@ Imports:
     lifecycle,
     crayon,
     TTR,
-    Rfast
+    Rfast,
+    stapmr
 RdMacros: Rdpack, lifecycle
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2

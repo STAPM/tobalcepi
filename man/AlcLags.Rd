@@ -2,7 +2,7 @@
 % Please edit documentation in R/AlcLags.R
 \name{AlcLags}
 \alias{AlcLags}
-\title{Alcohol lag times \lifecycle{stable}}
+\title{Alcohol lag times}
 \usage{
 AlcLags(disease_name = c("Pharynx", "Oral_cavity"), n_years = 20)
 }
@@ -23,11 +23,14 @@ gradually has an effect on the relative risk of disease incidence over time (up 
 since alcohol consumption changed.
 }
 \details{
-All lag times are taken from the review by Holmes et al. 2012,
+All lag times are taken from the review by \insertCite{holmes2012temporal;textual}{tobalcepi} ,
  and are the numbers used in the current version of SAPM.
 }
 \examples{
 \dontrun{
 AlcLags("Pharynx")
 }
+}
+\references{
+\insertRef{holmes2012temporal}{tobalcepi}
 }

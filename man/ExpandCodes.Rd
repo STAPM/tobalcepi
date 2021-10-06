@@ -2,7 +2,7 @@
 % Please edit documentation in R/ExpandCodes.R
 \name{ExpandCodes}
 \alias{ExpandCodes}
-\title{Convert groups of ICD-10 codes to single codes \lifecycle{stable}}
+\title{Convert groups of ICD-10 codes to single codes}
 \usage{
 ExpandCodes(lkup)
 }

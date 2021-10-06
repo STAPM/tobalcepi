@@ -3,7 +3,7 @@
 \docType{data}
 \name{binge_params_stapm}
 \alias{binge_params_stapm}
-\title{Parameters to estimate amount drunk on single occassions - STAPM version}
+\title{Parameters to estimate amount drunk on single occasions - STAPM version}
 \format{
 A list of four data tables (1 = Negative binomial regression model for the number of weekly drinking occasions, 
 2 = Fitted Heckman selection model for probability that an individual drinks on at least 3 separate occasions during the diary period, 
@@ -18,7 +18,7 @@ binge_params_stapm
 }
 \description{
 As our starting point we use the parameter estimates from Hill-McManus et al 2014 - stored within the `tobalcepi` package as the data object `binge_params`. 
-The problem with using these parameters directly in STAPM is that STAPM does not model the individual lifecourse trajectories of 
+The problem with using these parameters directly in STAPM is that STAPM does not model the individual life-course trajectories of 
 some of the covariates investigated by Hill-McManus et al, e.g. income, kids or social status. To get these parameters into a form that can be used in STAPM, 
 we matched them to the individual covariates in a sample of Health Survey for England data from 2011-2017, and then averaged the parameter values 
 by age category, sex and IMD quintiles. The code that does this is in the `data-raw/binge_params` folder of the `tobalcepi` package. 

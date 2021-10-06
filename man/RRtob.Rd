@@ -2,7 +2,7 @@
 % Please edit documentation in R/RRtob.R
 \name{RRtob}
 \alias{RRtob}
-\title{Tobacco relative risks \lifecycle{maturing}}
+\title{Tobacco relative risks}
 \usage{
 RRtob(
   data,

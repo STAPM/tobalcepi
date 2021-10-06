@@ -1,12 +1,12 @@
 
 #' Calculate Population Attributable Fractions
 #' 
-#' Uses \code{RRFunc()} and \code{subgroupRisk()} to 
+#' Uses [tobalcepi::RRFunc()] and [tobalcepi::subgroupRisk()] to 
 #' calculate population attributable fractions 
 #' based on the survey data provided.
 #' 
 #' 
-#' @param data Data table of individual characteristics
+#' @param data Data table of individual characteristics. Defaults to NULL.
 #' @param rrdata Optional - data table containing individual tobacco and alcohol consumption characteristics 
 #' with relative risks of disease already assigned. This could be useful for increasing efficiency - saving computer processing time. 
 #' Defaults to NULL.
@@ -51,7 +51,7 @@
 #' }
 #' 
 PAFcalc <- function(
-  data,
+  data = NULL,
   rrdata = NULL,
   substance,
   tob_include_risk_in_former_smokers = TRUE,
@@ -68,9 +68,11 @@ PAFcalc <- function(
   mort_or_morb = c("mort", "morb")[1]
 ) {
   
-  years <- min(data$year):max(data$year)
+
   
   if(is.null(rrdata)) {
+    
+    years <- min(data$year):max(data$year)
     
     cat("Assigning relative risks\n")
     

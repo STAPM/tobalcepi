@@ -1,5 +1,5 @@
 
-#' Summarise relative risk \lifecycle{stable}
+#' Summarise relative risk
 #'
 #' Calculate the sum of the relative risk for all individuals in a subgroup,
 #' or calculate the subgroup specific attributable fraction based on the current relative risks.

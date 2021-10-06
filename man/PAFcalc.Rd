@@ -5,7 +5,7 @@
 \title{Calculate Population Attributable Fractions}
 \usage{
 PAFcalc(
-  data,
+  data = NULL,
   rrdata = NULL,
   substance,
   tob_include_risk_in_former_smokers = TRUE,
@@ -23,7 +23,7 @@ PAFcalc(
 )
 }
 \arguments{
-\item{data}{Data table of individual characteristics}
+\item{data}{Data table of individual characteristics. Defaults to NULL.}
 
 \item{rrdata}{Optional - data table containing individual tobacco and alcohol consumption characteristics 
 with relative risks of disease already assigned. This could be useful for increasing efficiency - saving computer processing time. 
@@ -75,7 +75,7 @@ should refer to mortality or morbidity. Values could be "mort" or "morb". Defaul
 Returns a data.table containing the estimated PAFs.
 }
 \description{
-Uses \code{RRFunc()} and \code{subgroupRisk()} to 
+Uses [tobalcepi::RRFunc()] and [tobalcepi::subgroupRisk()] to 
 calculate population attributable fractions 
 based on the survey data provided.
 }

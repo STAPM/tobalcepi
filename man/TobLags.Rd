@@ -2,7 +2,7 @@
 % Please edit documentation in R/TobLags.R
 \name{TobLags}
 \alias{TobLags}
-\title{Tobacco lag times \lifecycle{stable}}
+\title{Tobacco lag times}
 \usage{
 TobLags(
   disease_name = c("Pharynx", "Oral_cavity"),

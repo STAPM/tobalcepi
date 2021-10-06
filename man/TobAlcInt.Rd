@@ -2,7 +2,7 @@
 % Please edit documentation in R/TobAlcInt.R
 \name{TobAlcInt}
 \alias{TobAlcInt}
-\title{Risk interaction between tobacco and alcohol \lifecycle{maturing}}
+\title{Risk interaction between tobacco and alcohol}
 \usage{
 TobAlcInt(
   data,

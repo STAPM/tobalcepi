@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Relative risks for alcohol-related injuries  — PArisk • tobalcepi</title>
+<title>Relative risks for alcohol-related injuries — PArisk • tobalcepi</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +46,7 @@
 
 
 
-<meta property="og:title" content="Relative risks for alcohol-related injuries  — PArisk" />
+<meta property="og:title" content="Relative risks for alcohol-related injuries — PArisk" />
 <meta property="og:description" content="Uses the 'new' binge model methods to calculate a relative risk
 for each individual for experiencing each cause during one year." />
 <meta property="og:image" content="https://stapm.gitlab.io/r-packages/tobalcepi/logo.png" />
@@ -116,7 +116,7 @@ for each individual for experiencing each cause during one year." />
 </li>
 <li>
   <a href="https://stapm.gitlab.io/software.html">
-    <span class="fas fa-code"></span>
+    <span class="fa fa-code"></span>
      
   </a>
 </li>
@@ -133,7 +133,7 @@ for each individual for experiencing each cause during one year." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Relative risks for alcohol-related injuries <a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></h1>
+    <h1>Relative risks for alcohol-related injuries</h1>
     
     <div class="hidden name"><code>PArisk.Rd</code></div>
     </div>
@@ -144,8 +144,7 @@ for each individual for experiencing each cause during one year.</p>
     </div>
 
     <pre class="usage"><span class='fu'>PArisk</span><span class='op'>(</span>
-  SODMean <span class='op'>=</span> <span class='cn'>NULL</span>,
-  SODSDV <span class='op'>=</span> <span class='cn'>NULL</span>,
+  interval_prob_vec <span class='op'>=</span> <span class='cn'>NULL</span>,
   SODFreq <span class='op'>=</span> <span class='cn'>NULL</span>,
   Weight <span class='op'>=</span> <span class='cn'>NULL</span>,
   Widmark_r <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -160,14 +159,9 @@ for each individual for experiencing each cause during one year.</p>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>SODMean</th>
-      <td><p>Numeric vector - the average amount that each individual is expected to
-drink on a single drinking occasion.</p></td>
-    </tr>
-    <tr>
-      <th>SODSDV</th>
-      <td><p>Numeric vector - the standard deviation of the amount that each individual is expected to
-drink on a single drinking occasion.</p></td>
+      <th>interval_prob_vec</th>
+      <td><p>Column of vectors - the probabilities that each individual 
+drinks each amount of grams of ethanol (1:600) on a single drinking occasion.</p></td>
     </tr>
     <tr>
       <th>SODFreq</th>

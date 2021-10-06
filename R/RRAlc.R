@@ -1,6 +1,6 @@
 
 
-#' Relative risks for alcohol related diseases \lifecycle{stable}
+#' Relative risks for alcohol related diseases
 #'
 #' Computes the relative risks for each alcohol related disease based on the published risk curves.
 #'
@@ -10,13 +10,13 @@
 #' indicates protective effects of alcohol, there is an option to remove the protective effect by setting all
 #' RR < 1 = 1.   
 #' 
-#' Relative risks for partially attributable acute are computed by the \code{PArisk()} function called from within
+#' Relative risks for partially attributable acute are computed by the [tobalcepi::PArisk()] function called from within
 #'  this function. The characteristics of individual single occasion drinking are also calculated within this function 
-#'  using \code{AlcBinge_stapm()}.     
+#'  using [tobalcepi::AlcBinge_stapm()].     
 #'  
 #'  Relative risks for wholly attributable chronic and wholly attributable acute conditions are calculated
 #'  based on the extent to which either weekly or daily consumption exceeds a pre-specified threshold. The risk 
-#'  for wholly attributable acute conditions is calculated by the function \code{WArisk_acute()}. We developed a new 
+#'  for wholly attributable acute conditions is calculated by the function [tobalcepi::WArisk_acute()]. We developed a new 
 #'  method to model the absolute risk of wholly attributable acute conditions to suit the STAPM modelling. 
 #'  This new method is based on the method used to model the risk of partially attributable acute conditions - 
 #'  the shape of the risk function is determined by the individual variation in the total annual number of units that

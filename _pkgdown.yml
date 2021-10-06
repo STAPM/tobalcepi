@@ -39,15 +39,10 @@ navbar:
       href: https://stapm.gitlab.io/software.html
     
 articles:
-- title: "Tobacco relative risks"
+- title: "Technical information"
   contents:
-  - smoking-disease-risks
-
-- title: "Alcohol relative risks"
-  contents:
-  - alc_partially_attrib_acute
-  - alc_wholly_attrib_acute
-  - alc_wholly_attrib_chronic
+  - tobalcepi
+  - use_of_disease_risks_in_stapm
     
 reference:
 - title: "Use of risk functions"
@@ -99,6 +94,7 @@ reference:
   contents:
   - ExpandCodes
   - disease_groups
+  - intervalprob
 
   
   

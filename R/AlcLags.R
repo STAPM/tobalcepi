@@ -1,11 +1,11 @@
 
-#' Alcohol lag times \lifecycle{stable}
+#' Alcohol lag times
 #'
 #' Prepare the disease specific functions that describe how a change in alcohol consumption
 #' gradually has an effect on the relative risk of disease incidence over time (up to 20 years)
 #' since alcohol consumption changed.
 #'
-#' All lag times are taken from the review by Holmes et al. 2012,
+#' All lag times are taken from the review by \insertCite{holmes2012temporal;textual}{tobalcepi} ,
 #'  and are the numbers used in the current version of SAPM.
 #'
 #' @param disease_name Character - the name of the disease under consideration.
@@ -18,6 +18,9 @@
 #' 
 #' @importFrom data.table := setDT setnames data.table
 #' @importFrom stapmr %fin%
+#' 
+#' @references
+#' \insertRef{holmes2012temporal}{tobalcepi}  
 #' 
 #' @export
 #' 

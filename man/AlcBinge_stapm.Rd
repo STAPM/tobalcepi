@@ -2,7 +2,7 @@
 % Please edit documentation in R/AlcBinge_stapm.R
 \name{AlcBinge_stapm}
 \alias{AlcBinge_stapm}
-\title{Calculate variables to inform alcohol binge model - STAPM version \lifecycle{maturing}}
+\title{Calculate variables to inform alcohol binge model - STAPM version}
 \usage{
 AlcBinge_stapm(data, params = tobalcepi::binge_params_stapm)
 }
@@ -20,7 +20,7 @@ Returns data plus the estimated variables.
 \description{
 Designed to work with simulated individual trajectories of alcohol consumption - stratified by 
 age category, sex and IMD quintile. Assigns coefficients stratified by age category, sex and IMD quintile to 
-the simulated sample of individuals to estimate their characteristics of single occassion drinking 
+the simulated sample of individuals to estimate their characteristics of single occasion drinking 
 at each time step in the simulation.
 }
 \details{

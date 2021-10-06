@@ -1,5 +1,5 @@
 
-#' Synergstic effects of tobacco and alcohol risks
+#' Synergistic effects of tobacco and alcohol risks
 #'
 #' @docType data
 #'

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Risk of acute conditions wholly-attributable to alcohol  — WArisk_acute • tobalcepi</title>
+<title>Risk of acute conditions wholly-attributable to alcohol — WArisk_acute • tobalcepi</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +46,7 @@
 
 
 
-<meta property="og:title" content="Risk of acute conditions wholly-attributable to alcohol  — WArisk_acute" />
+<meta property="og:title" content="Risk of acute conditions wholly-attributable to alcohol — WArisk_acute" />
 <meta property="og:description" content="Uses the 'new' binge model methods to calculate the risk
 that each individual experiences each acute consequence of drinking during one year 
 (e.g. alcohol poisoning or the effects of acute intoxication)." />
@@ -117,7 +117,7 @@ that each individual experiences each acute consequence of drinking during one y
 </li>
 <li>
   <a href="https://stapm.gitlab.io/software.html">
-    <span class="fas fa-code"></span>
+    <span class="fa fa-code"></span>
      
   </a>
 </li>
@@ -134,7 +134,7 @@ that each individual experiences each acute consequence of drinking during one y
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Risk of acute conditions wholly-attributable to alcohol <a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></h1>
+    <h1>Risk of acute conditions wholly-attributable to alcohol</h1>
     
     <div class="hidden name"><code>WArisk_acute.Rd</code></div>
     </div>
@@ -146,8 +146,7 @@ that each individual experiences each acute consequence of drinking during one y
     </div>
 
     <pre class="usage"><span class='fu'>WArisk_acute</span><span class='op'>(</span>
-  <span class='va'>SODMean</span>,
-  <span class='va'>SODSDV</span>,
+  <span class='va'>interval_prob_vec</span>,
   <span class='va'>SODFreq</span>,
   <span class='va'>sex</span>,
   grams_ethanol_per_unit <span class='op'>=</span> <span class='fl'>8</span>,
@@ -158,14 +157,9 @@ that each individual experiences each acute consequence of drinking during one y
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>SODMean</th>
-      <td><p>Numeric - the average amount that each individual is expected to
-drink on a single drinking occasion.</p></td>
-    </tr>
-    <tr>
-      <th>SODSDV</th>
-      <td><p>Numeric - the standard deviation of the amount that each individual is expected to
-drink on a single drinking occasion.</p></td>
+      <th>interval_prob_vec</th>
+      <td><p>Column of vectors - the probabilities that each individual 
+drinks each amount of grams of ethanol (1:600) on a single drinking occasion.</p></td>
     </tr>
     <tr>
       <th>SODFreq</th>
@@ -199,7 +193,7 @@ Defaults to 3 units/day for females and 4 units/day for males.</p></td>
 The calculation is based on the link between average weekly alcohol consumption and 
 the distribution of characteristics of single occasion drinking described by the 
 parameter estimates of Hill-McManus et al 2014.</p>
-<p>The function uses the outputs of AlcBinge_stapm() 
+<p>The function uses the outputs of [tobalcepi::AlcBinge_stapm()] 
 to estimate for each individual: (1) the average amount that each individual is expected to
 drink on a single drinking occasion; (2) the standard deviation of the amount that each individual is expected to
 drink on a single drinking occasion; (3) the expected number of drinking occasions that
@@ -214,6 +208,8 @@ We assume that each individual's risk is proportional to that value.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+
+<span class='co'># example needs updating</span>
 
 <span class='co'># Function called within RRAlc()</span>
 

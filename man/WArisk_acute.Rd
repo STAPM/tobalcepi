@@ -2,7 +2,7 @@
 % Please edit documentation in R/WArisk_acute.R
 \name{WArisk_acute}
 \alias{WArisk_acute}
-\title{Risk of acute conditions wholly-attributable to alcohol \lifecycle{stable}}
+\title{Risk of acute conditions wholly-attributable to alcohol}
 \usage{
 WArisk_acute(
   interval_prob_vec,
@@ -43,7 +43,7 @@ The calculation is based on the link between average weekly alcohol consumption 
 the distribution of characteristics of single occasion drinking described by the 
 parameter estimates of Hill-McManus et al 2014.     
 
-The function uses the outputs of AlcBinge_stapm() 
+The function uses the outputs of [tobalcepi::AlcBinge_stapm()] 
 to estimate for each individual: (1) the average amount that each individual is expected to
 drink on a single drinking occasion; (2) the standard deviation of the amount that each individual is expected to
 drink on a single drinking occasion; (3) the expected number of drinking occasions that

@@ -1,5 +1,5 @@
 
-#' Risk of acute conditions wholly-attributable to alcohol \lifecycle{stable}
+#' Risk of acute conditions wholly-attributable to alcohol
 #'
 #' Uses the 'new' binge model methods to calculate the risk
 #' that each individual experiences each acute consequence of drinking during one year 
@@ -10,7 +10,7 @@
 #' the distribution of characteristics of single occasion drinking described by the 
 #' parameter estimates of Hill-McManus et al 2014.     
 #' 
-#' The function uses the outputs of AlcBinge_stapm() 
+#' The function uses the outputs of [tobalcepi::AlcBinge_stapm()] 
 #' to estimate for each individual: (1) the average amount that each individual is expected to
 #' drink on a single drinking occasion; (2) the standard deviation of the amount that each individual is expected to
 #' drink on a single drinking occasion; (3) the expected number of drinking occasions that

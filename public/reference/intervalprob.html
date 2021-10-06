@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Risk interaction between tobacco and alcohol — TobAlcInt • tobalcepi</title>
+<title>Distribution of single-occasion drinking amount — intervalprob • tobalcepi</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,9 @@
 
 
 
-<meta property="og:title" content="Risk interaction between tobacco and alcohol — TobAlcInt" />
-<meta property="og:description" content="Assigns the disease-specific interaction term (synergy index) appropriate to each
-individual's tobacco and alcohol consumption." />
+<meta property="og:title" content="Distribution of single-occasion drinking amount — intervalprob" />
+<meta property="og:description" content="Computes the probability that each integer number of grams of ethanol per day 
+is consumed on a single drinking occasion." />
 <meta property="og:image" content="https://stapm.gitlab.io/r-packages/tobalcepi/logo.png" />
 
 
@@ -133,97 +133,59 @@ individual's tobacco and alcohol consumption." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Risk interaction between tobacco and alcohol</h1>
+    <h1>Distribution of single-occasion drinking amount</h1>
     
-    <div class="hidden name"><code>TobAlcInt.Rd</code></div>
+    <div class="hidden name"><code>intervalprob.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Assigns the disease-specific interaction term (synergy index) appropriate to each
-individual's tobacco and alcohol consumption.</p>
+    <p>Computes the probability that each integer number of grams of ethanol per day 
+is consumed on a single drinking occasion.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>TobAlcInt</span><span class='op'>(</span>
-  <span class='va'>data</span>,
-  disease <span class='op'>=</span> <span class='st'>"Pharynx"</span>,
-  alcohol_var <span class='op'>=</span> <span class='st'>"weekmean"</span>,
-  tobacco_var <span class='op'>=</span> <span class='st'>"smk.state"</span>,
-  <span class='va'>rr.data</span>,
-  account_for_synergy <span class='op'>=</span> <span class='cn'>TRUE</span>
+    <pre class="usage"><span class='fu'>intervalprob</span><span class='op'>(</span>
+  grams_ethanol <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>600</span>,
+  SODMean <span class='op'>=</span> <span class='cn'>NULL</span>,
+  SODSDV <span class='op'>=</span> <span class='cn'>NULL</span>,
+  SODFreq <span class='op'>=</span> <span class='cn'>NULL</span>,
+  grams_ethanol_per_unit <span class='op'>=</span> <span class='fl'>8</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>Data table - containing the individual characteristics of smokers and drinkers</p></td>
+      <th>grams_ethanol</th>
+      <td><p>Integer vector - the potential grams of ethanol drunk on a single occasion.</p></td>
     </tr>
     <tr>
-      <th>disease</th>
-      <td><p>Character</p></td>
+      <th>SODMean</th>
+      <td><p>Numeric vector - the average amount that each individual is expected to
+drink on a single drinking occasion.</p></td>
     </tr>
     <tr>
-      <th>alcohol_var</th>
-      <td><p>Character</p></td>
+      <th>SODSDV</th>
+      <td><p>Numeric vector - the standard deviation of the amount that each individual is expected to
+drink on a single drinking occasion.</p></td>
     </tr>
     <tr>
-      <th>tobacco_var</th>
-      <td><p>Character</p></td>
+      <th>SODFreq</th>
+      <td><p>Numeric vector - the expected number of drinking occasions that
+each individual has each week.</p></td>
     </tr>
     <tr>
-      <th>rr.data</th>
-      <td><p>Data table</p></td>
-    </tr>
-    <tr>
-      <th>account_for_synergy</th>
-      <td><p>Logical</p></td>
+      <th>grams_ethanol_per_unit</th>
+      <td><p>Numeric value giving the conversion factor for the number of grams of pure
+ethanol in one UK standard unit of alcohol.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a numeric vector containing  of each individual's relative risks for the tobacco-related disease
-specified by "disease".</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>We currently include estimates of synergistic effects for 
-oral, pharyngeal, laryngeal and oesophageal cancers 
-(we describe these data and their sources in our tobacco risk functions report 
-Webster et al. (2018)
-). 
-The data sources we use are Prabhu et al. (2014)
- 
- and Hashibe et al. (2009)
-.
-We apply these effects by scaling the joint risks by a 'synergy index', 
-which takes the result of a meta-analysis of the additional
-risk faced by people because they consume both tobacco and alcohol.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Webster L, Angus C, Brennan A, Gillespie D (2018).
-&#8220;Smoking and the risks of adult diseases.&#8221;
-doi: <a href='https://doi.org/10.15131/shef.data.7411451.v1'>10.15131/shef.data.7411451.v1</a>
-, <a href='https://figshare.shef.ac.uk/articles/Smoking_and_the_risks_of_adult_diseases/7411451/1'>https://figshare.shef.ac.uk/articles/Smoking_and_the_risks_of_adult_diseases/7411451/1</a>.</p>
-<p>Hashibe M, Brennan P, Chuang SC, Boccia S, Castellsague X, Chen C, Curado MP, Dal Maso L, Daudt AW, Fabianova E, Fernandez L, Wunsch-Filho V, Franceschi S, Hayes RB, Herrero R, Kelsey K, Koifman S, La Vecchia C, Lazarus P, Levi F, Lence JJ, Mates D, Matos E, Menezes A, McClean MD, Muscat J, Eluf-Neto J, Olshan AF, Purdue M, Rudnai P, Schwartz SM, Smith E, Sturgis EM, Szeszenia-Dabrowska N, Talamini R, Wei QY, Winn DM, Shangina O, Pilarska A, Zhang ZF, Ferro G, Berthiller J, Boffetta P (2009).
-&#8220;Interaction between Tobacco and Alcohol Use and the Risk of Head and Neck Cancer: Pooled Analysis in the International Head and Neck Cancer Epidemiology Consortium.&#8221;
-<em>Cancer Epidemiology Biomarkers \&amp; Prevention</em>, <b>18</b>(2), 541-550.
-ISSN 1055-9965, doi: <a href='https://doi.org/10.1158/1055-9965.epi-08-0347'>10.1158/1055-9965.epi-08-0347</a>
-.</p>
-<p>Prabhu A, Obi KO, Rubenstein JH (2014).
-&#8220;The Synergistic Effects of Alcohol and Tobacco Consumption on the Risk of Esophageal Squamous Cell Carcinoma: A Meta-Analysis.&#8221;
-<em>American Journal of Gastroenterology</em>, <b>109</b>(6), 821-827.
-ISSN 0002-9270, doi: <a href='https://doi.org/10.1038/ajg.2014.71'>10.1038/ajg.2014.71</a>
-.</p>
+    <p>Returns a numeric vector containing the probability that each amount of alcohol is consumed</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-
-<span class='fu'>TobAlcInt</span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='op'>}</span>
-
 
 </div></pre>
   </div>

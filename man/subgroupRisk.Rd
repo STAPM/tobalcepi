@@ -2,7 +2,7 @@
 % Please edit documentation in R/subgroupRisk.R
 \name{subgroupRisk}
 \alias{subgroupRisk}
-\title{Summarise relative risk \lifecycle{stable}}
+\title{Summarise relative risk}
 \usage{
 subgroupRisk(
   data,

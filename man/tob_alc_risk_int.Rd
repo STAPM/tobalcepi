@@ -3,7 +3,7 @@
 \docType{data}
 \name{tob_alc_risk_int}
 \alias{tob_alc_risk_int}
-\title{Synergstic effects of tobacco and alcohol risks}
+\title{Synergistic effects of tobacco and alcohol risks}
 \format{
 A data table. We currently include estimates of synergistic effects for 
 oral, pharyngeal, laryngeal and oesophageal cancers 
@@ -16,7 +16,7 @@ The data sources we use are \insertCite{Prabhu2014;textual}{tobalcepi}
 tob_alc_risk_int
 }
 \description{
-Synergstic effects of tobacco and alcohol risks
+Synergistic effects of tobacco and alcohol risks
 }
 \references{
 \insertRef{webster2018risk}{tobalcepi}  

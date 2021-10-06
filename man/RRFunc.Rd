@@ -2,7 +2,7 @@
 % Please edit documentation in R/RRFunc.R
 \name{RRFunc}
 \alias{RRFunc}
-\title{Individual relative risks of disease \lifecycle{maturing}}
+\title{Individual relative risks of disease}
 \usage{
 RRFunc(
   data,
@@ -107,7 +107,7 @@ See below
 \section{Alcohol risk}{
 
 For alcohol, the relative risk for each individual for each disease is calculated based on 
-their average weekly alcohol consumption (using \code{RRalc()}). 
+their average weekly alcohol consumption (using [tobalcepi::RRalc()]). 
 Alcohol consumption is converted to grams of ethanol consumed on average in a day, and 
 this is truncated at 150g/day. We assume 8 grams of ethanol per UK standard unit of alcohol. 
  For diseases that have separate mortality and morbidity risk functions, 

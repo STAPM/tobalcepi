@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate Population Attributable Fractions  — PAFcalc • tobalcepi</title>
+<title>Calculate Population Attributable Fractions — PAFcalc • tobalcepi</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Calculate Population Attributable Fractions  — PAFcalc" />
-<meta property="og:description" content="Uses RRFunc() and subgroupRisk() to 
+<meta property="og:title" content="Calculate Population Attributable Fractions — PAFcalc" />
+<meta property="og:description" content="Uses [tobalcepi::RRFunc()] and [tobalcepi::subgroupRisk()] to 
 calculate population attributable fractions 
 based on the survey data provided." />
 <meta property="og:image" content="https://stapm.gitlab.io/r-packages/tobalcepi/logo.png" />
@@ -117,7 +117,7 @@ based on the survey data provided." />
 </li>
 <li>
   <a href="https://stapm.gitlab.io/software.html">
-    <span class="fas fa-code"></span>
+    <span class="fa fa-code"></span>
      
   </a>
 </li>
@@ -134,19 +134,20 @@ based on the survey data provided." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate Population Attributable Fractions <a href='https://lifecycle.r-lib.org/articles/stages.html#maturing'><img src='figures/lifecycle-maturing.svg' alt='[Maturing]' /></a></h1>
+    <h1>Calculate Population Attributable Fractions</h1>
     
     <div class="hidden name"><code>PAFcalc.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Uses <code><a href='RRFunc.html'>RRFunc()</a></code> and <code><a href='subgroupRisk.html'>subgroupRisk()</a></code> to 
+    <p>Uses [tobalcepi::RRFunc()] and [tobalcepi::subgroupRisk()] to 
 calculate population attributable fractions 
 based on the survey data provided.</p>
     </div>
 
     <pre class="usage"><span class='fu'>PAFcalc</span><span class='op'>(</span>
-  <span class='va'>data</span>,
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  rrdata <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>substance</span>,
   tob_include_risk_in_former_smokers <span class='op'>=</span> <span class='cn'>TRUE</span>,
   alc_protective <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -157,7 +158,9 @@ based on the survey data provided.</p>
   year_range <span class='op'>=</span> <span class='st'>"all"</span>,
   pool <span class='op'>=</span> <span class='cn'>FALSE</span>,
   subgroups <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"sex"</span>, <span class='st'>"age_cat"</span><span class='op'>)</span>,
-  tobalc_include_int <span class='op'>=</span> <span class='cn'>FALSE</span>
+  tobalc_include_int <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  within_model <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  mort_or_morb <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mort"</span>, <span class='st'>"morb"</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -165,7 +168,13 @@ based on the survey data provided.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>Data table of individual characteristics</p></td>
+      <td><p>Data table of individual characteristics. Defaults to NULL.</p></td>
+    </tr>
+    <tr>
+      <th>rrdata</th>
+      <td><p>Optional - data table containing individual tobacco and alcohol consumption characteristics 
+with relative risks of disease already assigned. This could be useful for increasing efficiency - saving computer processing time. 
+Defaults to NULL.</p></td>
     </tr>
     <tr>
       <th>substance</th>
@@ -224,6 +233,16 @@ Weight variable must be called "wt_int".</p></td>
 should a (synergistic/multiplicative) interaction between exposure to tobacco and alcohol be included.
 Defaults to FALSE. If TRUE, then only interactive effects for oesophageal, pharynx, oral cavity and larynx cancers
 are considered.</p></td>
+    </tr>
+    <tr>
+      <th>within_model</th>
+      <td><p>Logical - is the function being used to calculate PAFs 
+from the results of a STAPM model simulation. Defaults to FALSE.</p></td>
+    </tr>
+    <tr>
+      <th>mort_or_morb</th>
+      <td><p>Character string - whether the risk functions for conditions with separate mortality and morbidity risk functions 
+should refer to mortality or morbidity. Values could be "mort" or "morb". Default is "mort".</p></td>
     </tr>
     </table>
 

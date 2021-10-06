@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Individual relative risks of disease  — RRFunc • tobalcepi</title>
+<title>Individual relative risks of disease — RRFunc • tobalcepi</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +46,7 @@
 
 
 
-<meta property="og:title" content="Individual relative risks of disease  — RRFunc" />
+<meta property="og:title" content="Individual relative risks of disease — RRFunc" />
 <meta property="og:description" content="This function takes a sample of individuals and computes each individual's relative risk
 for each disease according to their current tobacco and alcohol consumption. 
 There is an option to tailor this
@@ -118,7 +118,7 @@ to the alcohol only, tobacco only, or joint tobacco and alcohol contexts." />
 </li>
 <li>
   <a href="https://stapm.gitlab.io/software.html">
-    <span class="fas fa-code"></span>
+    <span class="fa fa-code"></span>
      
   </a>
 </li>
@@ -135,7 +135,7 @@ to the alcohol only, tobacco only, or joint tobacco and alcohol contexts." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Individual relative risks of disease <a href='https://lifecycle.r-lib.org/articles/stages.html#maturing'><img src='figures/lifecycle-maturing.svg' alt='[Maturing]' /></a></h1>
+    <h1>Individual relative risks of disease</h1>
     
     <div class="hidden name"><code>RRFunc.Rd</code></div>
     </div>
@@ -262,7 +262,7 @@ are considered.</p></td>
     </tr>
     <tr>
       <th>within_model</th>
-      <td><p>Logical - is the function being used within a new-style STAPM simulation. 
+      <td><p>Logical - is the function being used within a STAPM simulation. 
 Defaults to TRUE.</p></td>
     </tr>
     </table>
@@ -284,7 +284,7 @@ the relative risks for the current year added to the store.</p></li>
     
 
 <p>For alcohol, the relative risk for each individual for each disease is calculated based on 
-their average weekly alcohol consumption (using <code><a href='RRalc.html'>RRalc()</a></code>). 
+their average weekly alcohol consumption (using [tobalcepi::RRalc()]). 
 Alcohol consumption is converted to grams of ethanol consumed on average in a day, and 
 this is truncated at 150g/day. We assume 8 grams of ethanol per UK standard unit of alcohol. 
  For diseases that have separate mortality and morbidity risk functions, 

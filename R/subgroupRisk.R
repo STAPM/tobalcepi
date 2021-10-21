@@ -1,7 +1,7 @@
 
 #' Summarise relative risk
 #'
-#' Calculate the sum of the relative risk for all individuals in a subgroup,
+#' Calculate the average relative risk across individuals in a subgroup,
 #' or calculate the subgroup specific attributable fraction based on the current relative risks.
 #'
 #' Attributable fractions are calculated using the method as in Bellis & Jones 2014, which is also equivalent to the

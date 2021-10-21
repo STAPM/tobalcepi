@@ -31,8 +31,8 @@ alcohol consumption behaviours.
 ## Relative risk data
 
 The disease lists and risk functions in this package all have published
-sources, which we have referenced (Angus et al. [2018](#ref-Angus2018);
-Webster et al. [2018](#ref-webster2018risk)). We have written some
+sources, which we have referenced ([Angus et al. 2018](#ref-Angus2018);
+[Webster et al. 2018](#ref-webster2018risk)). We have written some
 working [technical
 descriptions](https://stapm.gitlab.io/r-packages/tobalcepi/articles/index.html)
 to explain how these risk functions are implemented in STAPM. We store
@@ -49,7 +49,7 @@ calculates individual risks of diseases as follows:
 
 1.  **Alcohol - partially-attributable chronic conditions**:
     dose-response effects of current alcohol consumption on disease risk
-    (Angus et al. [2018](#ref-Angus2018)) are hard-coded into the
+    ([Angus et al. 2018](#ref-Angus2018)) are hard-coded into the
     function `tobalcepi::RRalc()`. Updates to these risk functions must
     therefore be made by changing the function code.  
 2.  **Alcohol - partially-attributable acute conditions**: dose-response
@@ -73,8 +73,8 @@ calculates individual risks of diseases as follows:
 
 1.  `tobalcepi::RRtob()` takes a lookup table of the risks associated
     with current vs. never smoking and assigns these to individuals
-    based on their smoking state, age and sex (Webster et al.
-    [2018](#ref-webster2018risk)).  
+    based on their smoking state, age and sex ([Webster et al.
+    2018](#ref-webster2018risk)).  
 2.  We are in the process of developing the function
     `tobalcepi::RRTobDR()` to stratify the risks of some cancers
     according to the amount smoked per day by current smokers. There is
@@ -95,10 +95,10 @@ function).
 
 We use estimates of potential tobacco - alcohol risk interactions for:
 
-  - Oral cavity cancer  
-  - Pharyngeal cancer  
-  - Laryngeal cancer  
-  - Oesophageal SCC cancer
+-   Oral cavity cancer  
+-   Pharyngeal cancer  
+-   Laryngeal cancer  
+-   Oesophageal SCC cancer
 
 These estimates are stored in `tobalcepi::tob_alc_risk_int`.
 
@@ -113,12 +113,12 @@ annually.
 
 The types of data included in tobalcepi are:
 
-  - Lists of the names of the diseases that are related to tobacco
+-   Lists of the names of the diseases that are related to tobacco
     and/or alcohol.  
-  - Parameters used in the modelling of single occasion drinking.  
-  - Tobacco relative risks of current vs. never smokers.
-  - Tobacco lag times.  
-  - Tobacco - alcohol risk interactions.
+-   Parameters used in the modelling of single occasion drinking.  
+-   Tobacco relative risks of current vs. never smokers.
+-   Tobacco lag times.  
+-   Tobacco - alcohol risk interactions.
 
 When these data need to be updated, the inputs and code in the package
 folder `data-raw` will need to be changed, and the package rebuild with
@@ -199,19 +199,11 @@ library(magrittr) # for pipes
 library(ggplot2) # for plotting
 ```
 
-## Citation
-
-Please cite the latest version of the package using:  
-“Duncan Gillespie, Laura Webster, Maddy Henney, Colin Angus and Alan
-Brennan (2020). tobalcepi: Risk Functions and Attributable Fractions for
-Tobacco and Alcohol. R package version x.x.x.
-<https://stapm.gitlab.io/r-packages/tobalcepi>”
-
 ## References
 
-<div id="refs" class="references hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-Angus2018">
+<div id="ref-Angus2018" class="csl-entry">
 
 Angus, Colin, M Henney, L Webster, and Duncan Gillespie. 2018.
 “Alcohol-Attributable Diseases and Dose-Response Curves for the
@@ -220,11 +212,11 @@ Sheffield. <https://doi.org/10.15131/shef.data.6819689.v2>.
 
 </div>
 
-<div id="ref-webster2018risk">
+<div id="ref-webster2018risk" class="csl-entry">
 
 Webster, Laura, Colin Angus, Alan Brennan, and Duncan Gillespie. 2018.
-“Smoking and the Risks of Adult Diseases.” The University of
-Sheffield. <https://doi.org/10.15131/shef.data.7411451.v1>.
+“Smoking and the Risks of Adult Diseases.” The University of Sheffield.
+<https://doi.org/10.15131/shef.data.7411451.v1>.
 
 </div>
 

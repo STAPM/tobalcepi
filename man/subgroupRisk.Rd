@@ -57,7 +57,7 @@ For use only if average risk is stratified by single years of age. Defaults to F
 Returns a data table containing the subgroup specific summaries for each disease.
 }
 \description{
-Calculate the sum of the relative risk for all individuals in a subgroup,
+Calculate the average relative risk across individuals in a subgroup,
 or calculate the subgroup specific attributable fraction based on the current relative risks.
 }
 \details{

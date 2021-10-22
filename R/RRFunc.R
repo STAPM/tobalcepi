@@ -98,7 +98,9 @@
 #' @param tobalc_int_data Data table containing the disease-specific interactions between tobacco and alcohol.
 #' @param show_progress Logical - Should the progress of the loop through diseases be shown. Defaults to FALSE.
 #' @param within_model Logical - is the function being used within a STAPM simulation. 
-#' Defaults to TRUE.
+#' Defaults to TRUE. This is used only to determine which version of the alcohol binge model function to use - 
+#' there is a version that suits the STAPM model by using only the age, sex and IMD quintile variables 
+#' that are tracked within the STAPM model simulation.
 #' 
 #' @return Two data tables are returned:
 #' \itemize{

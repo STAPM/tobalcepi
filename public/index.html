@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -100,14 +100,14 @@
 <div id="relative-risk-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#relative-risk-data" class="anchor"></a>Relative risk data</h2>
-<p>The disease lists and risk functions in this package all have published sources, which we have referenced (Angus et al. <a href="#ref-Angus2018">2018</a>; Webster et al. <a href="#ref-webster2018risk">2018</a>). We have written some working <a href="https://stapm.gitlab.io/r-packages/tobalcepi/articles/index.html">technical descriptions</a> to explain how these risk functions are implemented in STAPM. We store the master files for our tobacco and alcohol disease lists and risk functions sources in the University of Sheffield folder <code>X:/ScHARR/PR_Disease_Risk_TA/Code/tables</code>. In order to obtain mathematical descriptions of the risk functions for use in modelling, we needed to contact some authors to ask for additional information.</p>
+<p>The disease lists and risk functions in this package all have published sources, which we have referenced (<a href="#ref-Angus2018">Angus et al. 2018</a>; <a href="#ref-webster2018risk">Webster et al. 2018</a>). We have written some working <a href="https://stapm.gitlab.io/r-packages/tobalcepi/articles/index.html">technical descriptions</a> to explain how these risk functions are implemented in STAPM. We store the master files for our tobacco and alcohol disease lists and risk functions sources in the University of Sheffield folder <code>X:/ScHARR/PR_Disease_Risk_TA/Code/tables</code>. In order to obtain mathematical descriptions of the risk functions for use in modelling, we needed to contact some authors to ask for additional information.</p>
 <div id="alcohol" class="section level3">
 <h3 class="hasAnchor">
 <a href="#alcohol" class="anchor"></a>Alcohol</h3>
 <p>The high-level function for alcohol is <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>, which calculates individual risks of diseases as follows:</p>
 <ol>
 <li>
-<strong>Alcohol - partially-attributable chronic conditions</strong>: dose-response effects of current alcohol consumption on disease risk (Angus et al. <a href="#ref-Angus2018">2018</a>) are hard-coded into the function <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>. Updates to these risk functions must therefore be made by changing the function code.<br>
+<strong>Alcohol - partially-attributable chronic conditions</strong>: dose-response effects of current alcohol consumption on disease risk (<a href="#ref-Angus2018">Angus et al. 2018</a>) are hard-coded into the function <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>. Updates to these risk functions must therefore be made by changing the function code.<br>
 </li>
 <li>
 <strong>Alcohol - partially-attributable acute conditions</strong>: dose-response effects of single-occasion alcohol consumption are hard coded into the function <code><a href="reference/PArisk.html">tobalcepi::PArisk()</a></code>, which is called by <code><a href="reference/RRalc.html">tobalcepi::RRalc()</a></code>.<br>
@@ -124,7 +124,7 @@
 <a href="#tobacco" class="anchor"></a>Tobacco</h3>
 <ol>
 <li>
-<code><a href="reference/RRtob.html">tobalcepi::RRtob()</a></code> takes a lookup table of the risks associated with current vs. never smoking and assigns these to individuals based on their smoking state, age and sex (Webster et al. <a href="#ref-webster2018risk">2018</a>).<br>
+<code><a href="reference/RRtob.html">tobalcepi::RRtob()</a></code> takes a lookup table of the risks associated with current vs. never smoking and assigns these to individuals based on their smoking state, age and sex (<a href="#ref-webster2018risk">Webster et al. 2018</a>).<br>
 </li>
 <li>We are in the process of developing the function <code><a href="reference/RRTobDR.html">tobalcepi::RRTobDR()</a></code> to stratify the risks of some cancers according to the amount smoked per day by current smokers. There is limited info on these dose-response effects, so we are gradually building up the epidemiological detail in this area as we review, critically appraise and integrate new risk data into our modelling.</li>
 </ol>
@@ -217,21 +217,15 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span> <span class="co"># for pipes</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span> <span class="co"># for plotting</span></code></pre></div>
 </div>
-<div id="citation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#citation" class="anchor"></a>Citation</h2>
-<p>Please cite the latest version of the package using:<br>
-“Duncan Gillespie, Laura Webster, Maddy Henney, Colin Angus and Alan Brennan (2020). tobalcepi: Risk Functions and Attributable Fractions for Tobacco and Alcohol. R package version x.x.x. <a href="https://stapm.gitlab.io/r-packages/tobalcepi" class="uri">https://stapm.gitlab.io/r-packages/tobalcepi</a>”</p>
-</div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
-<div id="refs" class="references hanging-indent">
-<div id="ref-Angus2018">
-<p>Angus, Colin, M Henney, L Webster, and Duncan Gillespie. 2018. “Alcohol-Attributable Diseases and Dose-Response Curves for the Sheffield Alcohol Policy Model Version 4.0.” The University of Sheffield. <a href="https://doi.org/10.15131/shef.data.6819689.v2" class="uri">https://doi.org/10.15131/shef.data.6819689.v2</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Angus2018" class="csl-entry">
+Angus, Colin, M Henney, L Webster, and Duncan Gillespie. 2018. “Alcohol-Attributable Diseases and Dose-Response Curves for the Sheffield Alcohol Policy Model Version 4.0.” The University of Sheffield. <a href="https://doi.org/10.15131/shef.data.6819689.v2" class="uri">https://doi.org/10.15131/shef.data.6819689.v2</a>.
 </div>
-<div id="ref-webster2018risk">
-<p>Webster, Laura, Colin Angus, Alan Brennan, and Duncan Gillespie. 2018. “Smoking and the Risks of Adult Diseases.” The University of Sheffield. <a href="https://doi.org/10.15131/shef.data.7411451.v1" class="uri">https://doi.org/10.15131/shef.data.7411451.v1</a>.</p>
+<div id="ref-webster2018risk" class="csl-entry">
+Webster, Laura, Colin Angus, Alan Brennan, and Duncan Gillespie. 2018. “Smoking and the Risks of Adult Diseases.” The University of Sheffield. <a href="https://doi.org/10.15131/shef.data.7411451.v1" class="uri">https://doi.org/10.15131/shef.data.7411451.v1</a>.
 </div>
 </div>
 </div>

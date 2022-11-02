@@ -95,10 +95,10 @@ function).
 
 We use estimates of potential tobacco - alcohol risk interactions for:
 
--   Oral cavity cancer  
--   Pharyngeal cancer  
--   Laryngeal cancer  
--   Oesophageal SCC cancer
+- Oral cavity cancer  
+- Pharyngeal cancer  
+- Laryngeal cancer  
+- Oesophageal SCC cancer
 
 These estimates are stored in `tobalcepi::tob_alc_risk_int`.
 
@@ -113,12 +113,12 @@ annually.
 
 The types of data included in tobalcepi are:
 
--   Lists of the names of the diseases that are related to tobacco
-    and/or alcohol.  
--   Parameters used in the modelling of single occasion drinking.  
--   Tobacco relative risks of current vs. never smokers.
--   Tobacco lag times.  
--   Tobacco - alcohol risk interactions.
+- Lists of the names of the diseases that are related to tobacco and/or
+  alcohol.  
+- Parameters used in the modelling of single occasion drinking.  
+- Tobacco relative risks of current vs. never smokers.
+- Tobacco lag times.  
+- Tobacco - alcohol risk interactions.
 
 When these data need to be updated, the inputs and code in the package
 folder `data-raw` will need to be changed, and the package rebuild with
@@ -177,7 +177,7 @@ devtools::install_git(
   "https://gitlab.com/stapm/r-packages/tobalcepi.git", 
   credentials = git2r::cred_user_pass("uname", getPass::getPass()),
   ref = "x.x.x",
-  build_vignettes = TRUE
+  build_vignettes = FALSE
 )
 
 # Where uname is your Gitlab user name.

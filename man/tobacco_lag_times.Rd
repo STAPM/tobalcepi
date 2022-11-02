@@ -7,9 +7,6 @@
 \format{
 A data table
 }
-\source{
-
-}
 \usage{
 tobacco_lag_times
 }

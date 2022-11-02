@@ -34,7 +34,3 @@ Returns a numeric vector containing the probability that each amount of alcohol 
 Computes the probability that each integer number of grams of ethanol per day 
 is consumed on a single drinking occasion.
 }
-\examples{
-
-
-}

@@ -22,7 +22,6 @@
 #' @export
 #'
 #'
-#' @examples
 #' 
 #'
 intervalprob <- function(

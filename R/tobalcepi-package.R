@@ -5,5 +5,6 @@
 # roxygen namespace tags. Modify with care!
 ## usethis namespace: start
 #' @importFrom lifecycle deprecate_soft
+#' @importFrom stats ar
 ## usethis namespace: end
 NULL

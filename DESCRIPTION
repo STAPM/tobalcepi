@@ -58,5 +58,5 @@ RoxygenNote: 7.2.1
 Depends: 
     R (>= 2.10)
 Remotes: 
-    gitlab::stapm/r-packages/hseclean,
+    stapm/hseclean,
     gitlab::stapm/r-packages/stapmr

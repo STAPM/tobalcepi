@@ -49,7 +49,6 @@ Imports:
     crayon,
     TTR,
     Rfast,
-    stapmr,
     stats
 RdMacros: Rdpack, lifecycle
 VignetteBuilder: knitr

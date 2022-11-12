@@ -1,7 +1,7 @@
 Package: tobalcepi
 Type: Package
 Title: Risk Functions and Attributable Fractions for Tobacco and Alcohol
-Version: 1.5.2
+Version: 1.5.3
 Authors@R: 
     c(
     person(given = "Duncan",
@@ -32,9 +32,11 @@ Encoding: UTF-8
 ByteCompile: true
 LazyData: true
 Suggests: 
+    hseclean (>= 1.8.5),
     knitr,
     rmarkdown,
     roxygen2,
+    stapmr (>= 1.7.1),
     usethis
 Imports: 
     boot,
@@ -55,3 +57,6 @@ VignetteBuilder: knitr
 RoxygenNote: 7.2.1
 Depends: 
     R (>= 2.10)
+Remotes: 
+    gitlab::stapm/r-packages/hseclean,
+    gitlab::stapm/r-packages/stapmr

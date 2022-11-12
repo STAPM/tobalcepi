@@ -36,7 +36,6 @@ Suggests:
     knitr,
     rmarkdown,
     roxygen2,
-    stapmr (>= 1.7.1),
     usethis
 Imports: 
     boot,
@@ -57,6 +56,5 @@ VignetteBuilder: knitr
 RoxygenNote: 7.2.1
 Depends: 
     R (>= 2.10)
-Remotes: 
-    stapm/hseclean,
-    gitlab::stapm/r-packages/stapmr
+Remotes:  
+    STAPM/hseclean

@@ -28,7 +28,7 @@
 #'
 #' @param disease_name Character - the name of the disease under consideration.
 #' @param n_years Integer - the number of years from 1 to n over which the effect of a change in
-#' consumption emerges. Defaults to 20 years to fit with the current lag data.
+#' consumption emerges. Defaults to 40 years to fit with the current lag data.
 #' @param lag_data Data table containing the numerical description of the lag function.
 #' The data table "tobacco lag times" is embedded within the stapmr package.
 #'

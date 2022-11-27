@@ -1,9 +1,11 @@
 ---
 title: "Use of disease risks in STAPM"
-subtitle: "Vignette version number 1.1.0"
 date: "Last reviewed 06/10/21"
-author: "Duncan Gillespie, Laura Webster, Colin Angus & Alan Brennan"
-output: rmarkdown::html_vignette
+author: "Duncan Gillespie"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
 vignette: >
   %\VignetteIndexEntry{Use of disease risks in STAPM}
   %\VignetteEncoding{UTF-8}
@@ -31,49 +33,49 @@ suppressPackageStartupMessages(library(ggplot2))
 
 ```
 
-## Background
+# Background
 Tobacco and alcohol are leading causes of preventable disease and of socio-demographic inequalities in health and there is a great deal of literature that reports estimates of the relationship between tobacco or alcohol consumption and the risk of having or dying from a wide range of conditions. There is less information available to estimate how tobacco and alcohol consumption might combine to influence disease risk, and so for STAPM we needed to collate and understand the available information.   
 
 This vignette describes how we use the relative risks of disease in STAPM, written as a guide to help understand the functions in the tobalcepi package.    
 
-## Approach taken to develop the tobalcepi package  
+# Approach taken to develop the tobalcepi package  
 
-### Literature reviewing
+## Literature reviewing
 The list of diseases, their ICD-10 code definitions and the associated risk functions were collated from periodic reviews of the literature, drawing primarily on other existing reviews. See these technical reports for further information:
 
 - [Alcohol and disease risks report](https://stapm.gitlab.io/model-inputs/epi_alcohol_risk/Alcohol-attributable_diseases_and_dose-response_curves.pdf) [@Angus2018]. 
 - [Smoking and disease risks report](https://stapm.gitlab.io/model-inputs/epi_tobacco_risk/Smoking_and_the_risks_of_adult_diseases.pdf) [@Webster2018].  
 
-### Developing R functions to assign relative risks of disease to individuals
+## R functions to assign relative risks of disease to individuals
 To organise the information on the relative risks of diseases due to tobacco and alcohol consumption, and to provide functions to easily work with these data in modelling, we built the [tobalcepi R code package](https://stapm.gitlab.io/r-packages/tobalcepi/) (click on the link to the package webpage for introductory information). The R code functions are version controlled so that each project works with a specified version of the package (see the [version tracking sheet](https://docs.google.com/spreadsheets/d/1xEMhnUMXgeXbeBQtqM_yCjJ9jC6f9j4QLMFX6SToJOo/edit#gid=0)), and error-fixes and new developments can be tracked (see the [issues log](https://docs.google.com/spreadsheets/d/1Mc6FjiwHgW4vvGs62SgYpAZrPXcqWBCpltBLZeTd8V4/edit#gid=0) and [software development tasks tracking sheet](https://docs.google.com/spreadsheets/d/1u3pxDF071LYbCfRF0SESRp_hX8YXUwoAG535etZBrPM/edit#gid=0). 
 
 The function `tobalcepi::RRFunc()` does the job of assigning the relative risks of each disease to a sample of individuals according to their current alcohol and/or tobacco consumption status. `tobalcepi::RRFunc()` has options that can tailor it to assign risks based on tobacco consumption only, alcohol consumption only, or both tobacco and alcohol consumption.    
 
-## Example calculations using functions from the tobalcepi package
+# Example calculations using functions from the tobalcepi package
 To illustrate the use of the `tobalcepi` functions for different tasks, we have begun to create example workflows. You can use these examples to help understand how the code works, run them to generate model inputs, or use them as a starting point for the development of a new project (at the moment, these workflows are accessible only to the project team).  
 
 The workflows are listed below:  
 
 - [Population attributable fractions](https://gitlab.com/stapm/model-inputs/epi_pop_attrib_fractions). Working code repository for the estimation and exploration of the fractions of disease attributable to tobacco and/or alcohol. See also the [experimental Shiny app](https://stapm.shinyapps.io/PAF_viewer/) that aims to make the population attributable fraction estimates more accessible.  
 
-## Alcohol related risks of disease
+# Alcohol related risks of disease
 See the [alcohol and disease risks report](https://stapm.gitlab.io/model-inputs/epi_alcohol_risk/Alcohol-attributable_diseases_and_dose-response_curves.pdf) [@Angus2018]. The alcohol modelling considers 45 categories of adult diseases related to alcohol consumption and the corresponding dose-response effects of current levels of alcohol consumption on the relative risks of disease . The model links average weekly alcohol consumption to the risk of chronic diseases, and the amount of alcohol consumed on single drinking occasions to health harms associated with intoxication.   
 
-### Approach taken to adapt the use of "partial acute" alcohol risk functions from the methods implemented in SAPM to suit STAPM
+## "Partial acute" alcohol risk functions
 Here we describe the approach taken in STAPM to model the health harms that are partially-attributable to level of acute alcohol intake on a single occasion (i.e. related to intoxication). The health harms that we consider could be intentional or unintentional, e.g. traffic accidents, assault or falls. "Partially-attributable acute" means that the harm can occur without alcohol but the risk of occurrence changes with intoxication.    
 
 We build on the method used to model the health harms due to intoxication in the Sheffield Alcohol Policy Model (SAPM). The methods used for this module of SAPM have evolved over time. Originally, the risk of harm was inferred from external information on the alcohol attributable fractions of traffic accidents, assaults, falls etc. (described in the Purshouse et al. modelling report for NICE [-@purshouse2009nice]). The method was updated to allow SAPM to model individual exposure to the risk of harm from each drinking occasion, e.g. for how long is someone intoxicated after drinking and what is their risk of a fall injury when intoxicated -- this new method is described in two papers by Hill-McManus et al. [-@hill2014estimation;-@Hill-McManus2014]. Most recently, the method was updated to incorporate new estimates of the risk of health harms due to intoxication by Cherpitel et al. [-@cherpitel2015relative] -- these are described in the alcohol risk functions report [@Angus2018].    
 
-#### The latest SAPM method
+### The latest SAPM method
 
-##### Number of drinking occassions
+#### Number of drinking occassions
 The first step is to estimate the number of drinking occasions that an individual has in a year and we have two sources of information on this.   
 
 *Source of information 1*. The HSE asks repondents about the frequency they drank alcoholic drinks in the last 12 months (in the variable `dnoft`), offering the responses: Almost every day, Five or six days a week, Three or four days a week, Once or twice a week, Once or twice a month, Once every couple of months, Once or twice a year. For interval frequencies, we take the mid point value. We convert yearly frequencies to weekly frequency. For example, Three or four days a week becomes 3.5 times a week. This processing is done by the function `hseclean::alc_drink_now_allages()` that calls the function `hseclean::alc_drink_freq()`.      
 
 *Source of information 2*. Hill-McManus et al. [-@hill2014estimation] developed a method to estimate the number of drinking occasions per year using data from detailed diaries in the National Diet and Nutrition Survey (NDNS) 2000/2001. Using the regression coefficients from this study, it is possible to predict each individual's expected number of drinking occasions across the year, the average amount they drunk on an occasion, the variability in the amount drunk among occasions, and how these vary socio-demographically. Hill-McManus et al. use a negative binomial regression model for the number of weekly drinking occasions (see their Table 3). The explanatory variables for the number of weekly drinking occasions were: log weekly mean consumption, age, income (in poverty or not), ethnicity (white/non-white), age left education, number of children, social class (manual/non-manual). From the regression coefficients we calculate the expected number of weekly drinking occasions for each individual in the HSE data (implemented in the STAPM code by the function `tobalcepi::AlcBinge()`). Note that this model was fitted to a population sample aged below 65 years, but we assume the effect at 55--65 years applies at older ages too.     
 
-##### Amount drunk on drinking occasions
+#### Amount drunk on drinking occasions
 The second step is to estimate the distribution of the amounts that each individual drinks on their drinking occasions. The HSE does not provide this information -- it asks questions on the number of units that each individual drank on their heaviest drinking day in the last seven days but this does not tell us about the distribution of amounts drunk across all drinking occasions in a year.    
 
 SAPM uses the method developed by Hill-McManus et al. [-@hill2014estimation] -- there are two parts to the process of estimating the distribution of amount drunk.   
@@ -88,7 +90,7 @@ Second, estimate the individual-level variability in the amount consumed across 
 
 In the STAPM code, the function `tobalcepi::AlcBinge()` uses the HSE data and the regression coefficients from Hill-McManus et al. to infer the mean and standard deviation of amount drunk on each drinking occasion by individuals who drink. From these two parameters, we then calculate individual-specific probability density functions of the amount of alcohol consumed on a drinking occasion (in the STAPM code, this is done within the function `tobalcepi::PArisk()`).   
 
-##### Time spent intoxicated
+#### Time spent intoxicated
 The third step is to estimate each individual's annual exposure to the risk of health harms due to intoxication, as defined by the amount of time that they spend intoxicated during a year (here we use 'intoxicated' to mean having a percentage blood alcohol content (\%BAC) greater than zero). The method that we use to estimate the time that each individual spends intoxicated over a year is described in Hill-McManus et al. [-@Hill-McManus2014], who drew on Taylor et al. [-@taylor2011combining].     
 
 The expected duration of intoxication for each amount of alcohol drunk on an occassion is defined in terms of the time, in hours, after a drinking occasion that it would take for an individual's \%BAC to drop to zero. The calculation of this time considers:   
@@ -103,7 +105,7 @@ To simplify the calculation, we do not consider the rate of alcohol absorption (
 
 The calculation of the time that each individual spends intoxicated in a year multiplies the probability that each level of alcohol is consumed on a drinking occasion by the expected duration of intoxication for each amount of alcohol that could be drunk on an occasion. This is then multiplied by the expected number of drinking occasions per week and by 52 weeks in a year. Finally, the time spent intoxicated is summed to give the expected time spent intoxicated in a year (in the STAPM code, this is implemented by the function `tobalcepi::PArisk()`).     
 
-##### The annual relative risk of partially-attributable acute conditions
+#### The annual relative risk of partially-attributable acute conditions
 The relative risks for alcohol-related injuries are taken from Cherpitel et al. [-@cherpitel2015relative] and described in our alcohol risk functions report [@Angus2018]. Note that Cherpitel et al. report relative risks by the number of standard drinks consumed (we assume 1 Std. drink = 16ml (12.8g) of ethanol). The risk functions in Cherpital differ by four causes of health harm, which we map onto our disease list as follows:       
 
 - Traffic   
@@ -121,7 +123,7 @@ To calculate the annual relative risk for each condition, we do the following:
 
 The final estimate of each individual's annual relative risk of a partially-attributable acute condition is the average risk considering time spent intoxicated and time not spent intoxicated (in the STAPM code the calculations are implemented by the function `tobalcepi::PArisk()`).     
 
-##### Adaptation to suit STAPM
+#### Adaptation to suit STAPM
 *The problem*  
 STAPM uses a different method of modelling to SAPM in that STAPM tracks individuals as they age (the within-cohort dynamics) but SAPM does not -- instead SAPM models changes over time (in one-year time steps) to repeated cross-sectional samples of individuals from the HSE. The method described above is easily applied to a sample of individuals from the HSE (the SAPM method), because the HSE contains the necessary covariate (i.e. in the HSE sample there is also data on ethnicity, income, number of children etc.). For STAPM to use the method, would require it to also track the individual age trajectories of traits such as income -- and this is beyond the current scope of the STAPM modelling.    
 
@@ -131,10 +133,10 @@ The STAPM modelling tracks the individual age trajectories of the average weekly
 *Implementing in the STAPM code*   
 The code to average the parameter values from Hill-McManus et al is in the folder `data-raw/binge_params` within the `tobalcepi` package. This code also averages individual height and weight by age, sex and IMD quintile, for use in the calculations of time spent intoxicated. A new function `tobalcepi::AlcBinge_stapm()` has been written to implement the calculations using these averaged parameter values. The functions `tobalcepi::RRAlc()` and `tobalcepi::PArisk()` have also had minor edits so that they work with the `tobalcepi::AlcBinge_stapm()` function.    
 
-### Approach taken in STAPM to model the risk of chronic diseases wholly attributable to alcohol
+## Chronic diseases wholly attributable to alcohol
 Here we describe the approach taken in STAPM to model the chronic health harms that are wholly-attributable to long-term high levels of alcohol consumption. The health harms that we consider in this category are: Alcoholic cardiomyopathy, Alcoholic gastritis, Alcoholic liver disease, Acute pancreatitis alcohol induced, Chronic pancreatitis alcohol induced, Alcohol induced pseudo-cushings syndrome, Alcoholic myopathy, Alcoholic polyneuropathy, Maternal care for suspected damage to foetus from alcohol, Degeneration, Mental and behavioural disorders due to use of alcohol [@Angus2018]. "Wholly-attributable" means that these conditions cannot occur without alcohol (i.e. all cases are due to alcohol consumption).    
 
-#### The SAPM method
+### The SAPM method
 We build on the method used to model the chronic health harms that are wholly-attributable to alcohol in the Sheffield Alcohol Policy Model (SAPM). The main issue is that there is minimal available evidence on the relationship between the level of long-term alcohol consumption and the risk of chronic harms that were wholly attributable to alcohol. Assumptions are therefore needed about the shape of the risk function that links alcohol consumption to the risk of wholly alcohol attributable chronic conditions (the approach taken is described on page 28 in the Purshouse et al. modelling report for NICE [-@purshouse2009nice]).    
 
 When the UK healthy drinking guidelines were revised, the thresholds used were revised to 2 units/day for females and males (14 units/week). Figure 1 shows the shape of the risk function currently used in SAPM.         
@@ -160,13 +162,13 @@ ggplot(data) +
 
 ```
 
-#### Implementing in the STAPM code  
+### Implementing in the STAPM code  
 The SAPM method is implemented unchanged in the STAPM code, within the function `tobalcepi::RRalc()`.   
 
-### Approach taken in STAPM to model the risk of acute diseases wholly attributable to alcohol
+## Acute diseases wholly attributable to alcohol
 Here we describe the approach taken in STAPM to model the health harms that are wholly-attributable to level of acute alcohol intake on a single occasion. The health harms that we consider in this category are conditions associated with the effects of excessive blood level of alcohol, toxic effects of alcohol, alcohol poisoning, and acute intoxication. "Wholly-attributable acute" means that these conditions cannot occur without alcohol (i.e. all cases are due to alcohol consumption) and the risk of these conditions changes with acute exposure to alcohol.    
 
-#### The SAPM method
+### The SAPM method
 We build on the method used to model the acute health harms that are wholly-attributable to alcohol in the Sheffield Alcohol Policy Model (SAPM).   
 
 The main issue to be overcome in the development of SAPM was that there was no available evidence on the relationship between the level of acute exposure to alcohol within a single drinking occasion and the risk of acute harms that were wholly attributable to this acute exposure. Assumptions therefore needed to be made about the shape of the risk function that links the level of single occasion drinking to the risk of acute harms (the approach taken is described on page 29 in the Purshouse et al. modelling report for NICE [-@purshouse2009nice]).   
@@ -194,7 +196,7 @@ ggplot(data) +
 
 ```
 
-#### Adaptation to suit STAPM
+### Adaptation to suit STAPM
 
 *The problem*  
 The main difference between SAPM and STAPM is that STAPM simulates the individual life-course dynamics of the average weekly amount of alcohol consumed - STAPM does not simulate the dynamics of the amount drunk on the heaviest drinking day. This means that for STAPM, we need to develop a method to link the risk of acute harms that are wholly-attributable to alcohol consumption to average weekly alcohol consumption.      
@@ -205,10 +207,10 @@ The solution is to draw on the methods described in `vignette("alc_partially_att
 *Implementing in the STAPM code*   
 A new function `tobalcepi::WArisk_acute()` has been created to calculate the total number of units that each individual is expected to drink above the single ocassion binge drinking thresholds. This function is called from within the function `tobalcepi::RRalc()` and uses the parameters outputs by `tobalcepi::AlcBinge_stapm()`.   
 
-### Lag times in the effect of changes in alcohol consumption on disease risk
+## Lag times between changes in alcohol consumption and disease risk
 All lag times are taken from the review by [@holmes2012temporal] and are the numbers used in the current version of SAPM.  
 
-## Tobacco related risks of disease
+# Tobacco related risks of disease
 See the [smoking and disease risks report](https://stapm.gitlab.io/model-inputs/epi_tobacco_risk/Smoking_and_the_risks_of_adult_diseases.pdf) [@Webster2018]. The Sheffield Tobacco Policy Model (STPM) considers 52 adult diseases related to smoking and the corresponding relative risks of developing these diseases in current vs. never smokers, and in former smokers according to the time since they quit. The first step carried out by `tobalcepi::RRFunc()` is to assign both current and former smokers the relative risk for each disease associated with current smoking. It does this using the function `tobalcepi::RRTob()`.    
 
 For current smokers, the current version of the modelling assumes that the relative risks of disease are the same for all smokers regardless of the amount currently smoked and the length of time as a smoker, although we have begun to review and incorporate available dose-response risk functions for smoking (the function `tobalcepi::RRTobDR()` estimates each individual in the data their dose-response relative risk based on the number of cigarettes they consume per day). STPM is also currently limited to the consideration of diseases that affect the consumer themselves e.g. excluding secondary effects of smoking.    
@@ -223,7 +225,7 @@ The notable omissions from our list are:
 
 For oesophageal cancer, our discussions with CRUK concluded that we should distinguish between adenocarcinoma (AC) and squamous cell carcinoma (SCC). However, it is not possible to distinguish these subtypes from the routinely recorded ICD-10 codes. We therefore settled on the following approach: We apportion overall oesophageal cancer prevalence between AC and SCC using estimates of percentage prevalence by age and sex shared with us by CRUK; these data are for 2014 for England and derive from UK cancer registry on the number of oesophageal SCCs.  
 
-### Risk in former smokers {#formersmokerrisk}
+## Risk in former smokers {#formersmokerrisk}
 To estimate the risk of disease for former smokers we used the findings of Kontis et al. [-@Kontis2014], who re-analysed the change in risk after smoking in the ACS-CPS II study from Oza et al.[-@Oza2011]. Since Kontis et al. only provide estimates for cancers, CVD or COPD, we had to decide how to specify the rates of decline in the risks due to smoking after quitting for other diseases. Kontis et al. [-@Kontis2014] consider this issue for type II diabetes, stating that "Randomised trials also indicate that the benefits of behaviour change and pharmacological treatment on diabetes risk occur within a few years, more similar to the CVDs than cancers [@Knowler2002]. Therefore, we used the CVD curve for diabetes." In-line with Kontis et al. [-@Kontis2014], we apply the rate of decline in risk of CVD after quitting smoking to type II diabetes.  
 
 We had to make further assumptions about how the risk due to smoking declines after quitting for other diseases (these assumptions are under review and their influence on model findings can be tested with sensitivity analyses). Our default is to assume that the decline in risk for all respiratory conditions follows Kontis et al.'s [-@Kontis2014] estimates for COPD. For other diseases, we might assume that the decline in relative risk follows the cancer curve (the slowest decline in risk), that the additional risk from smoking disappears immediately following quitting (the fastest decline in risk), or that the risk immediately falls to the average risk in former smokers identified from meta-analyses (potentially a middle-ground option, although these estimates will be influenced by differences in study design e.g. in average length of follow-up). The default option in the current version of STPM is to apply the most conservative option that the decline in risk for other diseases follows the cancer curve.    
@@ -236,7 +238,7 @@ RR_{former}=1+[RR_{current}-1][1-p(f)],
 
 in which the relative risk ($RR$) associated with current smoking is scaled according to our estimates of the proportional reduction in the risk ($p$) associated with their number of years ($f$) as a former smoker. After someone has been quit for 40 years, we assume their risk reverts back to be the same as a never smoker.  
 
-## Tobacco–Alcohol interactions in disease risk
+# Tobacco–Alcohol interactions in disease risk
 See the [smoking and disease risks report](https://stapm.gitlab.io/model-inputs/epi_tobacco_risk/Smoking_and_the_risks_of_adult_diseases.pdf) [@Webster2018] for a short section on tobacco-alcohol risk interactions.  
 
 There is evidence for the risk of disease in someone who consumes both tobacco and alcohol ($RR_{ta}$) being higher than would be expected from combining the independent risks from tobacco ($RR_t$) and alcohol ($RR_a$). This additional risk due to tobacco-alcohol interaction (over and above the combination of the independent contributions to risk from tobacco and alcohol) can be expressed as a "synergy factor" (1) [@Prabhu2014;@Hashibe2009].   
@@ -247,7 +249,7 @@ SF = \frac{RR_{ta}}{(RR_t - 1) + (RR_a - 1)}
 
 Data on the synergistic effects of tobacco and alcohol risks are stored in `tobalcepi::tob_alc_risk_int` and applied in modelling by the function `tobalcepi::TobAlcInt()`.  
 
-## References
+# References
 
 
 

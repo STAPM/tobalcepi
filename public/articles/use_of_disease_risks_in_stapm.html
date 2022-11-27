@@ -89,10 +89,8 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Use of disease risks in STAPM</h1>
-            <h3 data-toc-skip class="subtitle">Vignette version number
-1.1.0</h3>
                         <h4 data-toc-skip class="author">Duncan
-Gillespie, Laura Webster, Colin Angus &amp; Alan Brennan</h4>
+Gillespie</h4>
             
             <h4 data-toc-skip class="date">Last reviewed 06/10/21</h4>
       
@@ -140,8 +138,7 @@ and disease risks report</a> <span class="citation">(<a href="#ref-Webster2018" 
 </ul>
 </div>
 <div class="section level3">
-<h3 id="developing-r-functions-to-assign-relative-risks-of-disease-to-individuals">Developing R functions to assign relative risks of disease to
-individuals<a class="anchor" aria-label="anchor" href="#developing-r-functions-to-assign-relative-risks-of-disease-to-individuals"></a>
+<h3 id="r-functions-to-assign-relative-risks-of-disease-to-individuals">R functions to assign relative risks of disease to individuals<a class="anchor" aria-label="anchor" href="#r-functions-to-assign-relative-risks-of-disease-to-individuals"></a>
 </h3>
 <p>To organise the information on the relative risks of diseases due to
 tobacco and alcohol consumption, and to provide functions to easily work
@@ -194,8 +191,7 @@ consumption to the risk of chronic diseases, and the amount of alcohol
 consumed on single drinking occasions to health harms associated with
 intoxication.</p>
 <div class="section level3">
-<h3 id="approach-taken-to-adapt-the-use-of-partial-acute-alcohol-risk-functions-from-the-methods-implemented-in-sapm-to-suit-stapm">Approach taken to adapt the use of “partial acute” alcohol risk
-functions from the methods implemented in SAPM to suit STAPM<a class="anchor" aria-label="anchor" href="#approach-taken-to-adapt-the-use-of-partial-acute-alcohol-risk-functions-from-the-methods-implemented-in-sapm-to-suit-stapm"></a>
+<h3 id="partial-acute-alcohol-risk-functions">“Partial acute” alcohol risk functions<a class="anchor" aria-label="anchor" href="#partial-acute-alcohol-risk-functions"></a>
 </h3>
 <p>Here we describe the approach taken in STAPM to model the health
 harms that are partially-attributable to level of acute alcohol intake
@@ -432,8 +428,7 @@ have also had minor edits so that they work with the
 </div>
 </div>
 <div class="section level3">
-<h3 id="approach-taken-in-stapm-to-model-the-risk-of-chronic-diseases-wholly-attributable-to-alcohol">Approach taken in STAPM to model the risk of chronic diseases wholly
-attributable to alcohol<a class="anchor" aria-label="anchor" href="#approach-taken-in-stapm-to-model-the-risk-of-chronic-diseases-wholly-attributable-to-alcohol"></a>
+<h3 id="chronic-diseases-wholly-attributable-to-alcohol">Chronic diseases wholly attributable to alcohol<a class="anchor" aria-label="anchor" href="#chronic-diseases-wholly-attributable-to-alcohol"></a>
 </h3>
 <p>Here we describe the approach taken in STAPM to model the chronic
 health harms that are wholly-attributable to long-term high levels of
@@ -481,8 +476,7 @@ the function <code><a href="../reference/RRalc.html">tobalcepi::RRalc()</a></cod
 </div>
 </div>
 <div class="section level3">
-<h3 id="approach-taken-in-stapm-to-model-the-risk-of-acute-diseases-wholly-attributable-to-alcohol">Approach taken in STAPM to model the risk of acute diseases wholly
-attributable to alcohol<a class="anchor" aria-label="anchor" href="#approach-taken-in-stapm-to-model-the-risk-of-acute-diseases-wholly-attributable-to-alcohol"></a>
+<h3 id="acute-diseases-wholly-attributable-to-alcohol">Acute diseases wholly attributable to alcohol<a class="anchor" aria-label="anchor" href="#acute-diseases-wholly-attributable-to-alcohol"></a>
 </h3>
 <p>Here we describe the approach taken in STAPM to model the health
 harms that are wholly-attributable to level of acute alcohol intake on a
@@ -565,8 +559,8 @@ function is called from within the function
 </div>
 </div>
 <div class="section level3">
-<h3 id="lag-times-in-the-effect-of-changes-in-alcohol-consumption-on-disease-risk">Lag times in the effect of changes in alcohol consumption on disease
-risk<a class="anchor" aria-label="anchor" href="#lag-times-in-the-effect-of-changes-in-alcohol-consumption-on-disease-risk"></a>
+<h3 id="lag-times-between-changes-in-alcohol-consumption-and-disease-risk">Lag times between changes in alcohol consumption and disease
+risk<a class="anchor" aria-label="anchor" href="#lag-times-between-changes-in-alcohol-consumption-and-disease-risk"></a>
 </h3>
 <p>All lag times are taken from the review by <span class="citation">(<a href="#ref-holmes2012temporal" role="doc-biblioref">Holmes et al.
 2012</a>)</span> and are the numbers used in the current version of
@@ -719,7 +713,7 @@ SF = \frac{RR_{ta}}{(RR_t - 1) + (RR_a - 1)}
 stored in <code><a href="../reference/tob_alc_risk_int.html">tobalcepi::tob_alc_risk_int</a></code> and applied in
 modelling by the function <code><a href="../reference/TobAlcInt.html">tobalcepi::TobAlcInt()</a></code>.</p>
 </div>
-<div class="section level2 unnumbered">
+<div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent">

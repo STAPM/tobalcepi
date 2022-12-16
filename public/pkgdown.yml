@@ -1,10 +1,10 @@
-pandoc: 2.19.2
+pandoc: '2.18'
 pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   tobalcepi: tobalcepi.html
   use_of_disease_risks_in_stapm: use_of_disease_risks_in_stapm.html
-last_built: 2022-11-27T14:20Z
+last_built: 2022-12-16T11:30Z
 urls:
   reference: https://stapm.gitlab.io/r-packages/tobalcepi/reference
   article: https://stapm.gitlab.io/r-packages/tobalcepi/articles

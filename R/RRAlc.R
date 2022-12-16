@@ -39,7 +39,6 @@
 #' @return Returns a numeric vector of each individual's relative risks for the alcohol related disease specified by "disease".
 #' 
 #' @importFrom data.table := setDT setnames fifelse
-#' @importFrom stapmr %fin%
 #' 
 #' @export
 #' 

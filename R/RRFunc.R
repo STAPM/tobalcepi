@@ -112,7 +112,6 @@
 #' 
 #' 
 #' @importFrom data.table := setDT setnames copy rbindlist
-#' @importFrom stapmr %fin%
 #' 
 #' @export
 #' 

@@ -17,7 +17,6 @@
 #' on an individual's relative risk of disease has so far emerged.
 #' 
 #' @importFrom data.table := setDT setnames data.table
-#' @importFrom stapmr %fin%
 #' 
 #' @references
 #' \insertRef{holmes2012temporal}{tobalcepi}  

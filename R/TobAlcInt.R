@@ -26,7 +26,6 @@
 #' specified by "disease".
 #' 
 #' @importFrom data.table := setDT setnames copy
-#' @importFrom stapmr %fin%
 #' 
 #' @export
 #' @references

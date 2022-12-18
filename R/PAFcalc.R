@@ -51,28 +51,37 @@
 #' }
 #' 
 PAFcalc <- function(
-  data = NULL,
-  rrdata = NULL,
-  substance,
-  tob_include_risk_in_former_smokers = TRUE,
-  alc_protective = TRUE,
-  alc_wholly_chronic_thresholds = c(2, 2),
-  alc_wholly_acute_thresholds = c(3, 4),
-  grams_ethanol_per_unit = 8,
-  use_weights = FALSE,
-  year_range = "all",
-  pool = FALSE,
-  subgroups = c("sex", "age_cat"),
-  tobalc_include_int = FALSE,
-  within_model = FALSE,
-  mort_or_morb = c("mort", "morb")[1]
+    data = NULL,
+    rrdata = NULL,
+    substance,
+    tob_include_risk_in_former_smokers = TRUE,
+    alc_protective = TRUE,
+    alc_wholly_chronic_thresholds = c(2, 2),
+    alc_wholly_acute_thresholds = c(3, 4),
+    grams_ethanol_per_unit = 8,
+    use_weights = FALSE,
+    year_range = "all",
+    pool = FALSE,
+    subgroups = c("sex", "age_cat"),
+    tobalc_include_int = FALSE,
+    within_model = FALSE,
+    mort_or_morb = c("mort", "morb")[1]
 ) {
   
-
+  
   
   if(is.null(rrdata)) {
     
-    years <- min(data$year):max(data$year)
+    if(is.character(year_range)) {
+      
+      years <- min(data$year):max(data$year)
+      
+    } else {
+      
+      years <- year_range
+      
+    }
+    
     
     cat("Assigning relative risks\n")
     
@@ -115,7 +124,7 @@ PAFcalc <- function(
       
     }
     
-  
+    
     
     
   } else {
@@ -130,7 +139,7 @@ PAFcalc <- function(
     data_rr_comb <- data_rr_comb[ , c("Ischaemic_heart_disease", "LiverCirrhosis", "Haemorrhagic_Stroke", "Ischaemic_Stroke") := NULL]
     setnames(data_rr_comb, paste0(c("Ischaemic_heart_disease", "LiverCirrhosis", "Haemorrhagic_Stroke", "Ischaemic_Stroke"), "_morb"), c("Ischaemic_heart_disease", "LiverCirrhosis", "Haemorrhagic_Stroke", "Ischaemic_Stroke"))
   }
-
+  
   
   
   # Calculate PAFs

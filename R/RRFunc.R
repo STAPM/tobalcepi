@@ -293,6 +293,11 @@ RRFunc <- function(
   #########################################
   # Extra setup for alcohol related risk
   
+  #data_temp <- copy(data)
+  #data1 <- tobalcepi::AlcBinge_stapm(data_temp)
+  #data2 <- tobalcepi::AlcBinge(data_temp)
+  
+  
   if(substance %in% c("alc", "tobalc")) {
     
     if(isTRUE(within_model)) {

@@ -1,0 +1,21 @@
+
+The aim of this code is to process the parameters that allow the modelling of 
+acute harms that are partially attributable to alcohol in STAPM
+
+# This is the SAPM method
+data_sapm_test <- tobalcepi::AlcBinge(data)
+
+adapt the method to predict the number of drinking occassions 
+and the distribution of amount consumed 
+as a function of the average weekly amount of alcohol consumed, age, sex and IMD quintile. 
+
+assign the parameter values from Hill-McManus et al. to each individual 
+and then average these values by age, sex and IMD quintile 
+
+the IMD quintile averages will then reflect the variation among IMD quintiles 
+in the distribution of ethnicity, income, number of children etc.
+
+
+
+
+

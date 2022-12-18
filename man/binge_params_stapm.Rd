@@ -3,7 +3,7 @@
 \docType{data}
 \name{binge_params_stapm}
 \alias{binge_params_stapm}
-\title{Parameters to estimate amount drunk on single occasions - STAPM version}
+\title{Parameters to estimate amount drunk on single occasions - England - STAPM version}
 \format{
 A list of four data tables (1 = Negative binomial regression model for the number of weekly drinking occasions, 
 2 = Fitted Heckman selection model for probability that an individual drinks on at least 3 separate occasions during the diary period, 

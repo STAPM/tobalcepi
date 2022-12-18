@@ -80,6 +80,7 @@ reference:
   - WArisk_acute
   - binge_params
   - binge_params_stapm
+  - binge_params_stapm_scot
 - subtitle: "Alcohol lag times"
   contents:
   - AlcLags

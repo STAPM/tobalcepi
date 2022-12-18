@@ -3,7 +3,7 @@
 \docType{data}
 \name{binge_params}
 \alias{binge_params}
-\title{Parameters to estimate amount drunk on single occassions}
+\title{Parameters to estimate amount drunk on single occasions}
 \format{
 A list of three data tables (1 = Table 3, 2 = Table 5, 3 = Table 6)
 }
@@ -24,6 +24,6 @@ Table 5 - Fitted Heckman selection model for probability that an individual drin
 Table 6 - Fitted Heckman outcome regression results for the standard deviation in the quantity of alcohol consumed in a drinking occasion   
 
 We do not use parameter estimates from Table 4 - Fitted Tobit regression model for the mean grams of alcohol consumed during a drinking occasion. 
-This is because we calculate from the data by dividing the weekly mean alcohol consumption by the estimated number of weekly drinking occassions.
+This is because we calculate from the data by dividing the weekly mean alcohol consumption by the estimated number of weekly drinking occasions.
 }
 \keyword{datasets}

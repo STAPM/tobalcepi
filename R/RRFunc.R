@@ -101,6 +101,7 @@
 #' Defaults to TRUE. This is used only to determine which version of the alcohol binge model function to use - 
 #' there is a version that suits the STAPM model by using only the age, sex and IMD quintile variables 
 #' that are tracked within the STAPM model simulation.
+#' @param country Character string - "England" or "Scotland"
 #' 
 #' @return Two data tables are returned:
 #' \itemize{
@@ -232,23 +233,24 @@
 #'
 #' }
 RRFunc <- function(
-  data,
-  substance = c("tob", "alc", "tobalc"),
-  k_year = NULL,
-  alc_diseases = tobalcepi::alc_disease_names,
-  alc_mort_and_morb = c("ischaemic_heart_disease", "livercirrhosis", "haemorrhagic_stroke", "ischaemic_stroke"),
-  alc_risk_lags = TRUE,
-  alc_indiv_risk_trajectories_store = NULL,
-  alc_protective = TRUE,
-  alc_wholly_chronic_thresholds = c(2, 2),
-  alc_wholly_acute_thresholds = c(3, 4),
-  grams_ethanol_per_unit = 8,
-  tob_diseases = tobalcepi::tob_disease_names,
-  tob_include_risk_in_former_smokers = TRUE,
-  tobalc_include_int = FALSE,
-  tobalc_int_data = tobalcepi::tob_alc_risk_int,
-  show_progress = FALSE,
-  within_model = TRUE
+    data,
+    substance = c("tob", "alc", "tobalc"),
+    k_year = NULL,
+    alc_diseases = tobalcepi::alc_disease_names,
+    alc_mort_and_morb = c("ischaemic_heart_disease", "livercirrhosis", "haemorrhagic_stroke", "ischaemic_stroke"),
+    alc_risk_lags = TRUE,
+    alc_indiv_risk_trajectories_store = NULL,
+    alc_protective = TRUE,
+    alc_wholly_chronic_thresholds = c(2, 2),
+    alc_wholly_acute_thresholds = c(3, 4),
+    grams_ethanol_per_unit = 8,
+    tob_diseases = tobalcepi::tob_disease_names,
+    tob_include_risk_in_former_smokers = TRUE,
+    tobalc_include_int = FALSE,
+    tobalc_int_data = tobalcepi::tob_alc_risk_int,
+    show_progress = FALSE,
+    within_model = TRUE,
+    country = c("England", "Scotland")[1]
 ) {
   
   
@@ -308,7 +310,18 @@ RRFunc <- function(
       # based on the coefficients from Hill-McManus et al 2014
       
       # new version of function - adapted to new STAPM modelling
-      data <- tobalcepi::AlcBinge_stapm(data)
+      
+      if(country == "England") {
+        binge_params_sim <- tobalcepi::binge_params_stapm
+      }
+      
+      if(country == "Scotland") {
+        binge_params_sim <- tobalcepi::binge_params_stapm_scot
+      }
+      
+      data <- tobalcepi::AlcBinge_stapm(
+        data = data, 
+        params = binge_params_sim)
       
     } else {
       

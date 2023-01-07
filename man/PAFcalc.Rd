@@ -19,7 +19,8 @@ PAFcalc(
   subgroups = c("sex", "age_cat"),
   tobalc_include_int = FALSE,
   within_model = FALSE,
-  mort_or_morb = c("mort", "morb")[1]
+  mort_or_morb = c("mort", "morb")[1],
+  country = c("England", "Scotland")[1]
 )
 }
 \arguments{
@@ -70,6 +71,8 @@ from the results of a STAPM model simulation. Defaults to FALSE.}
 
 \item{mort_or_morb}{Character string - whether the risk functions for conditions with separate mortality and morbidity risk functions 
 should refer to mortality or morbidity. Values could be "mort" or "morb". Default is "mort".}
+
+\item{country}{Character string - "England" or "Scotland"}
 }
 \value{
 Returns a data.table containing the estimated PAFs.

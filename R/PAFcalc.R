@@ -28,6 +28,7 @@
 #' from the results of a STAPM model simulation. Defaults to FALSE.
 #' @param mort_or_morb Character string - whether the risk functions for conditions with separate mortality and morbidity risk functions 
 #' should refer to mortality or morbidity. Values could be "mort" or "morb". Default is "mort".
+#' @param country Character string - "England" or "Scotland"
 #' 
 #' @return Returns a data.table containing the estimated PAFs.
 #' 
@@ -65,7 +66,8 @@ PAFcalc <- function(
     subgroups = c("sex", "age_cat"),
     tobalc_include_int = FALSE,
     within_model = FALSE,
-    mort_or_morb = c("mort", "morb")[1]
+    mort_or_morb = c("mort", "morb")[1],
+    country = c("England", "Scotland")[1]
 ) {
   
   
@@ -110,7 +112,8 @@ PAFcalc <- function(
         grams_ethanol_per_unit = grams_ethanol_per_unit,
         show_progress = TRUE,
         within_model = within_model,
-        tobalc_include_int = tobalc_include_int)
+        tobalc_include_int = tobalc_include_int,
+        country = country)
       
       if(y == years[1]) {
         

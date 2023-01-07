@@ -22,7 +22,8 @@ RRFunc(
   tobalc_include_int = FALSE,
   tobalc_int_data = tobalcepi::tob_alc_risk_int,
   show_progress = FALSE,
-  within_model = TRUE
+  within_model = TRUE,
+  country = c("England", "Scotland")[1]
 )
 }
 \arguments{
@@ -87,6 +88,8 @@ are considered.}
 Defaults to TRUE. This is used only to determine which version of the alcohol binge model function to use - 
 there is a version that suits the STAPM model by using only the age, sex and IMD quintile variables 
 that are tracked within the STAPM model simulation.}
+
+\item{country}{Character string - "England" or "Scotland"}
 }
 \value{
 Two data tables are returned:

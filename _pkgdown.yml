@@ -32,7 +32,7 @@ navbar:
      text: Technical documentation
      menu:
       - text: Disease risk methods
-        href: use_of_disease_risks_in_stapm.html
+        href: articles/use_of_disease_risks_in_stapm.html
     github:
      icon: fab fa-github fa-lg
      href: https://github.com/STAPM/tobalcepi

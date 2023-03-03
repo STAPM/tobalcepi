@@ -62,7 +62,7 @@ The code on Github (https://github.com/STAPM/tobalcepi) is a mirror of the code 
 
 ## Citation
 
-Gillespie D, Webster L, Henney M, Brennan A, Angus C ([YEAR]). tobalcepi: An R Package for Relative Risks and Population Attributable Fractions of Diseases Related to Tobacco and Alcohol. R package version [x.x.x]. University of Sheffield. https://stapm.github.io/tobalcepi/. doi: https://doi.org/10.17605/OSF.IO/XQ8MV
+Gillespie D, Webster L, Henney M, Brennan A, Angus C ([YEAR]). tobalcepi: An R Package for Computing the Relative Risks and Population Attributable Fractions of Diseases Related to Tobacco and Alcohol. R package version [x.x.x]. University of Sheffield. https://stapm.github.io/tobalcepi/. doi: https://doi.org/10.17605/OSF.IO/XQ8MV
 
 
 
@@ -130,25 +130,24 @@ The **processes** applied by the functions in `tobalcepi` give options to estima
 The **outputs** of these processes are datasets in which an individual's tobacco and/or alcohol consumption has been matched to their relative risks of certain diseases, and aggregated datasets that summarise the risks of disease within certain population subgroups.      
 
 ## Installation
-`tobalcepi` is currently available only to members of the project team (but please contact Duncan Gillespie duncan.gillespie@sheffield.ac.uk to discuss). To access you need to [sign-up for a GitLab account](https://gitlab.com/). You will then need to be added to the STAPM project team to gain access.   
+`tobalcepi` is publicly available via Github.     
 
-Once that is sorted, you can install the latest or a specified version from GitLab with:     
+By default the user should install the latest tagged version of the package. Otherwise, if you want to reproduce project work and know the version of the package used, install that version.  
+
+If on a University of Sheffield managed computer, install the R, RStudio and Rtools bundle from the Software Centre. Install Rtools - using the [installr](https://cran.r-project.org/web/packages/installr/index.html) package can make this easier. Then install the latest or a specified version of `tobalcepi` from Github with:     
 
 ```{r gh_installation, message=FALSE, eval = FALSE}
 #install.packages("devtools")
-#install.packages("getPass")
 
 devtools::install_git(
-  "https://gitlab.com/stapm/r-packages/tobalcepi.git", 
-  credentials = git2r::cred_user_pass("uname", getPass::getPass()),
+  "https://github.com/stapm/tobalcepi.git", 
   ref = "x.x.x",
-  build_vignettes = FALSE
-)
+  build_vignettes = FALSE)
 
-# Where uname is your Gitlab user name.
-# ref = "x.x.x" is the version to install - remove this to install the latest version
-# this should make a box pop up where you enter your GitLab password
+# ref = "x.x.x" is the version to install - change to the version you want e.g. "1.2.3"
 ```
+
+Or clone the package repo locally and use the 'install and restart' button in the Build tab of RStudio. This option is more convenient when testing development versions.   
 
 Then load the package, and some other packages that are useful. Note that the code within `tobalcepi` uses the `data.table::data.table()` syntax.  
 

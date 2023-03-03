@@ -1,18 +1,89 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Risk Functions and Attributable Fractions for Tobacco and Alcohol <img src="logo.png" align="right" style="padding-left:10px;background-color:white;" width="100" height="100" />
+# Relative Risks and Population Attributable Fractions of Diseases Related to Tobacco and Alcohol <img src="logo.png" align="right" style="padding-left:10px;background-color:white;" width="100" height="100" />
 
 <!-- badges: start -->
 
-[![Lifecycle:
-maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
-developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)  
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+
+[![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
+
+[![](https://img.shields.io/badge/doi-10.17605/OSF.IO/XQ8MV-green.svg)](https://doi.org/10.17605/OSF.IO/XQ8MV)
+
 <!-- badges: end -->
 
-## Motivation
+## The Sheffield Tobacco and Alcohol Policy Modelling Platform
+
+This R package was developed as part of the Sheffield Tobacco and
+Alcohol Policy Modelling <https://stapm.gitlab.io/> by the [School of
+Health and Related Research at the University of
+Sheffield](https://www.sheffield.ac.uk/scharr).
+
+The aim of the research programme is to identify and evaluate approaches
+to reducing the harm from tobacco and alcohol, with the aim of improving
+commissioning in a public health policy context, i.e. providing
+knowledge to support benefits achieved by policymakers.
+
+The two objectives of the research programme are:
+
+-   To evaluate the health and economic effects of past trends, policy
+    changes or interventions that have affected alcohol consumption
+    and/or tobacco smoking
+-   To appraise the health and economic outcomes of potential future
+    trends, changes to alcohol and/or tobacco policy or new
+    interventions
+
+The STAPM modelling is not linked to the tobacco or alcohol industry and
+is conducted without industry funding or influence.
+
+## Purpose of making the code open source
+
+The code has been made open source for the following two reasons:
+
+-   Transparency. Open science, allowing review and feedback to the
+    project team on the code and methods used.
+-   Methodology sharing. For people to understand the code and methods
+    used so they might use aspects of it in their own work, e.g.,
+    because they are doing something partially related that isn’t
+    exactly the same job and might like to ‘dip into’ elements of this
+    code for inspiration.
+
+## Stage of testing and development
+
+The code is actively being used in project work. It is being reviewed
+and developed all the time; more tests and checks are being added.
+
+The repository is not intended to be maintained by an open source
+community wider than the development team.
+
+## Disease lists
+
+The list of diseases considered in the modelling is available here
+<https://osf.io/v945r>
+
+## Code repositories
+
+The code on Github (<https://github.com/STAPM/tobalcepi>) is a mirror of
+the code in a private Gitlab repository where the actual development
+takes place (<https://gitlab.com/stapm/r-packages/tobalcepi>). The code
+in the Github repository is linked to a repository on the Open Science
+Framework, which provides the doi for the package citation
+(<https://osf.io/xq8mv/>).
+
+## Citation
+
+Gillespie D, Webster L, Henney M, Brennan A, Angus C (\[YEAR\]).
+tobalcepi: An R Package for Computing the Relative Risks and Population
+Attributable Fractions of Diseases Related to Tobacco and Alcohol. R
+package version \[x.x.x\]. University of Sheffield.
+<https://stapm.github.io/tobalcepi/>. doi:
+<https://doi.org/10.17605/OSF.IO/XQ8MV>
+
+## Motivation for developing the R package
 
 The motivation for `tobalcepi` was to organise how we store, process and
 use the information on the risks of disease that stem from tobacco
@@ -35,12 +106,10 @@ sources, which we have referenced ([Angus et al. 2018](#ref-Angus2018);
 [Webster et al. 2018](#ref-webster2018risk)). We have written some
 working [technical
 descriptions](https://stapm.gitlab.io/r-packages/tobalcepi/articles/index.html)
-to explain how these risk functions are implemented in STAPM. We store
-the master files for our tobacco and alcohol disease lists and risk
-functions sources in the University of Sheffield folder
-`X:/ScHARR/PR_Disease_Risk_TA/Code/tables`. In order to obtain
-mathematical descriptions of the risk functions for use in modelling, we
-needed to contact some authors to ask for additional information.
+to explain how these risk functions are implemented in STAPM. In order
+to obtain mathematical descriptions of the risk functions for use in
+modelling, we needed to contact some authors to ask for additional
+information.
 
 ### Alcohol
 
@@ -95,10 +164,10 @@ function).
 
 We use estimates of potential tobacco - alcohol risk interactions for:
 
-- Oral cavity cancer  
-- Pharyngeal cancer  
-- Laryngeal cancer  
-- Oesophageal SCC cancer
+-   Oral cavity cancer  
+-   Pharyngeal cancer  
+-   Laryngeal cancer  
+-   Oesophageal SCC cancer
 
 These estimates are stored in `tobalcepi::tob_alc_risk_int`.
 
@@ -113,12 +182,12 @@ annually.
 
 The types of data included in tobalcepi are:
 
-- Lists of the names of the diseases that are related to tobacco and/or
-  alcohol.  
-- Parameters used in the modelling of single occasion drinking.  
-- Tobacco relative risks of current vs. never smokers.
-- Tobacco lag times.  
-- Tobacco - alcohol risk interactions.
+-   Lists of the names of the diseases that are related to tobacco
+    and/or alcohol.  
+-   Parameters used in the modelling of single occasion drinking.  
+-   Tobacco relative risks of current vs. never smokers.
+-   Tobacco lag times.  
+-   Tobacco - alcohol risk interactions.
 
 When these data need to be updated, the inputs and code in the package
 folder `data-raw` will need to be changed, and the package rebuild with
@@ -160,30 +229,32 @@ risks of disease within certain population subgroups.
 
 ## Installation
 
-`tobalcepi` is currently available only to members of the project team
-(but please contact Duncan Gillespie <duncan.gillespie@sheffield.ac.uk>
-to discuss). To access you need to [sign-up for a GitLab
-account](https://gitlab.com/). You will then need to be added to the
-STAPM project team to gain access.
+`tobalcepi` is publicly available via Github.
 
-Once that is sorted, you can install the latest or a specified version
-from GitLab with:
+By default the user should install the latest tagged version of the
+package. Otherwise, if you want to reproduce project work and know the
+version of the package used, install that version.
+
+If on a University of Sheffield managed computer, install the R, RStudio
+and Rtools bundle from the Software Centre. Install Rtools - using the
+[installr](https://cran.r-project.org/web/packages/installr/index.html)
+package can make this easier. Then install the latest or a specified
+version of `tobalcepi` from Github with:
 
 ``` r
 #install.packages("devtools")
-#install.packages("getPass")
 
 devtools::install_git(
-  "https://gitlab.com/stapm/r-packages/tobalcepi.git", 
-  credentials = git2r::cred_user_pass("uname", getPass::getPass()),
+  "https://github.com/stapm/tobalcepi.git", 
   ref = "x.x.x",
-  build_vignettes = FALSE
-)
+  build_vignettes = FALSE)
 
-# Where uname is your Gitlab user name.
-# ref = "x.x.x" is the version to install - remove this to install the latest version
-# this should make a box pop up where you enter your GitLab password
+# ref = "x.x.x" is the version to install - change to the version you want e.g. "1.2.3"
 ```
+
+Or clone the package repo locally and use the ‘install and restart’
+button in the Build tab of RStudio. This option is more convenient when
+testing development versions.
 
 Then load the package, and some other packages that are useful. Note
 that the code within `tobalcepi` uses the `data.table::data.table()`

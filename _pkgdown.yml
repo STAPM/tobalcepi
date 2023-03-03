@@ -1,7 +1,7 @@
-destination: public
+destination: docs
 home:
-  title: Risk Functions and Attributable Fractions for Tobacco and Alcohol
-url: https://stapm.gitlab.io/r-packages/tobalcepi/
+  title: Relative Risks and Population Attributable Fractions of Diseases Related to Tobacco and Alcohol
+url: https://stapm.github.io/tobalcepi/
 template:
   params:
     bootswatch: flatly
@@ -19,7 +19,7 @@ authors:
 navbar:
   structure:
     left:  [home, intro, reference, articles]
-    right: [gitlab, software]
+    right: [github, gitlab, software]
   components:
     home: ~
     intro:
@@ -30,19 +30,18 @@ navbar:
      href: reference/index.html
     articles:
      text: Technical documentation
-     href: articles/index.html
+     menu:
+      - text: Disease risk methods
+        href: use_of_disease_risks_in_stapm.html
+    github:
+     icon: fab fa-github fa-lg
+     href: https://github.com/STAPM/tobalcepi
     gitlab:
       icon: fab fa-gitlab fa-lg
       href: https://gitlab.com/stapm/r-packages/tobalcepi
     software:
       icon: fa-code
       href: https://stapm.gitlab.io/software.html
-    
-articles:
-- title: "Technical information"
-  contents:
-  - tobalcepi
-  - use_of_disease_risks_in_stapm
     
 reference:
 - title: "Use of risk functions"

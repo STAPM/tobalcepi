@@ -17,21 +17,63 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
-# Risk Functions and Attributable Fractions for Tobacco and Alcohol <img src="logo.png" align="right" style="padding-left:10px;background-color:white;" width="100" height="100" />
+# Relative Risks and Population Attributable Fractions of Diseases Related to Tobacco and Alcohol <img src="logo.png" align="right" style="padding-left:10px;background-color:white;" width="100" height="100" />
 
 <!-- badges: start -->
-[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)  
-  <!-- badges: end -->
+
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
+
+[![](https://img.shields.io/badge/doi-10.17605/OSF.IO/XQ8MV-green.svg)](https://doi.org/10.17605/OSF.IO/XQ8MV)
+
+<!-- badges: end -->
+
+## The Sheffield Tobacco and Alcohol Policy Modelling Platform
+This R package was developed as part of the Sheffield Tobacco and Alcohol Policy Modelling https://stapm.gitlab.io/ by the [School of Health and Related Research at the University of Sheffield](https://www.sheffield.ac.uk/scharr).    
+
+The aim of the research programme is to identify and evaluate approaches to reducing the harm from tobacco and alcohol, with the aim of improving commissioning in a public health policy context, i.e. providing knowledge to support benefits achieved by policymakers.  
+
+The two objectives of the research programme are:
+
+- To evaluate the health and economic effects of past trends, policy changes or interventions that have affected alcohol consumption and/or tobacco smoking
+- To appraise the health and economic outcomes of potential future trends, changes to alcohol and/or tobacco policy or new interventions
+
+The STAPM modelling is not linked to the tobacco or alcohol industry and is conducted without industry funding or influence.  
+
+## Purpose of making the code open source
+The code has been made open source for the following two reasons:  
+
+- Transparency. Open science, allowing review and feedback to the project team on the code and methods used.
+- Methodology sharing. For people to understand the code and methods used so they might use aspects of it in their own work, e.g., because they are doing something partially related that isn't exactly the same job and might like to 'dip into' elements of this code for inspiration.
+
+## Stage of testing and development
+The code is actively being used in project work. It is being reviewed and developed all the time; more tests and checks are being added.  
+
+The repository is not intended to be maintained by an open source community wider than the development team.   
+
+## Disease lists
+
+The list of diseases considered in the modelling is available here https://osf.io/v945r
+
+## Code repositories
+The code on Github (https://github.com/STAPM/tobalcepi) is a mirror of the code in a private Gitlab repository where the actual development takes place (https://gitlab.com/stapm/r-packages/tobalcepi). The code in the Github repository is linked to a repository on the Open Science Framework, which provides the doi for the package citation (https://osf.io/xq8mv/).    
 
 
-## Motivation
+## Citation
+
+Gillespie D, Webster L, Henney M, Brennan A, Angus C ([YEAR]). tobalcepi: An R Package for Relative Risks and Population Attributable Fractions of Diseases Related to Tobacco and Alcohol. R package version [x.x.x]. University of Sheffield. https://stapm.github.io/tobalcepi/. doi: https://doi.org/10.17605/OSF.IO/XQ8MV
+
+
+
+## Motivation for developing the R package
+
 The motivation for `tobalcepi` was to organise how we store, process and use the information on the risks of disease that stem from tobacco and/or alcohol consumption, including to provide functions to easily use these risk estimates in modelling.     
 
 `tobalcepi` was created as part of a programme of work on the health economics of tobacco and alcohol at the School of Health and Related Research (ScHARR), The University of Sheffield. This programme is based around the development of the Sheffield Tobacco and Alcohol Policy Modelling (STAPM), which aims to use comparable methodologies to evaluate the impacts of tobacco and alcohol policies, and investigate the consequences of clustering and interactions between tobacco and alcohol consumption behaviours.    
 
 ## Relative risk data
-The disease lists and risk functions in this package all have published sources, which we have referenced [@Angus2018;@webster2018risk]. We have written some working [technical descriptions](https://stapm.gitlab.io/r-packages/tobalcepi/articles/index.html) to explain how these risk functions are implemented in STAPM. We store the master files for our tobacco and alcohol disease lists and risk functions sources in the University of Sheffield folder `X:/ScHARR/PR_Disease_Risk_TA/Code/tables`. In order to obtain mathematical descriptions of the risk functions for use in modelling, we needed to contact some authors to ask for additional information.     
+The disease lists and risk functions in this package all have published sources, which we have referenced [@Angus2018;@webster2018risk]. We have written some working [technical descriptions](https://stapm.gitlab.io/r-packages/tobalcepi/articles/index.html) to explain how these risk functions are implemented in STAPM. In order to obtain mathematical descriptions of the risk functions for use in modelling, we needed to contact some authors to ask for additional information.     
 
 ### Alcohol
 The high-level function for alcohol is `tobalcepi::RRalc()`, which calculates individual risks of diseases as follows:  

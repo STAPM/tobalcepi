@@ -1,0 +1,87 @@
+condition,disease_type,disease_type2,name_formatted,ICD10
+Oral_cavity,Cancers,alcohol and tobacco,Oral cavity cancer,C00-C06
+Pharynx,Cancers,alcohol and tobacco,Pharyngeal cancer,"C09, C10, C12-C14"
+Lung,Cancers,tobacco,Lung cancer,"C33, C34"
+Nasopharynx_sinonasal,Cancers,tobacco,Nasopharynx & sinonasal cancer,"C11, C30, C31"
+Larynx,Cancers,alcohol and tobacco,Laryngeal cancer,C32
+Oesophageal_AC,Cancers,tobacco,Oesophageal AC cancer,C15
+Oesophageal_SCC,Cancers,alcohol and tobacco,Oesophageal SCC cancer,C15
+Oesophageal,Cancers,alcohol and tobacco,Oesophageal cancer,C15
+Stomach,Cancers,tobacco,Stomach cancer,C16
+Pancreas,Cancers,alcohol and tobacco,Pancreatic cancer,C25
+Liver,Cancers,alcohol and tobacco,Cancer of the liver and intrahepatic bile ducts,C22
+Colorectal,Cancers,alcohol and tobacco,Colorectal cancer,C18-C20
+Kidney,Cancers,tobacco,Kidney cancer,C64
+Lower_urinary_tract,Cancers,tobacco,Lower urinary tract cancer,"C65, C66"
+Bladder,Cancers,tobacco,Bladder cancer,C67
+Cervical,Cancers,tobacco,Cervical cancer,C53
+Acute_myeloid_leukaemia,Cancers,tobacco,Acute myeloid leukaemia,C92
+Breast,Cancers,alcohol,Breast cancer,C50
+Ischaemic_heart_disease,Cardiovascular,alcohol and tobacco,Ischaemic heart disease,I20-I25
+Haemorrhagic_Stroke,Cardiovascular,alcohol and tobacco,Haemorrhagic stroke,I60-I62
+Ischaemic_Stroke,Cardiovascular,alcohol and tobacco,Ischaemic stroke,I63-I67
+Peripheral_arterial_disease,Cardiovascular,tobacco,Peripheral arterial disease,I73.9
+Abdominal_aortic_aneurysm,Cardiovascular,tobacco,Abdominal aortic aneurysm,I71
+Venous_thromboembolism,Cardiovascular,tobacco,Venous thromboembolism,"I26,I80-I82"
+HypertensiveHeartDisease,Cardiovascular,alcohol,Hypertensive diseases,I10-I14
+Cardiac_Arrhythmias,Cardiovascular,alcohol,Cardiac arrhythmias,I47-I49
+LiverCirrhosis,Other,alcohol,Cirrhosis of the liver (excluding alcoholic liver disease),"K70 (excl. K70.0-K70.4, K70.9), K73-K74"
+Acute_Pancreatitis,Other,alcohol,Acute pancreatitis,"K85 (excl. K85.2, K85.3)"
+Chronic_Pancreatitis,Other,alcohol,Chronic pancreatitis,K86 (excl. K86.0)
+Ulcerative_colitis,Other,tobacco,Ulcerative colitis,K51
+Parkinson,Other,tobacco,Parkinson's disease,G20
+Alzheimers_disease,Mental health,tobacco,Alzheimers disease,G30
+Vascular_dementia,Mental health,tobacco,Vascular dementia,F01
+All_cause_dementia,Mental health,tobacco,All-cause dementia,"F02, F03"
+Depression,Mental health,tobacco,Depression,"F32, F33"
+Schizophrenia,Mental health,tobacco,Schizophrenia,F20-F25
+Bulimia,Mental health,tobacco,Bulimia,F50.2
+Psychosis,Mental health,tobacco,Psychosis,"F28, F29"
+Diabetes,Other,alcohol and tobacco,Type II diabetes,E11
+Multiple_sclerosis,Other,tobacco,Multiple sclerosis,G35
+Systematic_lupus_erythematosis,Other,tobacco,Systematic lupus erythematosis,M32
+Low_back_pain,Other,tobacco,Low back pain,M54
+Psoriasis,Other,tobacco,Psoriasis,L40
+Age_related_macular_degeneration,Other,tobacco,Age-related macular degeneration,H35.3-H52.4
+Crohns_disease,Other,tobacco,Crohn's disease,K50
+Hip_fracture,Other,tobacco,Hip fracture,S72.0-S72.2
+Rheumatoid_arthritis,Other,tobacco,Rheumatoid arthritis,"M05, M06"
+Chronic_Kidney_disease,Other,tobacco,Chronic kidney disease,"N18.1, N18.2, N18.3, N18.4, N18.8, N18.9"
+End_stage_renal_disease,Other,tobacco,End-stage renal disease,"N18.5, N18.0"
+Senile_cataract,Other,tobacco,Senile cataract,H25
+Hearing_loss,Other,tobacco,Hearing loss,"H90, H91"
+Epilepsy,Other,alcohol,Epilepsy and status epilepticus,G40-G41
+Transport_injuries,Partially-attributable acute,alcohol,Transport injuries,"V01-V98, Y85.0"
+Fall_injuries,Partially-attributable acute,alcohol,Fall injuries,W00-W19
+Mechanical_forces,Partially-attributable acute,alcohol,Exposure to mechanical forces (including machinery accidents),W20-W52
+Drowning,Partially-attributable acute,alcohol,Drowning,"W65-W74, Y21"
+Fire_injuries,Partially-attributable acute,alcohol,Fire injuries,"X00-X09, Y26"
+Other_unintentional_injuries,Partially-attributable acute,alcohol,Other unintentional injuries,"W75-W99, X10-X33, Y20, Y22-Y25, Y27-Y29, Y31-Y34"
+intentional_self_harm,Partially-attributable acute,alcohol,Intentional self-harm,"X60-X84 (excl. X65), Y87.0"
+Assault,Partially-attributable acute,alcohol,Assault,"X85-Y09, Y87.1"
+Other_intentional_injuries,Partially-attributable acute,alcohol,Other intentional injuries,Y35
+Accidental_poisoning,Partially-attributable acute,alcohol,Accidental poisoning by exposure to noxious substances,"X40-X49 (excl. X45), Y10-Y14, Y16-Y19, T36-T50, T52-T65"
+Chronic_obstructive_pulmonary_disease,Respiratory,tobacco,Chronic obstructive pulmonary disease,"J40-J44,J47"
+Asthma,Respiratory,tobacco,Asthma,J45-J46
+Tuberculosis,Respiratory,alcohol and tobacco,Tuberculosis,A15-A19
+Obstructive_sleep_apnoea,Respiratory,tobacco,Obstructive sleep apnoea,G47.3
+Pneumonia,Respiratory,alcohol and tobacco,Pneumonia,J12-J18
+Influenza_clinically_diagnosed,Respiratory,alcohol and tobacco,Influenza (clinically diagnosed),J11
+Influenza_microbiologically_confirmed,Respiratory,alcohol and tobacco,Influenza (microbiologically confirmed),"J09, J10"
+Idiopathic_pulmonary_fibrosis,Respiratory,tobacco,Idiopathic pulmonary fibrosis,J84.1
+Alcoholic_cardiomyopathy,Wholly attributable to alcohol,alcohol,Alcoholic cardiomyopathy,I42.6
+Alcoholic_liver_disease,Wholly attributable to alcohol,alcohol,Alcoholic liver disease,"K70.0-K70.4, K70.9"
+Acute_pancreatitis_alcohol_induced,Wholly attributable to alcohol,alcohol,Acute pancreatitis (alcohol induced),K85.2
+Chronic_pancreatitis_alcohol_induced,Wholly attributable to alcohol,alcohol,Chronic pancreatitis (alcohol induced),K86.0
+Alcoholic_gastritis,Wholly attributable to alcohol,alcohol,Alcoholic gastritis,K29.2
+Alcohol_induced_pseudoCushings_syndrome,Wholly attributable to alcohol,alcohol,Alcohol-induced pseudo-Cushing's syndrome,E24.4
+Acute_intoxication,Wholly attributable to alcohol,alcohol,Acute intoxication,F10.0
+Mental_and_behavioural_disorders_due_to_use_of_alcohol,Wholly attributable to alcohol,alcohol,Mental and behavioural disorders due to use of alcohol,F10.1-F10.9
+Degeneration,Wholly attributable to alcohol,alcohol,Degeneration,G31.2
+Alcoholic_polyneuropathy,Wholly attributable to alcohol,alcohol,Alcoholic polyneuropathy,G62.1
+Alcoholic_myopathy,Wholly attributable to alcohol,alcohol,Alcoholic myopathy,G72.1
+Maternal_care_for_suspected_damage_to_foetus_from_alcohol,Wholly attributable to alcohol,alcohol,Maternal care for suspected damage to foetus from alcohol,O35.4
+Excessive_Blood_Level_of_Alcohol,Wholly attributable to alcohol,alcohol,Excessive blood level of alcohol,R78.0
+Toxic_effect_of_alcohol,Wholly attributable to alcohol,alcohol,Toxic effect of alcohol,"T51.0, T51.1, T51.8, T51.9"
+Alcohol_poisoning,Wholly attributable to alcohol,alcohol,Alcohol poisoning,"X45, X65, Y15"
+Evidence_of_alcohol_involvement_determined_by_blood_alcohol_level,Wholly attributable to alcohol,alcohol,Evidence of alcohol involvement determined by blood alcohol level,Y90

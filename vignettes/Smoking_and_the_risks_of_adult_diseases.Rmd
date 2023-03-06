@@ -1,0 +1,303 @@
+---
+title: "**Smoking and the risks of adult diseases**"
+subtitle: Version 1.2.1
+biblio-style: apalike
+date: "October 2018"
+output: 
+  bookdown::pdf_document2:
+    highlight: haddock
+    pandoc_args: [ --listings ]
+    number_sections: true
+    toc: false
+header-includes:
+  - \usepackage{caption}
+  - \usepackage{amsmath}
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{tabu}
+  - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
+  - \usepackage[normalem]{ulem}
+  - \usepackage[normalem]{ulem}
+  - \usepackage[utf8]{inputenc}
+  - \usepackage{makecell}
+  - \usepackage{amsmath}
+  - \usepackage{graphicx}
+  - \usepackage{titling}
+  - \pretitle{\begin{center}
+    \includegraphics[width=6in,height=4in]{inst/LOGO_SCHARR.png}\LARGE\\\vskip 3em}
+  - \posttitle{\end{center}\vskip 4em}
+  - \usepackage{tcolorbox}
+  - \usepackage{xcolor}
+  - \usepackage{hyperref}
+  - \usepackage{footnote}
+link-citations: yes
+bibliography:
+- refs/disease-risks-tob.bib
+- refs/packages.bib
+always_allow_html: yes
+urlcolor: blue
+editor_options: 
+  chunk_output_type: console
+pkgdown:
+  as_is: true
+  extension: pdf
+---
+
+Laura Webster^1^, Colin Angus^1^, Alan Brennan^1^, Duncan Gillespie^1^
+
+\vskip 1em
+
+^1^School of Health and Related Research (ScHARR), The University of Sheffield
+
+\vskip 1em
+
+**Address for correspondence**:\
+Dr Duncan Gillespie\
+Section of Health Economics and Decision Science,\
+School for Health and Related Research,\
+The University of Sheffield,\
+Regent Court, Regent Street, Sheffield, S1 4DA, UK\
+Email: [duncan.gillespie\@sheffield.ac.uk](mailto:duncan.gillespie@sheffield.ac.uk){.email}
+
+\vskip 1em
+
+The code that accompanies this vignette can be found in the `tobalcepi` R package <https://stapm.github.io/tobalcepi/> (Github code repository https://github.com/STAPM/tobalcepi).   
+
+This vignette is a reproduction of the content in:
+Webster, Laura; Angus, Colin; Brennan, Alan; Gillespie, Duncan (2018): Smoking and the risks of adult diseases. The University of Sheffield. https://doi.org/10.15131/shef.data.7411451.v1    
+
+Therefore the citation above should be used for this vignette. This vignette differs from the report cited above in being produced by the code within the tobalcepi R package. This vignette therefore presents the risk functions and acts as a means to quality assure the code in the tobalcepi R package.   
+\newpage
+
+```{r setup, include = FALSE, results = 'hide', warning = FALSE}
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.pos = 'H'
+)
+
+options(tinytex.verbose = F)
+
+suppressPackageStartupMessages(library(magrittr))
+suppressPackageStartupMessages(library(knitr))
+suppressPackageStartupMessages(library(kableExtra))
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(readxl))
+suppressPackageStartupMessages(library(tobalcepi))
+#suppressPackageStartupMessages(library(stapmr))
+#suppressPackageStartupMessages(library(smktrans))
+suppressPackageStartupMessages(library(ggthemes))
+suppressPackageStartupMessages(library(RColorBrewer))
+suppressPackageStartupMessages(library(cowplot))
+
+```
+
+```{r include=FALSE, eval=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'vignettes/refs/packages.bib')
+```
+
+\newpage 
+
+\hypersetup{linkcolor=blue}
+\tableofcontents
+ 
+ 
+# Acknowledgements
+The authors would like to thank John Britton of the University of Nottingham and UK Centre for Tobacco and Alcohol Studies, Katrina Brown of Cancer Research UK for their advice and input at various stages of the preparation of this document.   
+
+# Introduction
+This document presents our list of **52** adult diseases related to smoking and the corresponding relative risks of disease due to smoking, explaining our choices of disease definitions and risk sources. Figure \@ref(fig:smkrelrisks) shows the variation in disease-specific risks. We focus on the risks of current smoking and limit ourselves to diseases that affect the consumer themselves e.g. excluding secondary effects of smoking on children. We assume the equivalence of relative risks and odds ratios. Our starting point was the Royal College of Physician's (RCP) report “Hiding in plain sight: Treating tobacco dependency in the NHS” [@RCP2018], which reviewed smoking–disease associations to produce an updated list of diseases that are caused by smoking and updated risk sources. We mainly keep to the RCP report's disease list, with any deviations from the RCP list and risk sources being for one of two reasons:   
+
+1. There are often slightly conflicting ICD-10 code definitions used for some conditions and we have sought to harmonise these consistently across both tobacco and alcohol, based on the Sheffield Alcohol Policy Model (SAPM) v4.0 disease list [@Angus2018];   
+
+1. Since publication of the RCP report, Cancer Research UK (CRUK) produced their own disease list and risk sources for cancers attributable to modifiable risk factors, including tobacco and alcohol [@Brown2018]. Discussions with CRUK shaped the disease definitions in our updated Sheffield disease list for alcohol. Where there are differences in the risk sources used in the RCP report and CRUK's work, we take the estimate that matches most closely to our disease definitions, or the more recent estimate.  
+
+# Tobacco–Alcohol interactions in disease risk
+There is limited evidence for the risk of disease in someone who consumes both tobacco and alcohol ($RR_{ta}$) being higher than would be expected from combining the independent risks from tobacco ($RR_t$) and alcohol ($RRa$). This additional risk due to tobacco-alcohol interaction (over and above the combination of the independent contributions to risk from tobacco and alcohol) can be expressed as a "synergy factor" (1) [@Prabhu2014;@Hashibe2009].   
+
+\begin{equation}
+SF = \frac{RR_{ta}}{(RR_t - 1) + (RR_a - 1)}
+\end{equation}
+
+We conducted a scoping review across all diseases for which tobacco and alcohol are causal factors to ascertain the extent of evidence on interaction effects. We include only interactions with a meta-analysis of effect size. The only diseases for which we have found suitable meta-analyses to inform the tobacco–alcohol interaction in risk are cancers of the oral cavity, pharynx, larynx and oesophagus. To evaluate the interaction between tobacco and alcohol and the risk of cancer of the oral cavity, pharynx and larynx, Hashibe et al. [-@Hashibe2009] conducted a pooled analysis within the INHANCE consortium. For the oral cavity and pharynx, the SF was estimated to be 3.09 (CI 1.82–5.23) i.e. smoking and drinking together causes around a 3-fold increase in the risk of head and neck cancers over and about the independent contributions of tobacco and alcohol. For cancer of the larynx, Hashibe et al. [-@Hashibe2009] estimate the SF to be 1.62 (CI 0.85–3.09). For cancer of the oesophagus, Prabhu et al. [@Prabhu2014] estimated the increase in risk of Squamous Cell Carcinoma in people who both smoke and drink to be characterised by a synergy factor of 1.85 (CI 1.45–2.38).   
+
+
+```{r smkrelrisks, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 8, fig.height = 10, fig.cap = "Relative risks and 95 percent confidence intervals in current smokers for 52 conditions attributable to smoking.", cache = F, fig.align = "center"}
+
+readRDS("Smoking_risk_report/output/tobacco_riskplot.rds")
+
+```
+
+# Cancers
+We include all cancers attributable to tobacco as mentioned by CRUK [@Brown2018], except ovarian cancer. Smoking only carries a risk for fully malignant mucinous ovarian cancers (13\% of ovarian cancers are mucinous, and of these 57\% are fully malignant). We excluded ovarian cancer due to the uncertainty involved in identifying the cases attributable to smoking based on the ICD-10 definitions used in our mortality data and hospital episode statistics.  
+
+Below we itemise each cancer type and explain how we have synthesised the definitions of cancers and the sources for the relative risk of smoking among the Sheffield alcohol disease list [@Angus2018], RCP report [@RCP2018], and CRUK's paper [@Brown2018].  
+
+## Oral cavity (C00–C06), and pharyngeal (C09, C10, C12–C14)
+Gandini et al. [-@Gandini2008] estimated the relative risk of smoking for cancer in the oral cavity as 3.43 (95\% Confidence Interval 2.37–4.94), and pharyngeal cancers as 6.76 (CI 2.86–16.0). Following Gandini, the RCP report associated the relative risk from Gandini for oral cavity (RR 3.43) with ICD10 code C10, and relative risk for pharyngeal cancer (RR 6.76) with ICD10 code C14. But in line with CRUK, we instead use the risk that Gandini associated with oral cavity cancer (RR 3.43) for pharyngeal cancers with ICD10 codes C09, C10, C12–C14. For oral cavity, we use the risk from Maasland et al. [-@Maasland2014] of 1.91 (CI 1.06–3.42) with ICD10 codes C00–C06.  
+
+## Oesophageal (C15)
+Gandini et al. [-@Gandini2008] estimated the relative risks of smoking for cancer of the oesophagus as 2.50 (CI 2.00–3.13). Differing from the RCP report but in-line with CRUK, we split oesophageal cancer into its two main histological types: Squamous Cell Carcinoma (SCC) and Adenocarcinoma (AC). CRUK use different relative risks of smoking for each subtype: following CRUK, for SCC, we use the risk from Prabhu et al. [-@Prabhu2013] of 4.21 (CI 3.13–5.66); for AC, we use the risk from Tramacere et al. [-@Tramacere2011] of 2.32 (CI 1.96–2.75). We apportion overall oesophageal cancer prevalence between AC and SCC using data on percentage prevalence by age and sex from cancer registries, supplied to us by CRUK.    
+
+## Colorectal (C18–C20)
+The RCP report used the CHANCES consortium [@Ordonez-Mena2016] estimate of the relative risk of smoking for colorectal cancer of 1.20 (CI 1.07–1.34). CRUK instead use the estimates of Cheng et al. [@Cheng2015], who produce two separate risks of smoking for cancer of the colon and rectum (RR 1.11, 1.44). To align with the SAPM disease list, we define colorectal cancer as a single disease and use the CHANCES risk estimate in-line with the RCP report.   
+
+## Liver (C22)
+The RCP report used Lee et al.'s [-@Lee2009] estimate of the risk of smoking for liver cancer of 1.51 (CI 1.37–1.67). CRUK use the same source but take the sex-specific effects: 1.61 (CI 1.38–1.89) for males and 1.86 (CI 1.33–2.60) for females. Due to the substantial overlap between the sex-specific confidence intervals, we use the overall estimate.  
+
+## Pancreatic (C25)
+CRUK used Bosetti et al.'s [-@Bosetti2011] estimate from the PanC4 study that the risk of smoking for pancreatic cancer is 2.20 (CI 1.71–2.83). The RCP report used the CHANCES consortium [@Ordonez-Mena2016] estimate of 1.90 (CI 1.48–2.43), and we use this more recent estimate.  
+
+
+## Laryngeal (C32)
+The RCP report used Gandini et al.'s [-@Gandini2008] estimate for the relative risks of smoking for cancer of the larynx of 6.98 (CI 3.14–15.52). CRUK used the more recent estimate by Zuo et al. [-@Zuo2017] of 7.01 (CI 5.56–8.85). We use the estimate of Zuo.   
+
+## Stomach (C16)
+CRUK used the estimate of Ladeiras-Lopes et al. [@Ladeiras-Lopes2008] that put the relative risk of stomach cancer among smokers at 1.62 (CI 1.50–1.75) for males and 1.20 (CI 1.01–1.43) for females. The RCP report used the CHANCES consortium [@Ordonez-Mena2016] estimate of 1.74 (CI 1.50–2.02), and estimates from Gandini et al. [-@Gandini2008] are similar. We use the CHANCES estimate.   
+
+## Lung (C33–C34)
+CRUK used Gandini et al.'s [-@Gandini2008] estimate of the relative risk of lung cancer among smokers of 8.96 (CI 6.73–12.11). The RCP report used the more recent 2016 meta-analysis by Jayes et al. [-@Jayes2016] estimates the risk to be 10.92 (CI 8.28–14.40). We use the Jayes estimate.   
+
+## Cervical (C53)
+Both CRUK and the RCP report use Gandini et al.'s [-@Gandini2008] estimate of the relative risk of cervix cancer among smokers of 1.83 (CI 1.51–2.21).  
+
+## Kidney (C64)
+The RCP report used Gandini et al.'s [-@Gandini2008] estimate of the relative risk of kidney cancer among smokers of 1.52 (CI 1.33–1.74). CRUK use the more recent meta-analysis by Cumberbatch et al. [-@Cumberbatch2016] of 1.35 (CI 1.13–1.60) but associate this with ICD10 codes C64–C66, C68. We use the Cumberbatch estimate for C64.   
+
+## Lower urinary tract (C65–C66)
+In-line with the RCP report, we use Gandini et al.'s [-@Gandini2008] estimate of the relative risk of lower urinary tract (renal pelvis, bladder and ureter) cancer of 2.77 (CI 2.17–3.54).  
+ 
+
+## Bladder (C67)
+The RCP report used the estimate by van Osch et al. [-@Osch2016] for the risk of bladder cancer among smokers of 3.14 (CI 2.53–3.75). CRUK used the same source but took the sex-specific estimates of 3.44 (CI 2.67–4.22) for males, and 3.56 (CI 2.76–4.36) for females. We use the overall estimate.   
+
+## Acute myeloid leukaemia (C92)
+CRUK used Fircanis et al.'s [-@Fircanis2014] estimate of the relative risk of acute myeloid leukaemia among smokers of 1.47 (CI 1.08–1.98) but associate it with ICD10 codes C90–C95. The RCP report used the more recent meta-analysis by Colamesta et al. [-@Colamesta2016], which produced a similar estimate of 1.36 (CI 1.11–1.66). In-line with the RCP report, we use the Colamesta estimate and associate it with ICD10 code C92.  
+
+## Nasal-sinuses and nasopharynx (C11, C30–C31)
+The RCP report and CRUK both used Gandini et al.'s [-@Gandini2008] estimate of the relative risk of smoking for nasopharyngeal (C11) and sino-nasal (C30, C31) cancers of 1.95 (CI 1.31–2.91).   
+
+
+# Cardiovascular conditions
+Our cardiovascular disease list and risk sources are all in-line with the RCP report, which discusses the sources available. To align with the Sheffield alcohol disease list, we split stroke into haemorrhagic (I60–I62) and ischaemic (I63–I67) but use the same smoking risk for each.
+
+# Respiratory conditions
+Our respiratory disease list and risk sources are all in-line with the RCP report. We expand the definition of ‘Lower respiratory tract infections’ (J09-J18) from the Sheffield alcohol disease list to accommodate the different risks of smoking that the RCP report identified for pneumonia (J12-J18), Influenza – clinically diagnosed (J11), and Influenza – microbiologically confirmed (J09, J10).
+
+
+# Mental health 
+Our mental health disease list and risk sources are all in-line with the RCP report.
+
+# Other adult diseases 
+We include 13 further diseases in-line with the RCP report.
+
+# Conditions less common among smokers
+We include 2 diseases in-line with the RCP report.
+
+
+# Decline in risk over time after quitting smoking
+To estimate the risk of disease for former smokers we used the findings of Kontis et al. [-@Kontis2014], who re-analysed the change in risk after smoking in the ACS-CPS II study from Oza et al.[-@Oza2011], producing three functions to describe the decline in risk after quitting for each of cancers, CVD and COPD (Figure \@ref(fig:smklags)). The estimates were informed by data on former smokers with known quit dates who were disease-free at baseline. The results show the proportion of excess relative risk remaining at each time-point since cessation. A cross-check showed that the figures for cancers were broadly consistent with the findings of the International Agency for Research on Cancer's (IARC) 2007 review of the decline in risk after quitting smoking [@IARCWHO2007].     
+
+The remaining question is how risk declines after quitting smoking for diseases that are not cancers, CVD or COPD. Kontis et al. [-@Kontis2014] state that “Randomised trials also indicate that the benefits of behaviour change and pharmacological treatment on diabetes risk occur within a few years, more similar to the CVDs than cancers [@Knowler2002]. Therefore, we used the CVD curve for diabetes.” In-line with Kontis, we apply the rate of decline in risk of CVD after quitting smoking to type 2 diabetes. For other diseases, we assume that the relative risk reverts to 1 immediately after quitting i.e. an immediate rather than a gradual decline in risk.    
+
+```{r smklags, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 8, fig.height = 3, fig.cap = "The proportion of remaining risk after quitting.", cache = F, fig.align = "center"}
+
+readRDS("Smoking_risk_report/output/tobacco_lag_times.rds")
+
+```
+
+
+# Tables
+
+(ref:tobcurnevrisk-ref1) [@Maasland2014]  
+(ref:tobcurnevrisk-ref2) [@Gandini2008]  
+(ref:tobcurnevrisk-ref3) [@Jayes2016]  
+(ref:tobcurnevrisk-ref4) [@Gandini2008]  
+(ref:tobcurnevrisk-ref5) [@Zuo2017]  
+(ref:tobcurnevrisk-ref6) [@Tramacere2011]  
+(ref:tobcurnevrisk-ref7) [@Prabhu2013]  
+(ref:tobcurnevrisk-ref8) [@Ordonez-Mena2016]  
+(ref:tobcurnevrisk-ref9) [@Ordonez-Mena2016]  
+(ref:tobcurnevrisk-ref10) [@Lee2009]  
+(ref:tobcurnevrisk-ref11) [@Ordonez-Mena2016]  
+(ref:tobcurnevrisk-ref12) [@Cumberbatch2016]  
+(ref:tobcurnevrisk-ref13) [@Gandini2008]  
+(ref:tobcurnevrisk-ref14) [@Osch2016]  
+(ref:tobcurnevrisk-ref15) [@Gandini2008]  
+(ref:tobcurnevrisk-ref16) [@Colamesta2016]  
+(ref:tobcurnevrisk-ref17) [@Rostron2012]  
+(ref:tobcurnevrisk-ref18) [@Peters2013]  
+(ref:tobcurnevrisk-ref19) [@Peters2013]  
+(ref:tobcurnevrisk-ref20) [@Lu2014]  
+(ref:tobcurnevrisk-ref21) [@Cornuz2004]  
+(ref:tobcurnevrisk-ref22) [@Cheng2013]  
+(ref:tobcurnevrisk-ref23) [@Jayes2016]  
+(ref:tobcurnevrisk-ref24) [@Jayes2016]  
+(ref:tobcurnevrisk-ref25) [@Jayes2016]  
+(ref:tobcurnevrisk-ref26) [@Jayes2016]  
+(ref:tobcurnevrisk-ref27) [@RCP2018]  
+(ref:tobcurnevrisk-ref28) [@RCP2018]  
+(ref:tobcurnevrisk-ref29) [@RCP2018]  
+(ref:tobcurnevrisk-ref30) [@Taskar2006]  
+(ref:tobcurnevrisk-ref31) [@Pan2015]  
+(ref:tobcurnevrisk-ref32) [@Zhong2015]  
+(ref:tobcurnevrisk-ref33) [@Zhang2016]  
+(ref:tobcurnevrisk-ref34) [@Breckenridge2016]  
+(ref:tobcurnevrisk-ref35) [@Zhong2015]  
+(ref:tobcurnevrisk-ref36) [@Zhong2015]  
+(ref:tobcurnevrisk-ref37) [@Luger2014]  
+(ref:tobcurnevrisk-ref38) [@RCP2018]  
+(ref:tobcurnevrisk-ref39) [@Gurillo2015]  
+(ref:tobcurnevrisk-ref40) [@Solmi2016]  
+(ref:tobcurnevrisk-ref41) [@Jiang2015]  
+(ref:tobcurnevrisk-ref42) [@Shiri2010]  
+(ref:tobcurnevrisk-ref43) [@DiGiuseppe2014]  
+(ref:tobcurnevrisk-ref44) [@Armstrong2014]  
+(ref:tobcurnevrisk-ref45) [@Chakravarthy2010]  
+(ref:tobcurnevrisk-ref46) [@Ye2012]  
+(ref:tobcurnevrisk-ref47) [@Mahid2006]  
+(ref:tobcurnevrisk-ref48) [@Dias2015]  
+(ref:tobcurnevrisk-ref49) [@Shen2015]  
+(ref:tobcurnevrisk-ref50) [@Xia2017]  
+(ref:tobcurnevrisk-ref51) [@Xia2017]  
+(ref:tobcurnevrisk-ref52) [@Nomura2005]  
+
+
+```{r tobcurnevrisk, eval = T, warning = F, echo=F}
+
+# Copy and paste the table from X:/ScHARR/PR_Disease_Risk_TA/Code/tables
+df_table1 <- readxl::read_xlsx('inst/Tobacco_current_vs_never_disease_risk.xlsx', 'Sheet1')
+
+df_table1 %>%
+  kableExtra::kbl(booktabs = T, caption = "Disease definitions and risk functions (with 95 percent confidence intervals) for current vs. never smoking.", label = "tobcurnevrisk", longtable = TRUE) %>%
+  kableExtra::column_spec(column = 1, width = "2cm") %>%
+  kableExtra::column_spec(column = 2:4, width = "3cm") %>%
+  kableExtra::column_spec(column = 5, width = "4cm") %>%
+  kableExtra::collapse_rows() %>%
+  kableExtra::kable_styling(font_size = 8, latex_options = c("HOLD_position", "repeat_header"))
+
+```
+
+
+
+
+# References
+
+
+
+
+
+
+

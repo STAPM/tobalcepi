@@ -1,16 +1,14 @@
 ---
-title: "Use of disease risks in STAPM"
-date: "Last reviewed 06/10/21"
-author: "Duncan Gillespie"
+title: "Methods notes on the use of disease risks in STAPM"
 output: 
   rmarkdown::html_vignette:
     toc: true
     number_sections: true
 vignette: >
-  %\VignetteIndexEntry{Use of disease risks in STAPM}
+  %\VignetteIndexEntry{Methods notes on the use of disease risks in STAPM}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
-bibliography: disease-risks.bib
+bibliography: refs/disease-risks.bib
 link-citations: yes
 citation_package: natbib
 biblio-style: apalike
@@ -43,8 +41,8 @@ This vignette describes how we use the relative risks of disease in STAPM, writt
 ## Literature reviewing
 The list of diseases, their ICD-10 code definitions and the associated risk functions were collated from periodic reviews of the literature, drawing primarily on other existing reviews. See these technical reports for further information:
 
-- [Alcohol and disease risks report](https://stapm.gitlab.io/model-inputs/epi_alcohol_risk/Alcohol-attributable_diseases_and_dose-response_curves.pdf) [@Angus2018]. 
-- [Smoking and disease risks report](https://stapm.gitlab.io/model-inputs/epi_tobacco_risk/Smoking_and_the_risks_of_adult_diseases.pdf) [@Webster2018].  
+- Alcohol and disease risks report [@Angus2018]. 
+- Smoking and disease risks report [@Webster2018].  
 
 ## R functions to assign relative risks of disease to individuals
 To organise the information on the relative risks of diseases due to tobacco and alcohol consumption, and to provide functions to easily work with these data in modelling, we built the [tobalcepi R code package](https://stapm.gitlab.io/r-packages/tobalcepi/) (click on the link to the package webpage for introductory information). The R code functions are version controlled so that each project works with a specified version of the package (see the [version tracking sheet](https://docs.google.com/spreadsheets/d/1xEMhnUMXgeXbeBQtqM_yCjJ9jC6f9j4QLMFX6SToJOo/edit#gid=0)), and error-fixes and new developments can be tracked (see the [issues log](https://docs.google.com/spreadsheets/d/1Mc6FjiwHgW4vvGs62SgYpAZrPXcqWBCpltBLZeTd8V4/edit#gid=0) and [software development tasks tracking sheet](https://docs.google.com/spreadsheets/d/1u3pxDF071LYbCfRF0SESRp_hX8YXUwoAG535etZBrPM/edit#gid=0). 

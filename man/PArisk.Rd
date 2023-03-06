@@ -13,7 +13,8 @@ PArisk(
   grams_ethanol_per_unit = 8,
   grams_ethanol_per_std_drink = 12.8,
   liver_clearance_rate_h = 0.017,
-  getcurve = FALSE
+  getcurve = FALSE,
+  grams_ethanol = NULL
 )
 }
 \arguments{
@@ -40,6 +41,9 @@ the number of grams of ethanol in one standard drink.}
 \item{liver_clearance_rate_h}{The rate at which blood alcohol concentration declines (percent / hour).}
 
 \item{getcurve}{Logical - do you just want to look at the risk function curve?}
+
+\item{grams_ethanol}{Numeric vector - if getcurve is TRUE, use this to specify the values 
+of grams of ethanol for which curve values should be returned.}
 }
 \value{
 Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.

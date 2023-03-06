@@ -1,0 +1,1462 @@
+---
+title: "**Alcohol-attributable diseases and dose-response curves**"
+subtitle: Version 1.1.1
+biblio-style: apalike
+date: "June 2018"
+output: 
+  bookdown::pdf_document2:
+    highlight: haddock
+    pandoc_args: [ --listings ]
+    number_sections: true
+    toc: false
+header-includes:
+  - \usepackage{caption}
+  - \usepackage{amsmath}
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{tabu}
+  - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
+  - \usepackage[normalem]{ulem}
+  - \usepackage[normalem]{ulem}
+  - \usepackage[utf8]{inputenc}
+  - \usepackage{makecell}
+  - \usepackage{amsmath}
+  - \usepackage{graphicx}
+  - \usepackage{titling}
+  - \pretitle{\begin{center}
+    \includegraphics[width=6in,height=4in]{inst/LOGO_SCHARR.png}\LARGE\\\vskip 3em}
+  - \posttitle{\end{center}\vskip 4em}
+  - \usepackage{tcolorbox}
+  - \usepackage{xcolor}
+  - \usepackage{hyperref}
+  - \usepackage{footnote}
+link-citations: yes
+bibliography:
+- refs/disease-risks-alc.bib
+- refs/packages.bib
+always_allow_html: yes
+urlcolor: blue
+editor_options: 
+  chunk_output_type: console
+pkgdown:
+  as_is: true
+  extension: pdf
+---
+
+Colin Angus^1^, Maddy Henney^1^, Laura Webster^1^, Alan Brennan^1^ & Duncan Gillespie^1^
+
+\vskip 1em
+
+^1^School of Health and Related Research (ScHARR), The University of Sheffield
+
+\vskip 1em
+
+**Address for correspondence**:\
+Colin Angus\
+Sheffield Alcohol Research Group,\
+School for Health and Related Research,\
+The University of Sheffield,\
+Regent Court, Regent Street, Sheffield, S1 4DA, UK\
+Email: [c.r.angus\@sheffield.ac.uk](mailto:c.r.angus@sheffield.ac.uk){.email}
+
+\vskip 1em
+
+The code that accompanies this vignette can be found in the `tobalcepi` R package <https://stapm.github.io/tobalcepi/> (Github code repository https://github.com/STAPM/tobalcepi).    
+
+This vignette is a reproduction of the content in:
+Angus, Colin; Henney, Madeleine; Webster, Laura; Gillespie, Duncan (2018): Alcohol-attributable diseases and dose-response curves for the Sheffield Alcohol Policy Model version 4.0. The University of Sheffield. https://doi.org/10.15131/shef.data.6819689.v2  
+
+Therefore the citation above should be used for the content of this vignette. This vignette differs from the report cited above in being produced by the code within the tobalcepi R package. This vignette therefore presents the risk functions and acts as a means to quality assure the code in the tobalcepi R package.   
+
+\newpage
+
+```{r setup, include = FALSE, results = 'hide', warning = FALSE}
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.pos = 'H'
+)
+
+options(tinytex.verbose = F)
+
+suppressPackageStartupMessages(library(magrittr))
+suppressPackageStartupMessages(library(knitr))
+suppressPackageStartupMessages(library(kableExtra))
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(readxl))
+suppressPackageStartupMessages(library(tobalcepi))
+#suppressPackageStartupMessages(library(stapmr))
+#suppressPackageStartupMessages(library(smktrans))
+suppressPackageStartupMessages(library(ggthemes))
+suppressPackageStartupMessages(library(RColorBrewer))
+suppressPackageStartupMessages(library(cowplot))
+
+```
+
+```{r include=FALSE, eval=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+\newpage 
+
+\hypersetup{linkcolor=blue}
+\tableofcontents
+
+
+# Introduction
+This document presents the list of health conditions related to alcohol which are included in the most recent version (4.0) of the Sheffield Alcohol Policy Model (SAPM). It also presents the corresponding dose-response curves (the mathematical relationships between volume of alcohol consumed and risk of morbidity/mortality) for all included conditions which are not wholly-attributable to alcohol. This is based on recent reviews by Rehm et al. [-@rehm2017risk;-@rehm2017relationship] and Sherk et al. [-@sherk2020international], as well as previous versions of the Sheffield Model [@meier2016estimated] supplemented with additional evidence as appropriate. Note that SAPM considers only conditions which affect the drinker and therefore several conditions related to alcohol, such as Foetal Alcohol Spectrum Disorders, are therefore not included.
+
+# Acknowledgements
+The authors would like to thank Katrina Brown of Cancer Research UK, Kevin Shield of the Centre for Addiction and Mental Health in Toronto and Adam Sherk of the University of Victoria for their advice and input at various stages of the preparation of this document. 
+
+
+```{r alcdislist, eval = T, warning = F, echo=F}
+
+# Copy and paste the table from X:/ScHARR/PR_Disease_Risk_TA/Code/tables
+df_table1 <- readxl::read_xlsx('inst/Alcohol_disease_list.xlsx', 'Sheet1')
+
+df_table1 %>%
+  kableExtra::kbl(booktabs = T, caption = "List of alcohol-attributable diseases.", label = "alcdislist", longtable = TRUE) %>%
+  kableExtra::column_spec(column = 1, width = "2cm") %>%
+  kableExtra::column_spec(column = 2, width = "7cm") %>%
+  kableExtra::column_spec(column = 3, width = "4cm") %>%
+  kableExtra::column_spec(column = 4, width = "2cm") %>%
+  kableExtra::collapse_rows() %>%
+  kableExtra::kable_styling(font_size = 8, latex_options = c("HOLD_position", "repeat_header")) %>%
+  kableExtra::footnote(symbol = "100% conditions are those which are wholly-attributable to alcohol (i.e. which would not exist if nobody drank). Partial conditions are those which are partly attributable to alcohol but which would still exist, albeit with reduced prevalence, if nobody drank. Acute conditions are those which are related to intoxication. Chronic conditions are those which are related to chronic alcohol consumption in the longer term.", threeparttable = T)
+
+```
+
+# Dose-response curves for partially alcohol attributable chronic conditions
+Relative risk of harm for drinkers at consumption level $x$, measured in grams of ethanol per day, versus lifetime abstainers. Due to small sample sizes, published risk functions are not stable above 150g/day, so we assume $RR(x)=RR(150)\;\forall\;x>150$ for all conditions. All risk functions are applied to both genders and for both mortality and morbidity except where stated otherwise.
+
+## Cancers
+
+### Oropharyngeal (C00-06, C09-10, C12-14)
+
+\begin{equation}
+\ln(RR(x)) = 0.02474x-0.00004x^2
+\end{equation}
+
+```{r oropharyngealcurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Oropharyngeal cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Oropharyngeal",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 18)
+
+```
+
+Source [@bagnardi2015alcohol]
+
+### Oesophageal (C15)
+
+\begin{equation}
+\ln(RR(x)) = 0.05593x-0.00789x\ln(x)
+\end{equation}
+
+```{r oesophagealcurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Oesophageal cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Oesophageal",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 14)
+
+```
+
+Source [@bagnardi2015alcohol]
+
+Notes: Oesophageal cancer has two main histological types: Squamous Cell Carcinoma (SCC) and Adenocarcinoma (AC). Alcohol is only associated with SCC, not AC [@bagnardi2015alcohol]. The relative prevalence of SCC and AC varies widely between countries and within population subgroups [@Arnold2015] and it may therefore be necessary to apportion overall oesophageal cancer prevalence between SCC and AC using external data such as that from cancer registries.
+
+
+### Colorectal (C18-C20)
+
+\begin{equation}
+\ln(RR(x)) = 0.006279x
+\end{equation}
+
+```{r colorectalcurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Colorectal cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Colorectal",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 3)
+
+```
+
+### Liver and intrahepatic bile ducts (C22)
+
+\begin{equation}
+\ln(RR(x)) = 0.4100701(y-0.6728571429)+0.6101417(y^2-0.4527367347),
+\end{equation}
+
+where
+
+\begin{equation}
+y = \frac{x+12}{100}
+\end{equation}
+
+```{r livercurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Liver cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Liver",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 10)
+
+```
+
+Source [@chuang2015alcohol]
+
+Notes: Bagnardi et al. [-@bagnardi2015alcohol], which we use as the source for all other cancer risk curves do provide a curve for liver cancer, however this has extremely high Relative Risks at high levels of consumption (RR=45 at 150g/day), driven by high risks from a small number of case-control studies. Alternative meta-analyses from Chuang et al [-@chuang2015alcohol] and Turati et al [-@turati2014alcohol] have found lower risks at high levels of consumption [@chuang2015alcohol; @turati2014alcohol], however these risk curves are still quite divergent. It may therefore be advisable to present modelled estimates using several alternative sources to illustrate the impact of this uncertainty.
+
+### Pancreatic (C25)
+
+\begin{equation}
+\ln(RR(x)) = 0.002089x
+\end{equation}
+
+
+```{r pancreascurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Pancreatic cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Pancreas",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 1.6)
+
+```
+
+Source [@bagnardi2015alcohol]
+
+
+### Laryngeal (C32)
+
+\begin{equation}
+\ln(RR(x)) = 0.01462x-0.00002x^2
+\end{equation}
+
+
+```{r larynxcurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Laryngeal cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Laryngeal",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 7)
+
+```
+
+Source [@bagnardi2015alcohol]
+
+### Breast (C50)
+
+\begin{equation}
+\ln(RR(x)) = 0.01018x
+\end{equation}
+
+
+```{r breastcurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Laryngeal cancer by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Breast",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr), colour = "#6600cc") +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 5)
+
+```
+
+Source [@bagnardi2015alcohol]
+
+## Cardiovascular diseases
+
+### Hypertensive diseases (I10-I14)
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) =
+\begin{cases}
+  0.0150537x-0.0156155\frac{x^3}{75^2}, & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<21
+       \end{aligned}
+\\
+  0.0150537x-0.0156155\frac{x^3-\frac{(x-21)^3\times{75}}{(75-21)}}{75^2}, & \text{if }
+       \begin{aligned}[t]
+       21\leq{x}<75
+       \end{aligned}
+\\
+  0.0150537x-0.0156155\frac{x^3-\frac{(x-10)^3\times{20}-(x-20)^3\times{10}}{(75-21)}}{75^2}, & \text{if }
+       \begin{aligned}[t]
+       75\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) =
+\begin{cases}
+  0, & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<18.9517
+       \end{aligned}
+\\
+  -0.0154196x+0.0217586\frac{x^3-\frac{(x-10)^3\times{20}-(x-20)^3\times{10}}{(20-10)}}{20^2}, & \text{if }
+       \begin{aligned}[t]
+       18.9517\leq{x}<75
+       \end{aligned}
+\\
+  0.9649937, & \text{if }
+       \begin{aligned}[t]
+       75\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+```{r hypertensivecurve, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Hypertensive diseases by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.table(
+  GPerDay = rep(0:150, 2),
+  sex = c(rep("Female", 151), rep("Male", 151)),
+  age = 30
+)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "HypertensiveHeartDisease",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 3) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@rehm2017risk]
+
+
+### Ischaemic heart disease (I20-I25)
+
+#### Mortality  
+
+\begin{equation}
+\textbf{Male, 16-34  }\ln(RR(x)) =
+\begin{cases}
+  1.111874(-0.4870068\sqrt{y}+1.550984y^3), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{60}
+       \end{aligned}
+\\
+  0, & \text{if }
+       \begin{aligned}[t]
+       60<{x}<100
+       \end{aligned}
+\\
+  0.012(x-100), & \text{if }
+       \begin{aligned}[t]
+       100\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Male, 35-64  }\ln(RR(x)) =
+\begin{cases}
+  1.035623(-0.4870068\sqrt{y}+1.550984y^3), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{60}
+       \end{aligned}
+\\
+  0, & \text{if }
+       \begin{aligned}[t]
+       60<{x}<100
+       \end{aligned}
+\\
+  0.012(x-100), & \text{if }
+       \begin{aligned}[t]
+       100\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Male, 65+  }\ln(RR(x)) =
+\begin{cases}
+  0.757104(-0.4870068\sqrt{y}+1.550984y^3), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{60}
+       \end{aligned}
+\\
+  0, & \text{if }
+       \begin{aligned}[t]
+       60<{x}<100
+       \end{aligned}
+\\
+  0.012(x-100), & \text{if }
+       \begin{aligned}[t]
+       100\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female, 16-34  }\ln(RR(x)) =
+\begin{cases}
+  1.111874(1.832441y+1.538557y\ln(y)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<{30.3814}
+       \end{aligned}
+\\
+  0.01(x-30.3814), & \text{if }
+       \begin{aligned}[t]
+       30.3814\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female, 35-64  }\ln(RR(x)) =
+\begin{cases}
+  1.035623(1.832441y+1.538557y\ln(y)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<{30.3814}
+       \end{aligned}
+\\
+  0.0093(x-30.3814), & \text{if }
+       \begin{aligned}[t]
+       30.3814\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female, 65+  }\ln(RR(x)) =
+\begin{cases}
+  0.757104(1.832441y+1.538557y\ln(y)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<{30.3814}
+       \end{aligned}
+\\
+  0.0068(x-30.3814), & \text{if }
+       \begin{aligned}[t]
+       30.3814\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}  
+
+where
+
+\begin{equation}
+y=\frac{x+0.0099999997764826}{100}
+\end{equation}
+
+
+```{r ihdmort, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for mortality from Ischaemic heart disease by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = c(16, 35, 65)
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "ischaemic_heart_disease",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex, linetype = as.factor(age))) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 3.5) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99")) +
+  scale_linetype_manual("Age", values = 1:3, labels = c("16-34", "35-64", "65+"))
+
+```
+
+Source [@rehm2016modelling]
+
+Notes: All protective effects are removed for drinkers who consume more than 60g in a single drinking occasion at least once per month, as per [@roerecke2010irregular]
+
+#### Morbidity  
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) =
+\begin{cases}
+  -0.1178113\sqrt{x}+0.0189\sqrt{x}\ln(x), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<{60}
+       \end{aligned}
+\\
+  0, & \text{if }
+       \begin{aligned}[t]
+       60\leq{x}
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) = -0.296842\sqrt{x}+0.0392805x
+\end{equation}
+
+
+```{r ihdmorb, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for mortality from Ischaemic heart disease by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "ischaemic_heart_disease",
+  mort_or_morb = "morb",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 12) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@roerecke2012cardioprotective]  
+
+Notes: All protective effects are removed for drinkers who consume more than 60g in a single drinking occasion at least once per month, as per [@roerecke2010irregular]
+
+### Cardiac arrhythmias (I47-I49)
+
+\begin{equation}
+\ln(RR(x)) = 0.0575183\times\frac{(x+0.0499992370605469)}{10}
+\end{equation}
+
+```{r cardarrhyth, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for mortality from Cardiac arrhythmias by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = "Female",
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Cardiac_Arrhythmias",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 2.5)
+
+```
+
+Source [@samokhvalov2010alcohol]
+
+### Haemorrhagic and other non-ischaemic stroke (I60-I62)
+
+#### Mortality
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-1.006943)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  0.6898937\times\frac{x+0.0028572082519531}{100}, & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-1.014815)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  1.466406\times\frac{x+0.0028572082519531}{100}, & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+```{r hstrokemort, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for mortality from Haemorrhagic and other non-ischaemic stroke by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "haemorrhagic_stroke",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 10) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@patra2010alcohol]
+
+#### Morbidity
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) = 0.007695021x
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) = -0.340861\sqrt{x}+0.0944208\sqrt{x}\ln(x)
+\end{equation}
+
+```{r hstrokemorb, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for morbidity from Haemorrhagic and other non-ischaemic stroke by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "haemorrhagic_stroke",
+  mort_or_morb = "morb",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 6) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@patra2010alcohol]
+
+### Ischaemic stroke (I63-I67)
+
+#### Mortality
+
+\begin{equation}
+\textbf{Male, 16-34  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-e^{-0.03521})), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  1.111874\times(0.4030081\sqrt{y}+0.3877538\sqrt{y}\ln(y)), & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Male, 35-64  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-e^{-0.03279})), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  1.035623\times(0.4030081\sqrt{y}+0.3877538\sqrt{y}\ln(y)), & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Male, 65+  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-e^{-0.02397})), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  0.757104\times(0.4030081\sqrt{y}+0.3877538\sqrt{y}\ln(y)), & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female, 16-34  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-e^{-0.37987})), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  1.111874\times(-2.48768\sqrt{y}+3.708724y), & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female, 35-64  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-e^{-0.35382})), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  1.035623\times(-2.48768\sqrt{y}+3.708724y), & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female, 65+  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1-x(1-e^{-0.25866})), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  0.757104\times(-2.48768\sqrt{y}+3.708724y), & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+where
+
+\begin{equation}
+y=\frac{x+0.0028572082519531}{100}
+\end{equation}
+
+```{r istrokemort, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for mortality from Ischaemic stroke by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = c(16, 35, 65)
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "ischaemic_stroke",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex, linetype = as.factor(age))) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 18) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99")) +
+  scale_linetype_manual("Age", values = 1:3, labels = c("16-34", "35-64", "65+"))
+
+```
+
+Source [@rehm2016modelling]
+
+Notes: All protective effects are removed for drinkers who consume more than 60g in a single drinking occasion at least once per month, as per [@rehm2016modelling]
+
+#### Morbidity
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) = -0.132894\sqrt{x}+0.03677422\sqrt{x}\ln(x)
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) = -0.114287\sqrt{x}+0.01680936x
+\end{equation}
+
+```{r istrokemorb, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for morbidity from Ischaemic stroke by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "ischaemic_stroke",
+  mort_or_morb = "morb",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 3.5) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@patra2010alcohol]  
+
+Notes: All protective effects are removed for drinkers who consume more than 60g in a single drinking occasion at least once per month, as per [@rehm2016modelling]
+
+## Digestive diseases
+
+### Cirrhosis of the liver (K70 (excl. K70.0-K70.4, K70.9), K73-K74)
+
+#### Mortality
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1+x(1.033224-1)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  2.793524\times\frac{x+0.1699981689453125}{100}, & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) =
+\begin{cases}
+  \ln(1+x(1.421569-1)), & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}\leq{1}
+       \end{aligned}
+\\
+  3.252035\times\frac{x+0.1699981689453125}{100}, & \text{if }
+       \begin{aligned}[t]
+       x>1
+       \end{aligned}
+\end{cases}
+\end{equation}
+
+```{r livercirrmort, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for mortality from Cirrhosis of the liver by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "livercirrhosis",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 70) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+#### Morbidity
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) = 0.01687111x
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) = 0.2351821\sqrt{x}
+\end{equation}
+
+```{r livercirrmorb, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for morbidity from Cirrhosis of the liver by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "livercirrhosis",
+  mort_or_morb = "morb",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 20) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@rehm2010alcohol]
+
+### Acute pancreatitis (K85 (excl. K85.2, K85.3))
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) = 0.013x
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) =
+\begin{cases}
+  -0.0272886x, & \text{if }
+       \begin{aligned}[t]
+       0\leq{x}<3
+       \end{aligned}
+\\
+  -0.0272886x+0.0611466\times\frac{(x-3)^3}{(40-3)^2}, & \text{if }
+       \begin{aligned}[t]
+        3\leq{x}<15
+       \end{aligned}
+\\
+  -0.0272886x+0.0611466\times\frac{(x-3)^3-\frac{(x-15)^3\times(40-3)}{40-15}}{(40-3)^2}, & \text{if }
+       \begin{aligned}[t]
+        15\leq{x}<40
+       \end{aligned}
+\\
+  -0.0272886x+0.0611466\times\frac{(x-3)^3-\frac{(x-15)^3\times(40-3)-(x-40)^3\times(15-3)}{40-15}}{(40-3)^2}, & \text{if }
+       \begin{aligned}[t]
+        40\leq{x}<108
+       \end{aligned}
+\\
+  2.327965, & \text{if }
+       \begin{aligned}[t]
+        108\leq{x}
+       \end{aligned}       
+\end{cases}
+\end{equation}
+
+```{r acutepanc, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Acute pancreatitis by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Acute_Pancreatitis",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 12) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@samokhvalov2015alcohol]
+
+### Chronic pancreatitis (K86 (excl. K86.0))
+
+\begin{equation}
+\ln(RR(x)) = 0.018x
+\end{equation}
+
+```{r chronicpanc, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Acute pancreatitis by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Chronic_Pancreatitis",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 16)
+
+```
+
+Source [@samokhvalov2015alcohol]
+
+## Endocrine diseases
+
+### Diabetes mellitus (type II) (E11)
+
+\begin{equation}
+\textbf{Male  }\ln(RR(x)) = 0.00001763703x^2-0.0000000728256x^3
+\end{equation}
+
+\begin{equation}
+\textbf{Female  }\ln(RR(x)) = -0.1313991\sqrt{x}+0.01014239x
+\end{equation}
+
+```{r diabetes, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Diabetes mellitus (type II) by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female", "Male"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Diabetes",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr, colour = sex)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 1.4) +
+  scale_color_manual("Sex", values = c("#6600cc", "#00cc99"))
+
+```
+
+Source [@knott2015alcohol]
+
+## Diseases of the nervous system
+
+### Epilepsy and status epilepticus (G40-G41)
+
+\begin{equation}
+\ln(RR(x)) = 1.22861\times\frac{x+0.5}{100}
+\end{equation}
+
+```{r epilepsy, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Epilepsy and status epilepticus by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Epilepsy",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 7)
+
+```
+
+Source [@samokhvalov2010alcoholepi]
+
+## Respiratory diseases
+
+### Tuberculosis (A15-A19)
+
+\begin{equation}
+\ln(RR(x)) = 0.0179695x
+\end{equation}
+
+```{r tuberc, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Tuberculosis by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Tuberculosis",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 16)
+
+```
+
+Source [@imtiaz2017alcohol]
+
+### Lower respiratory tract infections (J09-J18)
+
+\begin{equation}
+\ln(RR(x)) = 0.4764038\times\frac{x+0.0399999618530273}{100}
+\end{equation}
+
+```{r loweresp, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for Lower respiratory tract infections by the average daily consumption of alcohol.", cache = F, fig.align = "center"}
+
+data <- data.frame(expand.grid(
+  GPerDay = 0:150,
+  sex = c("Female"),
+  age = 30
+))
+
+setDT(data)
+
+data[ , rr := tobalcepi::RRalc(
+  data,
+  disease = "Pneumonia",
+  mort_or_morb = "mort",
+  getcurve = T
+)]
+
+ggplot(data) +
+  geom_line(aes(x = GPerDay, y = rr)) +
+  theme_minimal() +
+  xlab("Mean consumption (g/day)") +
+  ylab("Relative risk") +
+  ylim(0, 2.5)
+
+```
+
+Source [@samokhvalov2010alcoholpneumonia]
+
+# Dose-response curves for partially alcohol attributable acute conditions
+
+Relative risk of harm for drinkers at consumption level $x$, measured in grams of ethanol consumed *on a single drinking occasion*, versus non-drinkers. All risk functions are applied to both genders and for both mortality and morbidity except where stated otherwise.
+
+## Transport Injuries (V01-V98, Y85.0)
+
+\begin{equation}
+RR(x) = \frac{e^{0.837637\times(ln(y)+3.973538882)+1.018824\times(y^3-0.00000665184)}}{0.370731\times(1+e^{0.837637\times(\ln(y)+3.973538882)+1.018824\times(y^3-0.00000665184)})}
+\end{equation}
+
+where  
+
+\begin{equation}
+y = \frac{\frac{x}{12.8}+1}{100}
+\end{equation}
+
+
+```{r transport, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for transport injuries by the amount of alcohol consumed on an occassion.", cache = F, fig.align = "center"}
+
+data <- data.table(grams_ethanol = 0:160)
+
+data[ , rr := tobalcepi::PArisk(
+  cause = "Transport",
+  grams_ethanol = data$grams_ethanol,
+  grams_ethanol_per_std_drink = 12.8,
+  getcurve = TRUE
+)]
+
+ggplot(data) +
+  geom_line(aes(x = grams_ethanol, y = rr)) +
+  theme_minimal() +
+  xlab("Consumption on occassion (g)") +
+  ylab("Relative risk") +
+  ylim(0, 2.5)
+
+```
+
+Source [@cherpitel2015relative]
+
+## Violent injuries (X85-Y09, Y87.1 & Y35)
+
+\begin{equation}
+RR(x) = \frac{e^{-0.42362\times\left(\frac{1}{\sqrt{y}-5.084489629}\right)+0.562549\times(y^3-0.0000578783)}}{0.110872\times(1+e^{-0.42362\times\left(\frac{1}{\sqrt{y}}-5.084489629\right)+0.562549\times(y^3-0.0000578783)})}
+\end{equation}
+
+where  
+
+\begin{equation}
+y = \frac{\frac{x}{12.8}+1}{100}
+\end{equation}
+
+```{r violence, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for violence by the amount of alcohol consumed on an occassion.", cache = F, fig.align = "center"}
+
+data <- data.table(grams_ethanol = 0:160)
+
+data[ , rr := tobalcepi::PArisk(
+  cause = "Violence",
+  grams_ethanol = data$grams_ethanol,
+  grams_ethanol_per_std_drink = 12.8,
+  getcurve = TRUE
+)]
+
+ggplot(data) +
+  geom_line(aes(x = grams_ethanol, y = rr)) +
+  theme_minimal() +
+  xlab("Consumption on occassion (g)") +
+  ylab("Relative risk") +
+  ylim(0, 7)
+
+```
+
+Source [@cherpitel2015relative]
+
+## Falls (W00-W19)
+
+\begin{equation}
+RR(x) = \frac{e^{17.84434\times(\sqrt{y}-0.1398910338)-17.6229\times(y-0.0195695013)}}{0.367446\times(1+e^{17.84434\times(\sqrt{y}-0.1398910338)-17.6229\times(y-0.0195695013)})}
+\end{equation}
+
+where  
+
+\begin{equation}
+y = \frac{\frac{x}{12.8}+1}{100}
+\end{equation}
+
+```{r falls, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for falls by the amount of alcohol consumed on an occassion.", cache = F, fig.align = "center"}
+
+data <- data.table(grams_ethanol = 0:160)
+
+data[ , rr := tobalcepi::PArisk(
+  cause = "Fall",
+  grams_ethanol = data$grams_ethanol,
+  grams_ethanol_per_std_drink = 12.8,
+  getcurve = TRUE
+)]
+
+ggplot(data) +
+  geom_line(aes(x = grams_ethanol, y = rr)) +
+  theme_minimal() +
+  xlab("Consumption on occassion (g)") +
+  ylab("Relative risk") +
+  ylim(0, 3)
+
+```
+
+Source [@cherpitel2015relative]
+
+## Other injuries (W20-W52, W65-W74, Y21, X00-X09, Y26, W75-W99, X10-X33, Y20, Y22-Y25, Y27-Y29, Y31-Y34, X60-X84 (excl. X65), Y87.0)
+
+\begin{equation}
+RR(x) = \frac{e^{-0.28148\times\left(\frac{1}{\sqrt{y}}-0.1398910338\right)-2.00946\times(y-0.015761462)}}{0.363279\times(1+e^{-0.28148\times\left(\frac{1}{\sqrt{y}}-0.1398910338\right)-2.00946\times(y-0.015761462)})}
+\end{equation}
+
+where  
+
+\begin{equation}
+y = \frac{\frac{x}{12.8}+1}{100}
+\end{equation}
+
+```{r otherinj, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 5, fig.height = 3, fig.cap = "Relative risk for other injuries by the amount of alcohol consumed on an occassion.", cache = F, fig.align = "center"}
+
+data <- data.table(grams_ethanol = 0:160)
+
+data[ , rr := tobalcepi::PArisk(
+  cause = "Other",
+  grams_ethanol = data$grams_ethanol,
+  grams_ethanol_per_std_drink = 12.8,
+  getcurve = TRUE
+)]
+
+ggplot(data) +
+  geom_line(aes(x = grams_ethanol, y = rr)) +
+  theme_minimal() +
+  xlab("Consumption on occassion (g)") +
+  ylab("Relative risk") +
+  ylim(0, 2.5)
+
+```
+
+Source [@cherpitel2015relative]
+
+# References
+
+
+
+
+
+
+

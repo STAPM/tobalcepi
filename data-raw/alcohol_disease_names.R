@@ -15,8 +15,7 @@ root_dir <- "/Volumes/"
 # Load the data 
 
 
-AlcList <- readxl::read_excel(paste0(root_dir, 
-  "ScHARR/PR_Disease_Risk_TA/Code/tables/16102018tobaccoandalcoholDiseaseListandRiskFunctions.xlsx"), 
+AlcList <- readxl::read_excel("vignettes/inst/16102018tobaccoandalcoholDiseaseListandRiskFunctions.xlsx", 
   sheet = "Alcohol")
 
 # Set it as a data table

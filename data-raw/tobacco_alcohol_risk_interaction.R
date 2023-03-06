@@ -11,11 +11,10 @@ library(readxl)
 library(data.table)
 
 # Set the file path to point to the University of Sheffield X drive
-root_dir <- "/Volumes/"
+root_dir <- "X:/"
 
 # Load the spreadsheet containing disease risks
-tob_alc_risk_int <- data.table::fread(paste0(root_dir, 
-  "ScHARR/PR_Disease_Risk_TA/Code/tables/tob_alc_interactions_180119.csv"))
+tob_alc_risk_int <- data.table::fread("vignettes/inst/tob_alc_interactions_180119.csv")
 
 # Select the versions marked as current
 tob_alc_risk_int <- tob_alc_risk_int[Version == "Current"]
@@ -30,8 +29,7 @@ usethis::use_data(tob_alc_risk_int, overwrite = T)
 # Tobacco and alcohol related diseases
 
 # Alcohol lookups
-AlcList <- readxl::read_excel(paste0(root_dir, 
-                                     "ScHARR/PR_Disease_Risk_TA/Code/tables/16102018tobaccoandalcoholDiseaseListandRiskFunctions.xlsx"), 
+AlcList <- readxl::read_excel("vignettes/inst/16102018tobaccoandalcoholDiseaseListandRiskFunctions.xlsx", 
                               sheet = "Alcohol")
 data.table::setDT(AlcList)
 setnames(AlcList, colnames(AlcList), tolower(colnames(AlcList)))
@@ -41,8 +39,7 @@ alc_icd10_lookups <- unique(alc_icd10_lookups, by = "icd10_lookups")
 
 
 # Tobacco lookups
-tob_rr_data <- readxl::read_excel(paste0(root_dir, 
-                                         "ScHARR/PR_Disease_Risk_TA/Code/tables/16102018tobaccoandalcoholDiseaseListandRiskFunctions.xlsx"), 
+tob_rr_data <- readxl::read_excel("vignettes/inst/16102018tobaccoandalcoholDiseaseListandRiskFunctions.xlsx", 
                                   sheet = "Tobacco")
 data.table::setDT(tob_rr_data)
 setnames(tob_rr_data, colnames(tob_rr_data), tolower(colnames(tob_rr_data)))

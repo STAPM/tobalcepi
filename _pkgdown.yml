@@ -32,7 +32,12 @@ navbar:
      text: Technical documentation
      menu:
       - text: Disease risk methods
-        href: articles/use_of_disease_risks_in_stapm.html
+        href: articles/Methods_for_STAPM_disease_risks.html
+      - text: Alcohol disease risks
+        href: articles/Alcohol-attributable_diseases_and_dose-response_curves.pdf
+      - text: Tobacco disease risks
+        href: articles/Smoking_and_the_risks_of_adult_diseases.pdf
+        
     github:
      icon: fab fa-github fa-lg
      href: https://github.com/STAPM/tobalcepi

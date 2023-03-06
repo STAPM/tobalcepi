@@ -8,11 +8,11 @@
 library(data.table)
 
 # Set the file path to point to the University of Sheffield X drive
-root_dir <- "/Volumes/"
+root_dir <- "X:/"
 
 # Load the spreadsheet containing the lag times
 # These are taken from Kontis et al. 2015 and were sent to us by the author
-tobacco_lag_times <- data.table::fread(paste0(root_dir, "ScHARR/PR_Disease_Risk_TA/Code/tables/excess_risk_decline_from_KontisLancet.csv"))
+tobacco_lag_times <- data.table::fread("vignettes/inst/excess_risk_decline_from_KontisLancet.csv")
 
 # Select the versions marked as current
 # and select the required columns

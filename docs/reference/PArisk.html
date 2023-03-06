@@ -42,7 +42,13 @@ for each individual for experiencing each cause during one year."><meta property
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/use_of_disease_risks_in_stapm.html">Disease risk methods</a>
+      <a href="../articles/Methods_for_STAPM_disease_risks.html">Disease risk methods</a>
+    </li>
+    <li>
+      <a href="../articles/Alcohol-attributable_diseases_and_dose-response_curves.pdf">Alcohol disease risks</a>
+    </li>
+    <li>
+      <a href="../articles/Smoking_and_the_risks_of_adult_diseases.pdf">Tobacco disease risks</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -92,7 +98,8 @@ for each individual for experiencing each cause during one year.</p>
 <span>  grams_ethanol_per_unit <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>  grams_ethanol_per_std_drink <span class="op">=</span> <span class="fl">12.8</span>,</span>
 <span>  liver_clearance_rate_h <span class="op">=</span> <span class="fl">0.017</span>,</span>
-<span>  getcurve <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  getcurve <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  grams_ethanol <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -138,6 +145,11 @@ the number of grams of ethanol in one standard drink.</p></dd>
 
 <dt>getcurve</dt>
 <dd><p>Logical - do you just want to look at the risk function curve?</p></dd>
+
+
+<dt>grams_ethanol</dt>
+<dd><p>Numeric vector - if getcurve is TRUE, use this to specify the values 
+of grams of ethanol for which curve values should be returned.</p></dd>
 
 </dl></div>
     <div id="value">

@@ -12,3 +12,5 @@ data-raw/binge_params/*.csv
 .rds
 data-raw/binge_params/Scotland/*.rds
 
+/doc/
+/Meta/

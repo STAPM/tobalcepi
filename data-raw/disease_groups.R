@@ -4,8 +4,8 @@
 library(data.table)
 
 # Set the file path to point to the University of Sheffield X drive
-root_dir <- "/Volumes/Shared/"
+root_dir <- "X:/"
 
-disease_groups <- fread(paste0(root_dir, "ScHARR/PR_Disease_Risk_TA/Code/tables/disease_groups.csv"))
+disease_groups <- fread("vignettes/inst/disease_groups.csv")
 
 usethis::use_data(disease_groups, overwrite = T)

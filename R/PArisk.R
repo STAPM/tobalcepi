@@ -28,6 +28,8 @@
 #' the number of grams of ethanol in one standard drink.
 #' @param liver_clearance_rate_h The rate at which blood alcohol concentration declines (percent / hour).
 #' @param getcurve Logical - do you just want to look at the risk function curve?
+#' @param grams_ethanol Numeric vector - if getcurve is TRUE, use this to specify the values 
+#' of grams of ethanol for which curve values should be returned.
 #'
 #' @return Returns a numeric vector of each individual's relative risk of the acute consequences of drinking.
 #' 
@@ -135,33 +137,42 @@
 #' }
 #'
 PArisk <- function(
-  interval_prob_vec = NULL,
-  SODFreq = NULL,
-  Weight = NULL,
-  Widmark_r = NULL,
-  cause = "Transport",
-  grams_ethanol_per_unit = 8,
-  grams_ethanol_per_std_drink = 12.8,
-  liver_clearance_rate_h = 0.017,
-  getcurve = FALSE
+    interval_prob_vec = NULL,
+    SODFreq = NULL,
+    Weight = NULL,
+    Widmark_r = NULL,
+    cause = "Transport",
+    grams_ethanol_per_unit = 8,
+    grams_ethanol_per_std_drink = 12.8,
+    liver_clearance_rate_h = 0.017,
+    getcurve = FALSE,
+    grams_ethanol = NULL
 ) {
   
+  if(getcurve == FALSE) {
+    
+    # The max number of grams of ethanol per day drunk on a single drinking occasion
+    # 600 is v large
+    # but this can influence the probability density
+    # but it makes things slow to have a large number
+    # try scaling back by 10%
+    kn <- 600 * 0.9
+    
+    grams_ethanol <- 1:kn
+    
+  }
   
-  # The max number of grams of ethanol per day drunk on a single drinking ocassion
-  # 600 is v large
-  # but this can influence the probability density
-  # but it makes things slow to have a large number
-  # try scaling back by 10%
-  kn <- 600 * 0.9
-  
-  
-  grams_ethanol <- 1:kn
+  if(getcurve == TRUE) {
+    
+    kn <- length(grams_ethanol)  
+    
+  }
   
   # The amounts of alcohol (g ethanol) that could be consumed on an occasion
   # i.e. the mass of alcohol ingested
   #grams_ethanol <- 1:100 # units * ConvertToGramOfAlcohol#1:100
   
-  if(!isTRUE(getcurve)) {
+  if(getcurve == FALSE) {
     
     # Duration is calculated in minutes
     
@@ -219,7 +230,19 @@ PArisk <- function(
   
   # NOTE THAT VOLUME IS IN STANDARD DRINKS, NOT GRAMS, PER OCCASION. 1 STD. DRINK = 16ml (12.8g) OF ETHANOL
   
-  v <- grams_ethanol[1:(kn - 1)] / grams_ethanol_per_std_drink
+  
+  if(getcurve == FALSE) {
+    
+    v <- grams_ethanol[1:(kn - 1)] / grams_ethanol_per_std_drink
+    
+  }
+  
+  if(getcurve == TRUE) {
+    
+    v <- grams_ethanol / grams_ethanol_per_std_drink
+    
+  }
+  
   
   v1 <- (v + 1) / 100
   
@@ -314,7 +337,7 @@ PArisk <- function(
       FUN.VALUE = numeric(1)
     )
     
-
+    
     
     
     

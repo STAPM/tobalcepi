@@ -7,7 +7,6 @@ inst/doc
 Archive/
 dev/
 .DS_Store
-*.pdf
 data-raw/binge_params/*.csv
 .rds
 data-raw/binge_params/Scotland/*.rds

@@ -279,7 +279,7 @@ library(ggplot2) # for plotting
 Angus, Colin, M Henney, L Webster, and Duncan Gillespie. 2018.
 “Alcohol-Attributable Diseases and Dose-Response Curves for the
 Sheffield Alcohol Policy Model Version 4.0.” The University of
-Sheffield. <https://doi.org/10.15131/shef.data.6819689.v2>.
+Sheffield. <https://doi.org/10.15131/shef.data.6819689>.
 
 </div>
 
@@ -287,7 +287,7 @@ Sheffield. <https://doi.org/10.15131/shef.data.6819689.v2>.
 
 Webster, Laura, Colin Angus, Alan Brennan, and Duncan Gillespie. 2018.
 “Smoking and the Risks of Adult Diseases.” The University of Sheffield.
-<https://doi.org/10.15131/shef.data.7411451.v1>.
+<https://doi.org/10.15131/shef.data.7411451>.
 
 </div>
 

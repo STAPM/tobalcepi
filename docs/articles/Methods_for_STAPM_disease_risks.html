@@ -157,10 +157,10 @@ technical reports for further information:</p>
 </h3>
 <p>To organise the information on the relative risks of diseases due to
 tobacco and alcohol consumption, and to provide functions to easily work
-with these data in modelling, we built the <a href="https://stapm.gitlab.io/r-packages/tobalcepi/" class="external-link">tobalcepi R code
-package</a> (click on the link to the package webpage for introductory
-information). The R code functions are version controlled so that each
-project works with a specified version of the package (see the <a href="https://docs.google.com/spreadsheets/d/1xEMhnUMXgeXbeBQtqM_yCjJ9jC6f9j4QLMFX6SToJOo/edit#gid=0" class="external-link">version
+with these data in modelling, we built the <a href="https://stapm.github.io/tobalcepi/">tobalcepi R code package</a>
+(click on the link to the package webpage for introductory information).
+The R code functions are version controlled so that each project works
+with a specified version of the package (see the <a href="https://docs.google.com/spreadsheets/d/1xEMhnUMXgeXbeBQtqM_yCjJ9jC6f9j4QLMFX6SToJOo/edit#gid=0" class="external-link">version
 tracking sheet</a>), and error-fixes and new developments can be tracked
 (see the <a href="https://docs.google.com/spreadsheets/d/1Mc6FjiwHgW4vvGs62SgYpAZrPXcqWBCpltBLZeTd8V4/edit#gid=0" class="external-link">issues
 log</a> and <a href="https://docs.google.com/spreadsheets/d/1u3pxDF071LYbCfRF0SESRp_hX8YXUwoAG535etZBrPM/edit#gid=0" class="external-link">software
@@ -188,20 +188,17 @@ accessible only to the project team).</p>
 <a href="https://gitlab.com/stapm/model-inputs/epi_pop_attrib_fractions" class="external-link">Population
 attributable fractions</a>. Working code repository for the estimation
 and exploration of the fractions of disease attributable to tobacco
-and/or alcohol. See also the <a href="https://stapm.shinyapps.io/PAF_viewer/" class="external-link">experimental Shiny app</a>
-that aims to make the population attributable fraction estimates more
-accessible.</li>
+and/or alcohol.</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="alcohol-related-risks-of-disease">Alcohol related risks of disease<a class="anchor" aria-label="anchor" href="#alcohol-related-risks-of-disease"></a>
 </h2>
-<p>See the <a href="https://stapm.gitlab.io/model-inputs/epi_alcohol_risk/Alcohol-attributable_diseases_and_dose-response_curves.pdf" class="external-link">alcohol
-and disease risks report</a> <span class="citation">(<a href="#ref-Angus2018" role="doc-biblioref">Angus et al.
+<p>See the alcohol and disease risks report <span class="citation">(<a href="#ref-Angus2018" role="doc-biblioref">Angus et al.
 2018</a>)</span>. The alcohol modelling considers 45 categories of adult
 diseases related to alcohol consumption and the corresponding
 dose-response effects of current levels of alcohol consumption on the
-relative risks of disease . The model links average weekly alcohol
+relative risks of disease. The model links average weekly alcohol
 consumption to the risk of chronic diseases, and the amount of alcohol
 consumed on single drinking occasions to health harms associated with
 intoxication.</p>
@@ -550,20 +547,19 @@ the heaviest drinking day. This means that for STAPM, we need to develop
 a method to link the risk of acute harms that are wholly-attributable to
 alcohol consumption to average weekly alcohol consumption.</p>
 <p><em>The solution</em><br>
-The solution is to draw on the methods described in
-<code>vignette("alc_partially_attrib_acute")</code>, which uses
-parameter values from Hill-McManus et al. <span class="citation">(<a href="#ref-hill2014estimation" role="doc-biblioref">2014</a>)</span> to
-infer the characteristics of single occasion drinking from average
-weekly alcohol consumption and a range of individual-level covariates.
-Using the method in <code><a href="../reference/AlcBinge_stapm.html">tobalcepi::AlcBinge_stapm()</a></code> we can
-calculate the average parameter values by age, sex and IMD quintile.
-Using these parameter values, we can translate each individual’s average
-weekly alcohol consumption to their expected number of weekly drinking
-occasions, and the distribution of the amounts that each individual
-drinks on their drinking occasions. For each individual, we can then
-calculate the total number of units per year that are drunk after each
-individual has already exceeded the single occasion drinking thresholds
-of 4 units/day for men and 3 units/day for women.</p>
+The solution is to draw on the methods for partially attributable acute
+conditions, which uses parameter values from Hill-McManus et al. <span class="citation">(<a href="#ref-hill2014estimation" role="doc-biblioref">2014</a>)</span> to infer the characteristics of
+single occasion drinking from average weekly alcohol consumption and a
+range of individual-level covariates. Using the method in
+<code><a href="../reference/AlcBinge_stapm.html">tobalcepi::AlcBinge_stapm()</a></code> we can calculate the average
+parameter values by age, sex and IMD quintile. Using these parameter
+values, we can translate each individual’s average weekly alcohol
+consumption to their expected number of weekly drinking occasions, and
+the distribution of the amounts that each individual drinks on their
+drinking occasions. For each individual, we can then calculate the total
+number of units per year that are drunk after each individual has
+already exceeded the single occasion drinking thresholds of 4 units/day
+for men and 3 units/day for women.</p>
 <p><em>Implementing in the STAPM code</em><br>
 A new function <code><a href="../reference/WArisk_acute.html">tobalcepi::WArisk_acute()</a></code> has been created
 to calculate the total number of units that each individual is expected
@@ -585,8 +581,7 @@ SAPM.</p>
 <div class="section level2">
 <h2 id="tobacco-related-risks-of-disease">Tobacco related risks of disease<a class="anchor" aria-label="anchor" href="#tobacco-related-risks-of-disease"></a>
 </h2>
-<p>See the <a href="https://stapm.gitlab.io/model-inputs/epi_tobacco_risk/Smoking_and_the_risks_of_adult_diseases.pdf" class="external-link">smoking
-and disease risks report</a> <span class="citation">(<a href="#ref-Webster2018" role="doc-biblioref">Webster et al.
+<p>See the smoking and disease risks report <span class="citation">(<a href="#ref-Webster2018" role="doc-biblioref">Webster et al.
 2018</a>)</span>. The Sheffield Tobacco Policy Model (STPM) considers 52
 adult diseases related to smoking and the corresponding relative risks
 of developing these diseases in current vs. never smokers, and in former

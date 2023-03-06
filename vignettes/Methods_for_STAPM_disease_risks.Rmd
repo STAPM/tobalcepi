@@ -237,7 +237,7 @@ RR_{former}=1+[RR_{current}-1][1-p(f)],
 in which the relative risk ($RR$) associated with current smoking is scaled according to our estimates of the proportional reduction in the risk ($p$) associated with their number of years ($f$) as a former smoker. After someone has been quit for 40 years, we assume their risk reverts back to be the same as a never smoker.  
 
 # Tobacco–Alcohol interactions in disease risk
-See the [smoking and disease risks report](https://stapm.gitlab.io/model-inputs/epi_tobacco_risk/Smoking_and_the_risks_of_adult_diseases.pdf) [@Webster2018] for a short section on tobacco-alcohol risk interactions.  
+See the smoking and disease risks report [@Webster2018] for a short section on tobacco-alcohol risk interactions.  
 
 There is evidence for the risk of disease in someone who consumes both tobacco and alcohol ($RR_{ta}$) being higher than would be expected from combining the independent risks from tobacco ($RR_t$) and alcohol ($RR_a$). This additional risk due to tobacco-alcohol interaction (over and above the combination of the independent contributions to risk from tobacco and alcohol) can be expressed as a "synergy factor" (1) [@Prabhu2014;@Hashibe2009].   
 

@@ -1,0 +1,172 @@
+---
+title: "Methods notes on the estimation of Population Attributable Fractions"
+biblio-style: apalike
+output: 
+  bookdown::html_document2:
+    highlight: haddock
+    pandoc_args: [ --listings ]
+    number_sections: true
+    toc: false
+link-citations: yes
+bibliography:
+- refs/disease-risks-pafs.bib
+- refs/packages.bib
+always_allow_html: yes
+urlcolor: blue
+editor_options: 
+  chunk_output_type: console
+pkgdown:
+  as_is: true
+---
+
+```{r setup, include = FALSE, results = 'hide', warning = FALSE}
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.pos = 'H'
+)
+
+options(tinytex.verbose = F)
+
+suppressPackageStartupMessages(library(magrittr))
+suppressPackageStartupMessages(library(knitr))
+suppressPackageStartupMessages(library(kableExtra))
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(readxl))
+suppressPackageStartupMessages(library(tobalcepi))
+suppressPackageStartupMessages(library(ggthemes))
+suppressPackageStartupMessages(library(RColorBrewer))
+suppressPackageStartupMessages(library(cowplot))
+
+```
+
+```{r include=FALSE, eval=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'refs/packages.bib')
+```
+ 
+# Summary {-}
+This methodology report sets out a description of how we estimate the fraction of disease cases attributable to tobacco and alcohol. It is currently limited to a brief description and critique of the mathematical approach commonly taken.  
+
+ 
+\newpage 
+
+\hypersetup{linkcolor=blue}
+\tableofcontents
+
+\newpage
+
+# Introduction
+Tobacco and alcohol are risk factors for a broad range of health conditions, but the relationship between smoking, drinking and some health conditions is complex. Whilst some conditions, such as alcohol liver disease, are caused solely by alcohol, there are many other conditions for which alcohol is a contributory, but not the only, risk factor. Estimating the proportions of these partially alcohol-attributable and tobacco-attributable conditions that are due to smoking and drinking is critical in understanding the burden which tobacco and alcohol place upon health and healthcare services [@nhs2019statisticsALC;@nhs2019statistics]. These proportions, known generally as *Population Attributable Fractions* (PAFs) or specifically *Alcohol Attributable Fractions* (AAFs) and *Smoking Attributable Fractions* (SAFs), are defined as the proportion of the cases of a partially attributable disease or injury that would be prevented if exposure to alcohol or tobacco was eliminated [@mansournia2018population;@rosen2013intuitive].   
+
+
+```{r table1, eval = T, warning = F, echo=F, cache = F}
+
+df_table1 <- readxl::read_xlsx('inst/Glossary.xlsx','glossary')
+
+df_table1 %>%
+  kableExtra::kbl(booktabs = T, caption = "Explanation of terms.", label = "table1", linesep = "\\hline", escape = F, longtable = T) %>%
+  kableExtra::column_spec(column = 1, width = "5cm") %>%
+  kableExtra::column_spec(column = 2, width = "11cm") %>%
+  kableExtra::kable_styling(font_size = 12, latex_options = c("HOLD_position")) 
+
+```
+ 
+```{r table2, eval = T, warning = F, echo=F, cache = F}
+
+df_table1 <- readxl::read_xlsx('inst/mathematical_notation.xlsx','STPM_desc')
+
+df_table1 %>%
+  kableExtra::kbl(booktabs = T, caption = "Overview of mathematical notation.", label = "table2", linesep = "\\hline", escape = F) %>%
+  kableExtra::column_spec(column = 1, width = "4cm") %>%
+  kableExtra::column_spec(column = 2, width = "10cm") %>%
+  kableExtra::kable_styling(font_size = 12, latex_options = c("HOLD_position"))
+
+``` 
+
+# Population attributable fraction theory
+
+## Preamble
+The population attributable fraction (PAF) is the proportion by which the cases of a disease would be reduced if the population were not exposed to a certain factor. In our case, we define the exposure as either tobacco smoking, alcohol consumption, or a combination of the two. The PAF is defined as  
+
+\begin{equation}
+PAF = \frac{A_{\text{exposed}}(h)}{A_{\text{total}}(h)} (\#eq:pafbasic)
+\end{equation}
+
+where $A_{exposed}(h)$ is the number of individuals who have disease $h$ because of the exposure, and $A_{total}(h)$ is the total number of people with disease $h$. It should be obvious that for chronic diseases related to tobacco and alcohol, the number of individuals who have the disease in any year $y$ is strongly influenced by how their history of exposure to tobacco and alcohol consumption over many years has affected disease incidence, recovery, relapse and survival. However, it turns out that it is difficult to incorporate this complex chain of causality into PAF estimates. This means that when we consider the methodology of PAF calculation, part of our aim is to understand how our chosen method might bias the PAF estimates.       
+
+## The commonly used formula
+There are a range of alternative methods to calculate PAFs (e.g. see a comparison of methods for estimating smoking attributable fractions [@Oza2011]). The method that we consider, which we term the "prevalence-based method", is based on the use of cross-sectional survey data on tobacco and alcohol consumption. It does not make a direct link between an individual's tobacco and alcohol consumption and their development of disease using these data. Instead, it makes use of published statistical estimates that show how the relative risk of disease varies with exposure to tobacco and alcohol consumption. It is commonly used to estimate the disease morbidity and mortality attributable to tobacco and alcohol consumption in England [@nhs2019statisticsALC;@nhs2019statistics;@RCP2018;@jones2008alcohol]. It is defined for each disease as  
+
+\begin{equation}
+PAF = \frac{\sum_{u}\theta(u)[rr(u)-1]}{1+\sum_{u}\theta(u)[rr(u)-1]},(\#eq:pafmain)
+\end{equation}
+
+where $u$ is an index of exposure, which in our case might be defined in terms of current and past consumption of tobacco and/or alcohol, and $rr$ is the relative risk of disease. PAFs might be estimated using \@ref(eq:pafmain) separately for particular calendar years, ages or various definitions of population strata.  
+
+<br/>
+
+**Bias notes**
+
+- Estimates will depend on the extent to which the survey data records each individual's current and past tobacco and alcohol consumption, and most cross-sectional survey datasets have limited information on individual consumption histories.      
+- Estimates also depend on the nature of the statistical estimates that link individual tobacco and alcohol consumption to their relative risk of disease. Meta-analyses are used where possible, but primary studies vary in influential factors such as: population context; how they have defined exposure to tobacco and alcohol; how they have defined disease end-points, e.g. incidence, prevalence or death; study design, e.g. cohort or case-control; and the factors controlled for in statistical analysis.
+
+<br/>
+
+## Derivation for chronic disease incidence
+The derivation of \@ref(eq:pafmain) in terms of the incidence of a chronic disease, such as a particular type of cancer, is as follows:      
+
+1. Considering a particular year and age, write the number of new cases of the disease, $X(h)$, in terms of: population size, $A$; the proportion of people with each level of exposure, $\theta(u)$; the relative increase in the risk of disease incidence at that level of exposure, $rr(u, h)$; and the probability that people who are not exposed get the disease, $P_{\text{incidence}}(h | u = \text{not exposed})$. \begin{equation}
+X(h) = A\times{}\sum_{u}P_{\text{incidence}}(h | u = \text{not exposed})\times{}\theta(u)\times{}rr(u, h),(\#eq:der1)
+\end{equation} noting that 
+
+\begin{equation}
+rr(u, h) = 1 + z,(\#eq:rrz)
+\end{equation} 
+
+where $z$ is the proportional increase in risk due to the exposure such that $z = 0$ for individuals who are not exposed.      
+
+<br/>
+
+2. Re-write (\ref{der1}) in terms of $z$ to give \begin{equation}
+X(h) = A\times{}\sum_{u}P_{\text{incidence}}(h | u = \text{not exposed})\times{}\theta(u)\times{}[1+z(u, h)].\label{der2}
+\end{equation} For the numerator, expand the brackets and retain only the terms that give the number of new disease cases that are due to exposure \begin{align}
+X_{\text{exposed}}(h) = A\times{}\sum_{u}\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})\times{}z(u, h).
+\end{align} For the denominator, use the full expanded version, i.e. the total new disease cases, and apply \@ref(eq:pafbasic) to give \begin{equation}
+PAF = \frac{A\times{}\sum_{u}\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})\times{}z(u, h)}{A\times{}\sum_{u}\left[\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})+\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})\times{}z(u, h)\right]},
+\end{equation} which simplifies to \begin{equation}
+PAF = \frac{\sum_{u}\theta(u)\times{}z(u,h)}{1+\sum_{u}\theta(u)\times{}z(u,h)},
+\end{equation} and then substituting with \@ref(eq:rrz) becomes \@ref(eq:pafmain).   
+
+
+<br/>
+
+**Bias notes**  
+
+- The PAFs associated with the prevalence and mortality rates from chronic diseases for a particular age will be a function of the PAFs associated with disease incidence for previous ages within the same birth-cohort.   
+- The function will be a weighted average, where the weights indicate the distribution of ages of disease incidence for the individuals who are currently alive and have the disease.   
+- If \@ref(eq:pafmain) is applied to the prevalence and mortality rates from chronic diseases, then this makes the strong assumption that exposure is constant across ages within a birth-cohort.
+
+<br/>
+
+## Protective effects
+For some diseases, the relative risks indicate that some levels of exposure to tobacco or alcohol consumption protect against the disease, i.e. people who smoke or drink are less likely to get the disease. Protective effects are defined by $rr(u,h) < 1$, which when \@ref(eq:pafmain) is applied results in negative PAFs. Negative PAFs can be understood by defining the relationship between the observed lower number of disease cases with the exposure $A_\text{observed exposure}(h)$ and the hypothetically higher number of disease cases without the exposure $A_\text{no exposure}(h)$ as:   
+
+\begin{equation}
+A_\text{no exposure}(h) \times{} [1+PAF] = A_\text{observed exposure}(h).
+\end{equation}
+
+<br/>
+
+# References
+
+
+
+
+
+
+

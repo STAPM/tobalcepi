@@ -37,6 +37,8 @@ navbar:
         href: articles/Alcohol-attributable_diseases_and_dose-response_curves.pdf
       - text: Tobacco disease risks
         href: articles/Smoking_and_the_risks_of_adult_diseases.pdf
+      - text: Population Attributable Fraction methods
+        href: articles/PAF_methodology_report.html
         
     github:
      icon: fab fa-github fa-lg

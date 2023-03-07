@@ -4,9 +4,10 @@ pkgdown_sha: ~
 articles:
   Alcohol-attributable_diseases_and_dose-response_curves: Alcohol-attributable_diseases_and_dose-response_curves.pdf
   Methods_for_STAPM_disease_risks: Methods_for_STAPM_disease_risks.html
+  PAF_methodology_report: PAF_methodology_report.html
   Smoking_and_the_risks_of_adult_diseases: Smoking_and_the_risks_of_adult_diseases.pdf
   tobalcepi: tobalcepi.html
-last_built: 2023-03-06T17:51Z
+last_built: 2023-03-07T09:14Z
 urls:
   reference: https://stapm.github.io/tobalcepi/reference
   article: https://stapm.github.io/tobalcepi/articles

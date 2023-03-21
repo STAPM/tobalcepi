@@ -11,7 +11,7 @@ Functions to assign relative risks of disease to individuals based on their toba
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://stapm.gitlab.io/r-packages/tobalcepi/}
+  \item \url{https://stapm.github.io/tobalcepi/}
 }
 
 }

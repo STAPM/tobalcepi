@@ -358,17 +358,19 @@ PAF = \frac{\sum_{u}\theta(u)[rr(u)-1]}{1+\sum_{u}\theta(u)[rr(u)-1]},\tag{2.2}
 </h3>
 <p>The derivation of <a href="#eq:pafmain">(2.2)</a> in terms of the incidence of a chronic disease, such as a particular type of cancer, is as follows:</p>
 <ol style="list-style-type: decimal">
-<li>Considering a particular year and age, write the number of new cases of the disease, <span class="math inline">\(X(h)\)</span>, in terms of: population size, <span class="math inline">\(A\)</span>; the proportion of people with each level of exposure, <span class="math inline">\(\theta(u)\)</span>; the relative increase in the risk of disease incidence at that level of exposure, <span class="math inline">\(rr(u, h)\)</span>; and the probability that people who are not exposed get the disease, <span class="math inline">\(P_{\text{incidence}}(h | u = \text{not exposed})\)</span>. <span class="math display">\[\begin{equation}
-X(h) = A\times{}\sum_{u}P_{\text{incidence}}(h | u = \text{not exposed})\times{}\theta(u)\times{}rr(u, h),(\#eq:der1)
-\end{equation}\]</span> noting that</li>
+<li>Considering a particular year and age, write the number of new cases of the disease, <span class="math inline">\(X(h)\)</span>, in terms of: population size, <span class="math inline">\(A\)</span>; the proportion of people with each level of exposure, <span class="math inline">\(\theta(u)\)</span>; the relative increase in the risk of disease incidence at that level of exposure, <span class="math inline">\(rr(u, h)\)</span>; and the probability that people who are not exposed get the disease, <span class="math inline">\(P_{\text{incidence}}(h | u = \text{not exposed})\)</span>.</li>
 </ol>
+<p><span class="math display" id="eq:der1">\[\begin{equation}
+X(h) = A\times{}\sum_{u}P_{\text{incidence}}(h | u = \text{not exposed})\times{}\theta(u)\times{}rr(u, h),\tag{2.3}
+\end{equation}\]</span></p>
+<p>noting that</p>
 <p><span class="math display" id="eq:rrz">\[\begin{equation}
-rr(u, h) = 1 + z,\tag{2.3}
+rr(u, h) = 1 + z,\tag{2.4}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(z\)</span> is the proportional increase in risk due to the exposure such that <span class="math inline">\(z = 0\)</span> for individuals who are not exposed.</p>
 <p><br></p>
 <ol start="2" style="list-style-type: decimal">
-<li>Re-write <a href="#eq:der1">(<strong>??</strong>)</a> in terms of <span class="math inline">\(z\)</span> to give <span class="math display">\[\begin{equation}
+<li>Re-write <a href="#eq:der1">(2.3)</a> in terms of <span class="math inline">\(z\)</span> to give <span class="math display">\[\begin{equation}
 X(h) = A\times{}\sum_{u}P_{\text{incidence}}(h | u = \text{not exposed})\times{}\theta(u)\times{}[1+z(u, h)].\label{der2}
 \end{equation}\]</span> For the numerator, expand the brackets and retain only the terms that give the number of new disease cases that are due to exposure <span class="math display">\[\begin{align}
 X_{\text{exposed}}(h) = A\times{}\sum_{u}\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})\times{}z(u, h).
@@ -376,7 +378,7 @@ X_{\text{exposed}}(h) = A\times{}\sum_{u}\theta(u)\times{}P_{\text{incidence}}(h
 PAF = \frac{A\times{}\sum_{u}\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})\times{}z(u, h)}{A\times{}\sum_{u}\left[\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})+\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})\times{}z(u, h)\right]},
 \end{equation}\]</span> which simplifies to <span class="math display">\[\begin{equation}
 PAF = \frac{\sum_{u}\theta(u)\times{}z(u,h)}{1+\sum_{u}\theta(u)\times{}z(u,h)},
-\end{equation}\]</span> and then substituting with <a href="#eq:rrz">(2.3)</a> becomes <a href="#eq:pafmain">(2.2)</a>.</li>
+\end{equation}\]</span> and then substituting with <a href="#eq:rrz">(2.4)</a> becomes <a href="#eq:pafmain">(2.2)</a>.</li>
 </ol>
 <p><br></p>
 <p><strong>Bias notes</strong></p>

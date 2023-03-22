@@ -126,9 +126,13 @@ where $u$ is an index of exposure, which in our case might be defined in terms o
 ## Derivation for chronic disease incidence
 The derivation of \@ref(eq:pafmain) in terms of the incidence of a chronic disease, such as a particular type of cancer, is as follows:      
 
-1. Considering a particular year and age, write the number of new cases of the disease, $X(h)$, in terms of: population size, $A$; the proportion of people with each level of exposure, $\theta(u)$; the relative increase in the risk of disease incidence at that level of exposure, $rr(u, h)$; and the probability that people who are not exposed get the disease, $P_{\text{incidence}}(h | u = \text{not exposed})$. \begin{equation}
+1. Considering a particular year and age, write the number of new cases of the disease, $X(h)$, in terms of: population size, $A$; the proportion of people with each level of exposure, $\theta(u)$; the relative increase in the risk of disease incidence at that level of exposure, $rr(u, h)$; and the probability that people who are not exposed get the disease, $P_{\text{incidence}}(h | u = \text{not exposed})$. 
+
+\begin{equation}
 X(h) = A\times{}\sum_{u}P_{\text{incidence}}(h | u = \text{not exposed})\times{}\theta(u)\times{}rr(u, h),(\#eq:der1)
-\end{equation} noting that 
+\end{equation} 
+
+noting that 
 
 \begin{equation}
 rr(u, h) = 1 + z,(\#eq:rrz)

@@ -133,7 +133,10 @@
 <h2 id="introduction">
 <span class="header-section-number">1</span> Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>Tobacco and alcohol are risk factors for a broad range of health conditions, but the relationship between smoking, drinking and some health conditions is complex. Whilst some conditions, such as alcohol liver disease, are caused solely by alcohol, there are many other conditions for which alcohol is a contributory, but not the only, risk factor. Estimating the proportions of these partially alcohol-attributable and tobacco-attributable conditions that are due to smoking and drinking is critical in understanding the burden which tobacco and alcohol place upon health and healthcare services <span class="citation">(<a href="#ref-nhs2019statisticsALC" role="doc-biblioref">NHS Digital 2019a</a>, <a href="#ref-nhs2019statistics" role="doc-biblioref">2019b</a>)</span>. These proportions, known generally as <em>Population Attributable Fractions</em> (PAFs) or specifically <em>Alcohol Attributable Fractions</em> (AAFs) and <em>Smoking Attributable Fractions</em> (SAFs), are defined as the proportion of the cases of a partially attributable disease or injury that would be prevented if exposure to alcohol or tobacco was eliminated <span class="citation">(<a href="#ref-mansournia2018population" role="doc-biblioref">Mansournia and Altman 2018</a>; <a href="#ref-rosen2013intuitive" role="doc-biblioref">Rosen 2013</a>)</span>.</p>
+<p>Tobacco and alcohol are risk factors for a broad range of health conditions, but the relationship between smoking, drinking and some health conditions is complex. Whilst some conditions, such as alcohol liver disease, are caused solely by alcohol, there are other conditions for which alcohol is a contributory, but not the only, risk factor.</p>
+<p>When the risk of having a health condition is increased by exposure to tobacco or alcohol consumption, but tobacco or alcohol consumption is not the only factor that increases risk, we refer to the burden of ill health from that condition as being “partially-attributable” to tobacco or alcohol consumption.</p>
+<p>Estimating the proportions of the health burden of conditions that are partially attributable to tobacco smoking and drinking alcohol is important for monitoring the impact of these commodities on society, e.g. for understanding the additional demand for healthcare services that is due to tobacco or alcohol consumption <span class="citation">(<a href="#ref-nhs2019statisticsALC" role="doc-biblioref">NHS Digital 2019a</a>, <a href="#ref-nhs2019statistics" role="doc-biblioref">2019b</a>)</span>.</p>
+<p>These proportions, known generally as <em>Population Attributable Fractions</em> (PAFs) or specifically <em>Alcohol Attributable Fractions</em> (AAFs), <em>Smoking Attributable Fractions</em> (SAFs) or <em>Alcohol and Smoking Attributable Fractions</em> (ASAFs) (that define the joint burden of disease that is due to the combination of tobacco and alcohol consumption among individuals in society), are defined as the proportion of the cases of a partially attributable disease or injury that would be prevented if exposure to alcohol or tobacco was eliminated <span class="citation">(<a href="#ref-mansournia2018population" role="doc-biblioref">Mansournia and Altman 2018</a>; <a href="#ref-rosen2013intuitive" role="doc-biblioref">Rosen 2013</a>)</span>.</p>
 <table class="table table" style="font-size: 12px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
 <span id="tab:table1">Table 1.1: </span>Explanation of terms.
@@ -318,8 +321,8 @@ proportional increase in the relative risk of a disease due to an exposure
 </table>
 </div>
 <div class="section level2" number="2">
-<h2 id="population-attributable-fraction-theory">
-<span class="header-section-number">2</span> Population attributable fraction theory<a class="anchor" aria-label="anchor" href="#population-attributable-fraction-theory"></a>
+<h2 id="population-attributable-fraction-derivation">
+<span class="header-section-number">2</span> Population attributable fraction derivation<a class="anchor" aria-label="anchor" href="#population-attributable-fraction-derivation"></a>
 </h2>
 <div class="section level3" number="2.1">
 <h3 id="preamble">
@@ -365,7 +368,7 @@ rr(u, h) = 1 + z,\tag{2.3}
 <p>where <span class="math inline">\(z\)</span> is the proportional increase in risk due to the exposure such that <span class="math inline">\(z = 0\)</span> for individuals who are not exposed.</p>
 <p><br></p>
 <ol start="2" style="list-style-type: decimal">
-<li>Re-write (<span class="math inline">\(\ref{der1}\)</span>) in terms of <span class="math inline">\(z\)</span> to give <span class="math display">\[\begin{equation}
+<li>Re-write <a href="#eq:der1">(<strong>??</strong>)</a> in terms of <span class="math inline">\(z\)</span> to give <span class="math display">\[\begin{equation}
 X(h) = A\times{}\sum_{u}P_{\text{incidence}}(h | u = \text{not exposed})\times{}\theta(u)\times{}[1+z(u, h)].\label{der2}
 \end{equation}\]</span> For the numerator, expand the brackets and retain only the terms that give the number of new disease cases that are due to exposure <span class="math display">\[\begin{align}
 X_{\text{exposed}}(h) = A\times{}\sum_{u}\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})\times{}z(u, h).

@@ -61,7 +61,13 @@ This methodology report sets out a description of how we estimate the fraction o
 \newpage
 
 # Introduction
-Tobacco and alcohol are risk factors for a broad range of health conditions, but the relationship between smoking, drinking and some health conditions is complex. Whilst some conditions, such as alcohol liver disease, are caused solely by alcohol, there are many other conditions for which alcohol is a contributory, but not the only, risk factor. Estimating the proportions of these partially alcohol-attributable and tobacco-attributable conditions that are due to smoking and drinking is critical in understanding the burden which tobacco and alcohol place upon health and healthcare services [@nhs2019statisticsALC;@nhs2019statistics]. These proportions, known generally as *Population Attributable Fractions* (PAFs) or specifically *Alcohol Attributable Fractions* (AAFs) and *Smoking Attributable Fractions* (SAFs), are defined as the proportion of the cases of a partially attributable disease or injury that would be prevented if exposure to alcohol or tobacco was eliminated [@mansournia2018population;@rosen2013intuitive].   
+Tobacco and alcohol are risk factors for a broad range of health conditions, but the relationship between smoking, drinking and some health conditions is complex. Whilst some conditions, such as alcohol liver disease, are caused solely by alcohol, there are other conditions for which alcohol is a contributory, but not the only, risk factor.   
+
+When the risk of having a health condition is increased by exposure to tobacco or alcohol consumption, but tobacco or alcohol consumption is not the only factor that increases risk, we refer to the burden of ill health from that condition as being "partially-attributable" to tobacco or alcohol consumption.   
+
+Estimating the proportions of the health burden of conditions that are partially attributable to tobacco smoking and drinking alcohol is important for monitoring the impact of these commodities on society, e.g. for understanding the additional demand for healthcare services that is due to tobacco or alcohol consumption [@nhs2019statisticsALC;@nhs2019statistics].    
+
+These proportions, known generally as *Population Attributable Fractions* (PAFs) or specifically *Alcohol Attributable Fractions* (AAFs), *Smoking Attributable Fractions* (SAFs) or *Alcohol and Smoking Attributable Fractions* (ASAFs) (that define the joint burden of disease that is due to the combination of tobacco and alcohol consumption among individuals in society), are defined as the proportion of the cases of a partially attributable disease or injury that would be prevented if exposure to alcohol or tobacco was eliminated [@mansournia2018population;@rosen2013intuitive].     
 
 
 ```{r table1, eval = T, warning = F, echo=F, cache = F}
@@ -88,7 +94,7 @@ df_table1 %>%
 
 ``` 
 
-# Population attributable fraction theory
+# Population attributable fraction derivation
 
 ## Preamble
 The population attributable fraction (PAF) is the proportion by which the cases of a disease would be reduced if the population were not exposed to a certain factor. In our case, we define the exposure as either tobacco smoking, alcohol consumption, or a combination of the two. The PAF is defined as  
@@ -132,7 +138,7 @@ where $z$ is the proportional increase in risk due to the exposure such that $z 
 
 <br/>
 
-2. Re-write (\ref{der1}) in terms of $z$ to give \begin{equation}
+2. Re-write \@ref(eq:der1) in terms of $z$ to give \begin{equation}
 X(h) = A\times{}\sum_{u}P_{\text{incidence}}(h | u = \text{not exposed})\times{}\theta(u)\times{}[1+z(u, h)].\label{der2}
 \end{equation} For the numerator, expand the brackets and retain only the terms that give the number of new disease cases that are due to exposure \begin{align}
 X_{\text{exposed}}(h) = A\times{}\sum_{u}\theta(u)\times{}P_{\text{incidence}}(h | u = \text{not exposed})\times{}z(u, h).

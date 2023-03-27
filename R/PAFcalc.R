@@ -95,7 +95,7 @@ PAFcalc <- function(
       
       # Add the relative risks to the data
       data_rr <- tobalcepi::RRFunc(
-        data = data[year == y],
+        data = copy(data[year == y]),
         substance = substance,
         tob_diseases = tobalcepi::tob_disease_names,
         tob_include_risk_in_former_smokers = tob_include_risk_in_former_smokers,

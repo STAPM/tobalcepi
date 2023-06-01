@@ -771,7 +771,8 @@ RRFunc <- function(
         
         # Combine the tobacco and alcohol relative risks
         # accounting for the synergy index
-        data[ , (d) := (1 + ((get(d_alc) - 1) + (get(d_tob) - 1)) * get(d_si))]
+        #data[ , (d) := (1 + ((get(d_alc) - 1) + (get(d_tob) - 1)) * get(d_si))]
+        data[ , (d) := get(d_alc) * get(d_tob) * get(d_si)] # formula changed to align with corrected formula for the synergy index from Prabhu Am J Gastroenterol 2014; 109:822–827; doi: 10.1038/ajg.2014.71
         
         data[ , (d_si) := NULL]
         
@@ -779,7 +780,8 @@ RRFunc <- function(
         
         # Combine the tobacco and alcohol relative risks
         # *without* accounting for the synergy index
-        data[ , (d) := 1 + ((get(d_alc) - 1) + (get(d_tob) - 1))]
+        #data[ , (d) := 1 + ((get(d_alc) - 1) + (get(d_tob) - 1))]
+        data[ , (d) := get(d_alc) * get(d_tob)]
         
       }
       

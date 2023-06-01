@@ -74,7 +74,7 @@ TobAlcInt <- function(
     alc1_tob1 <- rr[ , alc1_tob1]
 
     #si <- (alc1_tob1 - 1) / ((alc1_tob0 - 1) + (alc0_tob1 - 1))
-    si <- alc1_tob1 / (alc1_tob0 + alc0_tob1)
+    si <- alc1_tob1 / (alc1_tob0 * alc0_tob1) # corrected to match Prabhu Am J Gastroenterol 2014; 109:822–827; doi: 10.1038/ajg.2014.71;
 
   } else {
 

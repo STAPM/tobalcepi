@@ -73,7 +73,8 @@ TobAlcInt <- function(
     alc0_tob1 <- rr[ , alc0_tob1]
     alc1_tob1 <- rr[ , alc1_tob1]
 
-    si <- (alc1_tob1 - 1) / ((alc1_tob0 - 1) + (alc0_tob1 - 1))
+    #si <- (alc1_tob1 - 1) / ((alc1_tob0 - 1) + (alc0_tob1 - 1))
+    si <- alc1_tob1 / (alc1_tob0 + alc0_tob1)
 
   } else {
 

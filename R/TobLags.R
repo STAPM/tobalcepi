@@ -5,8 +5,9 @@
 #' gradually has an effect on the relative risk of disease incidence over time (up to 40 years)
 #' since e.g. someone quit smoking
 #'
-#' All lag times are taken from a re-analysis of the Cancer prevention II study by Oza et al 2011 and Kontis et al 2014
-#' The values were sent to us by Kontis. Lags are smoothed functions over time describing the proportion of
+#' All lag times are taken from a re-analysis of the Cancer prevention II study by \insertCite{Oza2011;textual}{tobalcepi}
+#'  and \insertCite{Kontis2014;textual}{tobalcepi}.  
+#' The values were sent to us on request by Kontis. Lags are smoothed functions over time describing the proportion of
 #' the excess risk due to smoking that still remains.
 #'
 #' Kontis et al. re-analysed the change in risk after smoking in the ACS-CPS II study from Oza et al.,
@@ -23,8 +24,8 @@
 #' on diabetes risk occur within a few years, more similar to the CVDs than cancers.
 #'  Therefore, we used the CVD curve for diabetes." In-line with Kontis, we apply the rate of decline
 #'  in risk of CVD after quitting smoking to type 2 diabetes.
-#'   For other diseases, we assume that the relative risk reverts to 1 immediately after quitting
-#'   i.e. an immediate rather than a gradual decline in risk.
+#'   For all remaining conditions we apply the most conservative estimate available 
+#'   and assume that the decline in risk follows the cancer estimate provided by Kontis et al., as this has the slowest decline in risk.   
 #'
 #' @param disease_name Character - the name of the disease under consideration.
 #' @param n_years Integer - the number of years from 1 to n over which the effect of a change in
@@ -39,7 +40,11 @@
 #' @importFrom data.table := setDT setnames data.table
 #' 
 #' @export
-#'
+#' @references
+#' \insertRef{Kontis2014}{tobalcepi}  
+#' 
+#' \insertRef{Oza2011}{tobalcepi}  
+#' 
 #'
 #' @examples
 #'
@@ -63,12 +68,10 @@ TobLags <- function(
 
   copd_lags <- c("Chronic_obstructive_pulmonary_disease")
 
-  # For other conditions assume that the excess risk is zero 1 year after cessation
-
+  
   #################################
   # Specify the functional forms of the lags
-  # The numbers are taken from SAPM - Holmes et al. 2012
-
+  
   ##################
   # Set the default
 

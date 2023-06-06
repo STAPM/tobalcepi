@@ -66,15 +66,15 @@ TobAlcInt <- function(
     "Oesophageal_SCC"
   )
 
-  # Calculate the synergy index.
+  # Calculate the Synergy Index.
   if(disease %fin% str1) {
 
     alc1_tob0 <- rr[ , alc1_tob0]
     alc0_tob1 <- rr[ , alc0_tob1]
     alc1_tob1 <- rr[ , alc1_tob1]
 
-    #si <- (alc1_tob1 - 1) / ((alc1_tob0 - 1) + (alc0_tob1 - 1))
-    si <- alc1_tob1 / (alc1_tob0 * alc0_tob1) # corrected to match Prabhu Am J Gastroenterol 2014; 109:822–827; doi: 10.1038/ajg.2014.71;
+    si <- (alc1_tob1 - 1) / ((alc1_tob0 - 1) + (alc0_tob1 - 1))
+    #si <- alc1_tob1 / (alc1_tob0 * alc0_tob1) # Synergy Factor - multiplicative scale - NOT USED - Prabhu Am J Gastroenterol 2014; 109:822–827; doi: 10.1038/ajg.2014.71;
 
   } else {
 

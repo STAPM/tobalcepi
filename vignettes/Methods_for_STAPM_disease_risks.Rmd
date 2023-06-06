@@ -237,15 +237,31 @@ RR_{former}=1+[RR_{current}-1][1-p(f)],
 in which the relative risk ($RR$) associated with current smoking is scaled according to our estimates of the proportional reduction in the risk ($p$) associated with their number of years ($f$) as a former smoker. After someone has been quit for 40 years, we assume their risk reverts back to be the same as a never smoker.  
 
 # Tobacco–Alcohol interactions in disease risk
-See the smoking and disease risks report [@Webster2018] for a short section on tobacco-alcohol risk interactions.  
+When we talk about tobacco-alcohol interactions in disease risk, what we mean is that we want to account for any additional increase in risk of disease that occurs for people who both smoke and drink alcohol. See VanderWeele and Knol [-@vanderweele2014tutorial] for an explanation of measures of interaction. The rationale for considering this risk interaction is that for some diseases there can be physiological interactions between substances in alcoholic beverages and in tobacco smoke that mean that when both alcohol and tobacco are consumed, then the disease-causing effect of either one is greater.   
 
-There is evidence for the risk of disease in someone who consumes both tobacco and alcohol ($RR_{ta}$) being higher than would be expected from combining the independent risks from tobacco ($RR_t$) and alcohol ($RR_a$). This additional risk due to tobacco-alcohol interaction (over and above the combination of the independent contributions to risk from tobacco and alcohol) can be expressed as a "synergy factor" (1) [@Prabhu2014;@Hashibe2009].   
+In 2015, we conducted a scoping review across all diseases for which tobacco and alcohol are causal factors to ascertain the extent of evidence on interaction effects. We included only interactions with a meta-analysis of effect size. The only diseases for which we found suitable meta-analyses to inform the tobacco–alcohol interaction in risk was cancers of the oral cavity, pharynx, larynx (for which we used estimated of head and neck cancer overall: alcohol alone 1.06, tobacco alone 2.37, tobacco and alcohol 5.73) [@Hashibe2009], and Squamous Cell Carcinoma (SCC) of the oesophagus (alcohol alone 1.21, tobacco alone 1.36, alcohol and tobacco 3.28) [@Prabhu2014]. Interactions estimated from odds ratios were assumed to be equivalent to interactions estimated from relative risks.  
+
+Prabhu et al. [-@Prabhu2014] reported interaction effects using a metric of multiplicative interaction called the "Synergy Factor". The Synergy Factor gives the factor by which the relative risk of disease in someone who both smokes and drinks ($RR_{ta}$) exceeds the product of the relative risks in someone who only smokes ($RR_{t}$) and someone who only drinks ($RR_{a}$):  
 
 \begin{equation}
-SF = \frac{RR_{ta}}{(RR_t - 1) + (RR_a - 1)}
+\text{Synergy Factor} = \frac{RR_{ta}}{RR_t \times RR_a}.
 \end{equation}
 
-Data on the synergistic effects of tobacco and alcohol risks are stored in `tobalcepi::tob_alc_risk_int` and applied in modelling by the function `tobalcepi::TobAlcInt()`.  
+In the STAPM modelling, interaction estimates from the literature are applied on the additive rather than multiplicative scale by estimating a metric called the "Synergy Index" [@rothman1986]. The Synergy Index measures the extent to which the relative risk for someone who both smokes and drinks exceeds 1, and whether this is greater than the sum of the extent to which the relative risk of people who only smoke or only drink exceeds 1:   
+
+\begin{equation}
+\text{Synergy Index} = \frac{RR_{ta}-1}{(RR_t-1)+(RR_a-1)}.
+\end{equation}
+
+For head and neck cancer overall, the Synergy Index is estimated to be 3.09, and for oesophageal SCC the Synergy Index is 1.99.    
+
+Data on the synergistic effects of tobacco and alcohol risks are stored in the package repository in the spreadsheet `tobalcepi/vignettes/inst/tob_alc_interactions_180119.csv` and as package data in `tobalctobalcepi::tob_alc_risk_int`.   
+
+The interaction effects are applied in the STAPM modelling using the functions `tobalcepi::RRFunc()` and `tobalcepi::TobAlcInt()`. The function  `tobalcepi::TobAlcInt()` contains code that calculates the Synergy Index according to the above formula. The function  `tobalcepi::RRFunc()` then combines the relative risks for diseases that are related to both tobacco and alcohol using the additive scale formula:  
+
+\begin{equation}
+RR_{ta} = 1 + \left[\left((RR_a - 1) + (RR_t - 1)\right) \times \text{Synergy Index}\right].
+\end{equation}
 
 # References
 

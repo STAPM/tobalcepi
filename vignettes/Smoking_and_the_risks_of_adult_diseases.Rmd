@@ -124,15 +124,6 @@ This document presents our list of **52** adult diseases related to smoking and 
 
 1. Since publication of the RCP report, Cancer Research UK (CRUK) produced their own disease list and risk sources for cancers attributable to modifiable risk factors, including tobacco and alcohol [@Brown2018]. Discussions with CRUK shaped the disease definitions in our updated Sheffield disease list for alcohol. Where there are differences in the risk sources used in the RCP report and CRUK's work, we take the estimate that matches most closely to our disease definitions, or the more recent estimate.  
 
-# Tobacco–Alcohol interactions in disease risk
-There is limited evidence for the risk of disease in someone who consumes both tobacco and alcohol ($RR_{ta}$) being higher than would be expected from combining the independent risks from tobacco ($RR_t$) and alcohol ($RRa$). This additional risk due to tobacco-alcohol interaction (over and above the combination of the independent contributions to risk from tobacco and alcohol) can be expressed as a "synergy factor" (1) [@Prabhu2014;@Hashibe2009].   
-
-\begin{equation}
-SF = \frac{RR_{ta}}{(RR_t - 1) + (RR_a - 1)}
-\end{equation}
-
-We conducted a scoping review across all diseases for which tobacco and alcohol are causal factors to ascertain the extent of evidence on interaction effects. We include only interactions with a meta-analysis of effect size. The only diseases for which we have found suitable meta-analyses to inform the tobacco–alcohol interaction in risk are cancers of the oral cavity, pharynx, larynx and oesophagus. To evaluate the interaction between tobacco and alcohol and the risk of cancer of the oral cavity, pharynx and larynx, Hashibe et al. [-@Hashibe2009] conducted a pooled analysis within the INHANCE consortium. For the oral cavity and pharynx, the SF was estimated to be 3.09 (CI 1.82–5.23) i.e. smoking and drinking together causes around a 3-fold increase in the risk of head and neck cancers over and about the independent contributions of tobacco and alcohol. For cancer of the larynx, Hashibe et al. [-@Hashibe2009] estimate the SF to be 1.62 (CI 0.85–3.09). For cancer of the oesophagus, Prabhu et al. [@Prabhu2014] estimated the increase in risk of Squamous Cell Carcinoma in people who both smoke and drink to be characterised by a synergy factor of 1.85 (CI 1.45–2.38).   
-
 
 ```{r smkrelrisks, eval = T, warning = F, out.extra='', fig.pos = "H", echo=F, fig.width = 8, fig.height = 10, fig.cap = "Relative risks and 95 percent confidence intervals in current smokers for 52 conditions attributable to smoking.", cache = F, fig.align = "center"}
 

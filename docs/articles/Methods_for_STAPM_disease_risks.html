@@ -46,7 +46,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.5</span>
       </span>
     </div>
 
@@ -705,25 +705,66 @@ be the same as a never smoker.</p>
 <div class="section level2">
 <h2 id="tobaccoalcohol-interactions-in-disease-risk">Tobacco–Alcohol interactions in disease risk<a class="anchor" aria-label="anchor" href="#tobaccoalcohol-interactions-in-disease-risk"></a>
 </h2>
-<p>See the smoking and disease risks report <span class="citation">(<a href="#ref-Webster2018" role="doc-biblioref">Webster et al.
-2018</a>)</span> for a short section on tobacco-alcohol risk
-interactions.</p>
-<p>There is evidence for the risk of disease in someone who consumes
-both tobacco and alcohol (<span class="math inline">\(RR_{ta}\)</span>)
-being higher than would be expected from combining the independent risks
-from tobacco (<span class="math inline">\(RR_t\)</span>) and alcohol
-(<span class="math inline">\(RR_a\)</span>). This additional risk due to
-tobacco-alcohol interaction (over and above the combination of the
-independent contributions to risk from tobacco and alcohol) can be
-expressed as a “synergy factor” (1) <span class="citation">(<a href="#ref-Prabhu2014" role="doc-biblioref">Prabhu, Obi, and Rubenstein
-2014</a>; <a href="#ref-Hashibe2009" role="doc-biblioref">Hashibe et al.
-2009</a>)</span>.</p>
+<p>When we talk about tobacco-alcohol interactions in disease risk, what
+we mean is that we want to account for any additional increase in risk
+of disease that occurs for people who both smoke and drink alcohol. See
+VanderWeele and Knol <span class="citation">(<a href="#ref-vanderweele2014tutorial" role="doc-biblioref">2014</a>)</span> for an explanation of measures of
+interaction. The rationale for considering this risk interaction is that
+for some diseases there can be physiological interactions between
+substances in alcoholic beverages and in tobacco smoke that mean that
+when both alcohol and tobacco are consumed, then the disease-causing
+effect of either one is greater.</p>
+<p>In 2015, we conducted a scoping review across all diseases for which
+tobacco and alcohol are causal factors to ascertain the extent of
+evidence on interaction effects. We included only interactions with a
+meta-analysis of effect size. The only diseases for which we found
+suitable meta-analyses to inform the tobacco–alcohol interaction in risk
+was cancers of the oral cavity, pharynx, larynx (for which we used
+estimated of head and neck cancer overall: alcohol alone 1.06, tobacco
+alone 2.37, tobacco and alcohol 5.73) <span class="citation">(<a href="#ref-Hashibe2009" role="doc-biblioref">Hashibe et al.
+2009</a>)</span>, and Squamous Cell Carcinoma (SCC) of the oesophagus
+(alcohol alone 1.21, tobacco alone 1.36, alcohol and tobacco 3.28) <span class="citation">(<a href="#ref-Prabhu2014" role="doc-biblioref">Prabhu,
+Obi, and Rubenstein 2014</a>)</span>. Interactions estimated from odds
+ratios were assumed to be equivalent to interactions estimated from
+relative risks.</p>
+<p>Prabhu et al. <span class="citation">(<a href="#ref-Prabhu2014" role="doc-biblioref">2014</a>)</span> reported interaction effects using
+a metric of multiplicative interaction called the “Synergy Factor”. The
+Synergy Factor gives the factor by which the relative risk of disease in
+someone who both smokes and drinks (<span class="math inline">\(RR_{ta}\)</span>) exceeds the product of the
+relative risks in someone who only smokes (<span class="math inline">\(RR_{t}\)</span>) and someone who only drinks
+(<span class="math inline">\(RR_{a}\)</span>):</p>
 <p><span class="math display">\[\begin{equation}
-SF = \frac{RR_{ta}}{(RR_t - 1) + (RR_a - 1)}
+\text{Synergy Factor} = \frac{RR_{ta}}{RR_t \times RR_a}.
 \end{equation}\]</span></p>
+<p>In the STAPM modelling, interaction estimates from the literature are
+applied on the additive rather than multiplicative scale by estimating a
+metric called the “Synergy Index” <span class="citation">(<a href="#ref-rothman1986" role="doc-biblioref">Rothman 1986.</a>)</span>.
+The Synergy Index measures the extent to which the relative risk for
+someone who both smokes and drinks exceeds 1, and whether this is
+greater than the sum of the extent to which the relative risk of people
+who only smoke or only drink exceeds 1:</p>
+<p><span class="math display">\[\begin{equation}
+\text{Synergy Index} = \frac{RR_{ta}-1}{(RR_t-1)+(RR_a-1)}.
+\end{equation}\]</span></p>
+<p>For head and neck cancer overall, the Synergy Index is estimated to
+be 3.09, and for oesophageal SCC the Synergy Index is 1.99.</p>
 <p>Data on the synergistic effects of tobacco and alcohol risks are
-stored in <code><a href="../reference/tob_alc_risk_int.html">tobalcepi::tob_alc_risk_int</a></code> and applied in
-modelling by the function <code><a href="../reference/TobAlcInt.html">tobalcepi::TobAlcInt()</a></code>.</p>
+stored in the package repository in the spreadsheet
+<code>tobalcepi/vignettes/inst/tob_alc_interactions_180119.csv</code>
+and as package data in
+<code>tobalctobalcepi::tob_alc_risk_int</code>.</p>
+<p>The interaction effects are applied in the STAPM modelling using the
+functions <code><a href="../reference/RRFunc.html">tobalcepi::RRFunc()</a></code> and
+<code><a href="../reference/TobAlcInt.html">tobalcepi::TobAlcInt()</a></code>. The function
+<code><a href="../reference/TobAlcInt.html">tobalcepi::TobAlcInt()</a></code> contains code that calculates the
+Synergy Index according to the above formula. The function
+<code><a href="../reference/RRFunc.html">tobalcepi::RRFunc()</a></code> then combines the relative risks for
+diseases that are related to both tobacco and alcohol using the additive
+scale formula:</p>
+<p><span class="math display">\[\begin{equation}
+RR_{ta} = 1 + \left[\left((RR_a - 1) + (RR_t - 1)\right) \times
+\text{Synergy Index}\right].
+\end{equation}\]</span></p>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -839,6 +880,10 @@ and Intervention to Reduce Alcohol Attributable Harm in England Using
 the Sheffield Alcohol Policy Model Version 2.0.”</span> Report to the
 NICE Public Health Programme Development Group. <a href="https://www.nice.org.uk/guidance/ph24/evidence/economic-modelling-report-371533357" class="external-link">https://www.nice.org.uk/guidance/ph24/evidence/economic-modelling-report-371533357</a>.
 </div>
+<div id="ref-rothman1986" class="csl-entry">
+Rothman, Kenneth J. 1986. <em>Modern Epidemiology /</em>. Boston :
+Little Brown,.
+</div>
 <div id="ref-taylor2011combining" class="csl-entry">
 Taylor, Benjamin J, Kevin D Shield, and Jürgen T Rehm. 2011.
 <span>“Combining Best Evidence: A Novel Method to Calculate the
@@ -860,6 +905,10 @@ Health and Human Services, Centers for Disease Control and
 Prevention.”</span> Journal Article. <em>National Center for Chronic
 Disease Prevention and Health Promotion, Office on Smoking and
 Health</em>.
+</div>
+<div id="ref-vanderweele2014tutorial" class="csl-entry">
+VanderWeele, Tyler J, and Mirjam J Knol. 2014. <span>“A Tutorial on
+Interaction.”</span> <em>Epidemiologic Methods</em> 3 (1): 33–72. <a href="https://doi.org/10.1515/em-2013-0005" class="external-link">https://doi.org/10.1515/em-2013-0005</a>.
 </div>
 <div id="ref-watson1981prediction" class="csl-entry">
 Watson, Patricia E, Ian D Watson, and Richard D Batt. 1981.

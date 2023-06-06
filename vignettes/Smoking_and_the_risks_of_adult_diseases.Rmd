@@ -1,6 +1,6 @@
 ---
 title: "**Smoking and the risks of adult diseases**"
-subtitle: Version 1.2.1
+subtitle: Version 1.2.2
 biblio-style: apalike
 date: "October 2018"
 output: 
@@ -70,8 +70,8 @@ Email: [duncan.gillespie\@sheffield.ac.uk](mailto:duncan.gillespie@sheffield.ac.
 
 The code that accompanies this vignette can be found in the `tobalcepi` R package <https://stapm.github.io/tobalcepi/> (Github code repository https://github.com/STAPM/tobalcepi).   
 
-This vignette is a reproduction of the content in:
-Webster, Laura; Angus, Colin; Brennan, Alan; Gillespie, Duncan (2018): Smoking and the risks of adult diseases. The University of Sheffield. https://doi.org/10.15131/shef.data.7411451.v1    
+This vignette is a working version of the content in:
+Webster, Laura; Angus, Colin; Brennan, Alan; Gillespie, Duncan (2018): Smoking and the risks of adult diseases. The University of Sheffield. https://doi.org/10.15131/shef.data.7411451    
 
 Therefore the citation above should be used for this vignette. This vignette differs from the report cited above in being produced by the code within the tobalcepi R package. This vignette therefore presents the risk functions and acts as a means to quality assure the code in the tobalcepi R package.   
 \newpage

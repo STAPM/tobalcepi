@@ -13,6 +13,8 @@ if(!dir.exists(project_lib)) {dir.create(project_lib)}
 
 .libPaths(project_lib)
 
+update.packages(ask = FALSE, checkBuilt = TRUE, lib.loc = project_lib)
+
 ###########################
 # CRAN packages
 
@@ -72,7 +74,9 @@ packages <- c(
   "utils",
   "VGAM",
   "viridis",
-  "writexl")
+  "writexl",
+  "pkgdown",
+  "DLL")
 
 
 # Install packages not yet installed

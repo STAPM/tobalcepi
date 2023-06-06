@@ -46,7 +46,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tobalcepi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.5</span>
       </span>
     </div>
 
@@ -402,15 +402,54 @@ A_\text{no exposure}(h) \times{} [1+PAF] = A_\text{observed exposure}(h).
 <p><br></p>
 </div>
 </div>
+<div class="section level2" number="3">
+<h2 id="single-substance-and-joint-substance-attributable-fractions">
+<span class="header-section-number">3</span> Single substance and joint substance attributable fractions<a class="anchor" aria-label="anchor" href="#single-substance-and-joint-substance-attributable-fractions"></a>
+</h2>
+<p>The population attributable fraction (PAF) is the proportion by which the cases of a disease would be reduced if the population were not exposed to a certain risk factor. In the STAPM modelling, the exposure considered is either only alcohol consumption, only tobacco smoking or a combination of the two.
+When both alcohol consumption and tobacco smoking are considered, the population attributable fraction represents the proportion by which the cases of a disease would be reduced if the exposure of the population to the effects of both tobacco and alcohol consumption were removed. If this were to happen, then it would mean that people who both smoke and drink would have to stop both behaviours, and people who smoke but do not drink, and vice versa, would have to stop one behaviour.</p>
+<p>It is commonly observed that the joint alcohol and smoking attributable fractions (ASAFs) are smaller than the sum of the single substance attributable fractions, the AAFs and SAFs. In general terms, this is because the substance specific attributable fractions combine to give the joint attributable fraction according to the formula <span class="citation">(<a href="#ref-mant1995detecting" role="doc-biblioref">Mant and Hicks 1995</a>; <a href="#ref-ezzati2003estimates" role="doc-biblioref">Ezzati et al. 2003</a>)</span>:</p>
+<p><span class="math display">\[\begin{equation}
+ASAF = 1 – (1 - AAF) \times (1 – SAF)
+\end{equation}\]</span></p>
+<p>According to this formula, if 20% of cases of a disease could be prevented by removing exposure to alcohol, and 20% of cases of the same disease could be prevented by removing exposure to tobacco smoke, then we would expect that 36% rather than 40% of cases of the disease would be prevented by removing exposure to both substances.</p>
+<p>The reduction of the ASAF in relation to the sum of the single substance attributable fractions is larger when a larger proportion of the population both drink and smoke, i.e., when there is a larger positive correlation between individuals’ tobacco and alcohol consumption. The reduction of the ASAF in relation to the sum of the single substance attributable fractions implies that preventing some cases of a disease that is related to both tobacco and alcohol in people who consume both substances might necessitate the removal of the exposure to both tobacco and alcohol consumption, i.e. removing just one exposure is insufficient. However, the single substance AAFs and SAFs assume that removing exposure to just one substance is enough, without considering the competing effects of multiple exposures. The ASAF is therefore a more accurate estimate of the joint burden of disease <span class="citation">(<a href="#ref-ezzati2002selected" role="doc-biblioref">Ezzati et al. 2002</a>)</span>.</p>
+<p>In light of this, adjusted versions of the single substance attributable fractions can be calculated in which they are scaled downwards to approximate the cases of a disease related to both tobacco and alcohol that might be prevented if exposure to only one substance were removed.</p>
+<p>Difference between the sum of the single substance attributable fractions and the joint attributable fraction:</p>
+<p><span class="math display">\[\begin{equation}
+d = ((AAF + SAF) – ASAF).
+\end{equation}\]</span></p>
+<p>Adjusted single substance attributable fractions from which half of the above difference has been subtracted:</p>
+<p><span class="math display">\[\begin{equation}
+AAF_{adjusted} = AAF – 0.5 \times d,
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+SAF_{adjusted} = SAF – 0.5 \times d.
+\end{equation}\]</span></p>
+<p>Using the adjusted single substance attributable fractions means that</p>
+<p><span class="math display">\[\begin{equation}
+ASAF = AAF_{adjusted} + SAF_{adjusted}.
+\end{equation}\]</span></p>
+<p>Using the adjusted single substance attributable fractions can help to communicate the accumulated burden of disease from exposure to multiple risk factors.</p>
+</div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-ezzati2002selected" class="csl-entry">
+Ezzati, Majid, Alan D Lopez, Anthony Rodgers, Stephen Vander Hoorn, and Christopher JL Murray. 2002. <span>“Selected Major Risk Factors and Global and Regional Burden of Disease.”</span> <em>The Lancet</em> 360 (9343): 1347–60.
+</div>
+<div id="ref-ezzati2003estimates" class="csl-entry">
+Ezzati, Majid, Stephen Vander Hoorn, Anthony Rodgers, Alan D Lopez, Colin D Mathers, and Christopher JL Murray. 2003. <span>“Estimates of Global and Regional Potential Health Gains from Reducing Multiple Major Risk Factors.”</span> <em>The Lancet</em> 362 (9380): 271–80.
+</div>
 <div id="ref-jones2008alcohol" class="csl-entry">
 Jones, Lisa, Mark A Bellis, Dan Dedman, Harry Sumnall, and Karen Tocque. 2008. <span>“Alcohol-Attributable Fractions for England: Alcohol-Attributable Mortality and Hospital Admissions.”</span> <em>Liverpool: Centre for Public Health, Liverpool John Moores University</em>. <a href="https://fingertips.phe.org.uk/documents/alcoholattributablefractions.pdf" class="external-link">https://fingertips.phe.org.uk/documents/alcoholattributablefractions.pdf</a>.
 </div>
 <div id="ref-mansournia2018population" class="csl-entry">
 Mansournia, Mohammad Ali, and Douglas G Altman. 2018. <span>“Population Attributable Fraction.”</span> <em><span>BMJ</span></em> 360. <a href="https://doi.org/10.1136/bmj.k757" class="external-link">https://doi.org/10.1136/bmj.k757</a>.
+</div>
+<div id="ref-mant1995detecting" class="csl-entry">
+Mant, Jonathan, and Nicholas Hicks. 1995. <span>“Detecting Differences in Quality of Care: The Sensitivity of Measures of Process and Outcome in Treating Acute Myocardial Infarction.”</span> <em>Bmj</em> 311 (7008): 793–96.
 </div>
 <div id="ref-nhs2019statisticsALC" class="csl-entry">
 NHS Digital. 2019a. <span>“Statistics on Alcohol: England.”</span> <a href="https://digital.nhs.uk/data-and-information/publications/statistical/statistics-on-alcohol" class="external-link">https://digital.nhs.uk/data-and-information/publications/statistical/statistics-on-alcohol</a>.

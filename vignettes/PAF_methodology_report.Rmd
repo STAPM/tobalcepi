@@ -172,6 +172,51 @@ A_\text{no exposure}(h) \times{} [1+PAF] = A_\text{observed exposure}(h).
 
 <br/>
 
+
+# Single substance and joint substance attributable fractions
+The population attributable fraction (PAF) is the proportion by which the cases of a disease would be reduced if the population were not exposed to a certain risk factor. In the STAPM modelling, the exposure considered is either only alcohol consumption, only tobacco smoking or a combination of the two. 
+When both alcohol consumption and tobacco smoking are considered, the population attributable fraction represents the proportion by which the cases of a disease would be reduced if the exposure of the population to the effects of both tobacco and alcohol consumption were removed. If this were to happen, then it would mean that people who both smoke and drink would have to stop both behaviours, and people who smoke but do not drink, and vice versa, would have to stop one behaviour.     
+
+It is commonly observed that the joint alcohol and smoking attributable fractions (ASAFs) are smaller than the sum of the single substance attributable fractions, the AAFs and SAFs. In general terms, this is because the substance specific attributable fractions combine to give the joint attributable fraction according to the formula [@mant1995detecting;@ezzati2003estimates]:    
+
+\begin{equation}
+ASAF = 1 – (1 - AAF) \times (1 – SAF)
+\end{equation}
+
+According to this formula, if 20\% of cases of a disease could be prevented by removing exposure to alcohol, and 20\% of cases of the same disease could be prevented by removing exposure to tobacco smoke, then we would expect that 36\% rather than 40\% of cases of the disease would be prevented by removing exposure to both substances.   
+
+The reduction of the ASAF in relation to the sum of the single substance attributable fractions is larger when a larger proportion of the population both drink and smoke, i.e., when there is a larger positive correlation between individuals’ tobacco and alcohol consumption. The reduction of the ASAF in relation to the sum of the single substance attributable fractions implies that preventing some cases of a disease that is related to both tobacco and alcohol in people who consume both substances might necessitate the removal of the exposure to both tobacco and alcohol consumption, i.e. removing just one exposure is insufficient. However, the single substance AAFs and SAFs assume that removing exposure to just one substance is enough, without considering the competing effects of multiple exposures. The ASAF is therefore a more accurate estimate of the joint burden of disease [@ezzati2002selected].   
+
+In light of this, adjusted versions of the single substance attributable fractions can be calculated in which they are scaled downwards to approximate the cases of a disease related to both tobacco and alcohol that might be prevented if exposure to only one substance were removed.   
+
+Difference between the sum of the single substance attributable fractions and the joint attributable fraction:   
+
+\begin{equation}
+d = ((AAF + SAF) – ASAF).
+\end{equation}
+
+Adjusted single substance attributable fractions from which half of the above difference has been subtracted:   
+
+\begin{equation}
+AAF_{adjusted} = AAF – 0.5 \times d,
+\end{equation}
+
+\begin{equation}
+SAF_{adjusted} = SAF – 0.5 \times d.
+\end{equation}
+
+
+Using the adjusted single substance attributable fractions means that   
+
+\begin{equation}
+ASAF = AAF_{adjusted} + SAF_{adjusted}.
+\end{equation}
+
+
+Using the adjusted single substance attributable fractions can help to communicate the accumulated burden of disease from exposure to multiple risk factors.   
+
+
+
 # References
 
 

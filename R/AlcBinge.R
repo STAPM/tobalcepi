@@ -241,10 +241,17 @@ AlcBinge <- function(
   #data[sex == "Male", rwatson := 0.55]
   #data[sex == "Female", rwatson := 0.68]
 
+  # Note that the numbers in the formulae below come from "The Estimation of Blood Alcohol Concentration - Widmark Revisited" - Posey and Mozayani
+  # height must be in meters and weight in kg
+  
+  if(max(data$height, na.rm = T) > 100) {
+    warning("AlcBinge: height in cm not m - correct the input data")
+  }
+  
   data[sex == "Male", rwatson := 0.39834 + ((12.725 * height - 0.11275 * age + 2.8993) / weight)]
   data[sex == "Female", rwatson := 0.29218 + ((12.666 * height - 2.4846) / weight)]
 
-
+  
   data[ , age_temp := NULL]
 
 return(data)

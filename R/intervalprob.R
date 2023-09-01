@@ -51,8 +51,7 @@ intervalprob <- function(
   
   # compare method against numeric integration
   
-  # NOT SURE IF THE LINE BELOW IS NEEDED
-  # the code makes values sum to 1
+  # The line below makes values sum to 1
   # discussion with Alan has concluded that it is needed because 
   # the values are subsequently used in the computation of a weighted average
   interval_prob <- interval_prob / matrix(colSums(interval_prob), nrow = kn - 1, ncol = ncol(interval_prob), byrow = T)

@@ -27,6 +27,8 @@
 #' just tobacco ("tob") or joint risks for tobacco and alcohol ("tobalc").
 #' @param smooth Logical - should the age patterns in average risk be smoothed with a moving average. 
 #' For use only if average risk is stratified by single years of age. Defaults to FALSE
+#' @param oesoph_subtypes Logical - should the attributable fractions for oesophageal cancer 
+#' be multiplied by the proportions of each subtype. In development. Defaults to FALSE.
 #'
 #' @return Returns a data table containing the subgroup specific summaries for each disease.
 #' 
@@ -91,18 +93,19 @@
 #' test_aafs
 #' }
 subgroupRisk <- function(
-  data,
-  label = NULL,
-  disease_names = c("Pharynx", "Oral_cavity"),
-  af = FALSE,
-  use_weights = FALSE,
-  year_range = "all",
-  pool = FALSE,
-  subgroups = c("sex", "age_cat"),
-  mort_or_morb = "mort",
-  alc_mort_and_morb = c("Ischaemic_heart_disease", "LiverCirrhosis", "Haemorrhagic_Stroke", "Ischaemic_Stroke"),
-  substance = c("alc", "tob", "tobalc")[3],
-  smooth = FALSE
+    data,
+    label = NULL,
+    disease_names = c("Pharynx", "Oral_cavity"),
+    af = FALSE,
+    use_weights = FALSE,
+    year_range = "all",
+    pool = FALSE,
+    subgroups = c("sex", "age_cat"),
+    mort_or_morb = "mort",
+    alc_mort_and_morb = c("Ischaemic_heart_disease", "LiverCirrhosis", "Haemorrhagic_Stroke", "Ischaemic_Stroke"),
+    substance = c("alc", "tob", "tobalc")[3],
+    smooth = FALSE,
+    oesoph_subtypes = FALSE
 ) {
   
   out <- copy(data) # see if this can be removed from code as inefficient
@@ -219,7 +222,7 @@ subgroupRisk <- function(
     
     setnames(out_risk, paste0(disease_names, "_z"), disease_names)
     
-
+    
     
     out_risk <- melt(
       out_risk,
@@ -279,26 +282,28 @@ subgroupRisk <- function(
     # }
     
     ##########################
-    # Summarise the proportion of oesophageal cancer cases that are scc 
-    # in the same way as the above attributable fractions
-    out_scc_prop <- out[ , .(prop_scc = sum(weight * prop_scc, na.rm = T) / sum(weight, na.rm = T)), by =  subgroups]
-    
-    # Merge in the proportions of scc into the paf dataset
-    out_risk <- merge(out_risk, out_scc_prop, all.x = T, all.y = F, by = subgroups)
-    
-    # Multiple the estimated attributable fractions for Oesophageal Scc and AC by the proportions of each subtype
-    out_risk[ , Oesophageal_SCC_z := Oesophageal_SCC_z * prop_scc]
-    
-    if(substance %fin% c("tob")) {
+    if(oesoph_subtypes == TRUE) {
       
-      out_risk[ , Oesophageal_AC_z := Oesophageal_AC_z * (1 - prop_scc)]
+      # Summarise the proportion of oesophageal cancer cases that are scc 
+      # in the same way as the above attributable fractions
+      out_scc_prop <- out[ , .(prop_scc = sum(weight * prop_scc, na.rm = T) / sum(weight, na.rm = T)), by =  subgroups]
       
+      # Merge in the proportions of scc into the paf dataset
+      out_risk <- merge(out_risk, out_scc_prop, all.x = T, all.y = F, by = subgroups)
+      
+      # Multiple the estimated attributable fractions for Oesophageal Scc and AC by the proportions of each subtype
+      out_risk[ , Oesophageal_SCC_z := Oesophageal_SCC_z * prop_scc]
+      
+      if(substance %fin% c("tob")) {
+        
+        out_risk[ , Oesophageal_AC_z := Oesophageal_AC_z * (1 - prop_scc)]
+        
+      }
     }
-    
     ###########################
     
     setnames(out_risk, paste0(disease_names, "_z"), disease_names)
-
+    
     
     out_risk <- melt(
       out_risk,

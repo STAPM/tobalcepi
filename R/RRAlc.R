@@ -127,7 +127,7 @@ RRalc <- function(
   if(!isTRUE(getcurve)) {
     
     # Calculate average amount drunk per drinking occasion
-    p <- grams_ethanol_per_unit * data_RRalc[ , mean_sod] / data_RRalc[ , drink_freq]
+    p <- grams_ethanol_per_unit * data_RRalc[ , mean_sod]
     
   }
   

@@ -156,7 +156,7 @@ PArisk <- function(
     # but this can influence the probability density
     # but it makes things slow to have a large number
     # try scaling back by 10%
-    kn <- 600 * 0.9
+    kn <- 600 * 0.9 # 540
     
     grams_ethanol <- 1:kn
     

@@ -82,7 +82,7 @@ WArisk_acute <- function(
   # grams_ethanol_per_unit <- 8
   # alc_wholly_acute_thresholds <- c(6, 8)
   
-  kn <- 600 * 0.9
+  kn <- 600 * 0.9 # 540
   grams_ethanol <- 1:kn
   
   # Units consumed above the binge threshold

@@ -5,7 +5,7 @@
 \title{Distribution of single-occasion drinking amount}
 \usage{
 intervalprob(
-  grams_ethanol = 1:600,
+  grams_ethanol = 1:540,
   SODMean = NULL,
   SODSDV = NULL,
   SODFreq = NULL,

@@ -17,6 +17,13 @@ set.seed(1)
 # Read the imputed survey data sample
 data <- readRDS("data-raw/binge_params/Scotland/tobalc_consumption_scot_national_2008-2019_v1_2022-12-18_hseclean_1.9.2_imputed.rds")
 
+# height must be in m
+# weight must be in kg
+
+# In the current version of the input data, height is in cm
+data[ , height := height / 100]
+
+
 # Test the existing AlcBinge function on these data
 # This is the SAPM method
 #data <- tobalcepi::AlcBinge(data)

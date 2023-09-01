@@ -11,6 +11,14 @@
 # do not save the intermediate datasets as don't want these uploaded to gitlab
 # (but for development purposes the intermediate datasets were saved locally)
 
+
+#####################################
+
+# Check that height is in m not cm
+
+#####################################
+
+
 library(data.table)
 library(tobalcepi)
 
@@ -18,8 +26,8 @@ set.seed(1)
 
 # Requires connection to the X drive to read the HSE data
 # takes a while to run
-source("data-raw/binge_params/10 HSE variable processing.R", echo = F, verbose = F)
-source("data-raw/binge_params/12 Imputation.R", echo = F, verbose = F)
+source("data-raw/binge_params/England/10_HSE_variable_processing.R", echo = F, verbose = F)
+source("data-raw/binge_params/England/12_Imputation.R", echo = F, verbose = F)
 
 # Read the imputed HSE data sample
 #data <- fread("data-raw/binge_params/HSE_2011_to_2017_imputed.csv")

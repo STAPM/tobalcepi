@@ -8,7 +8,8 @@ library(hseclean)
 library(magrittr)
 library(data.table)
 
-root_dir <- "/Volumes/Shared/"
+#root_dir <- "/Volumes/Shared/"
+root_dir <- "X:/"
 
 # apply functions to create the variables for analysis and to retain only the required variables
 

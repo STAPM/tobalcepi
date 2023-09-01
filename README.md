@@ -30,12 +30,11 @@ knowledge to support benefits achieved by policymakers.
 
 The two objectives of the research programme are:
 
--   To evaluate the health and economic effects of past trends, policy
-    changes or interventions that have affected alcohol consumption
-    and/or tobacco smoking
--   To appraise the health and economic outcomes of potential future
-    trends, changes to alcohol and/or tobacco policy or new
-    interventions
+- To evaluate the health and economic effects of past trends, policy
+  changes or interventions that have affected alcohol consumption and/or
+  tobacco smoking
+- To appraise the health and economic outcomes of potential future
+  trends, changes to alcohol and/or tobacco policy or new interventions
 
 The STAPM modelling is not linked to the tobacco or alcohol industry and
 is conducted without industry funding or influence.
@@ -44,13 +43,13 @@ is conducted without industry funding or influence.
 
 The code has been made open source for the following two reasons:
 
--   Transparency. Open science, allowing review and feedback to the
-    project team on the code and methods used.
--   Methodology sharing. For people to understand the code and methods
-    used so they might use aspects of it in their own work, e.g.,
-    because they are doing something partially related that isn’t
-    exactly the same job and might like to ‘dip into’ elements of this
-    code for inspiration.
+- Transparency. Open science, allowing review and feedback to the
+  project team on the code and methods used.
+- Methodology sharing. For people to understand the code and methods
+  used so they might use aspects of it in their own work, e.g., because
+  they are doing something partially related that isn’t exactly the same
+  job and might like to ‘dip into’ elements of this code for
+  inspiration.
 
 ## Stage of testing and development
 
@@ -164,10 +163,10 @@ function).
 
 We use estimates of potential tobacco - alcohol risk interactions for:
 
--   Oral cavity cancer  
--   Pharyngeal cancer  
--   Laryngeal cancer  
--   Oesophageal SCC cancer
+- Oral cavity cancer  
+- Pharyngeal cancer  
+- Laryngeal cancer  
+- Oesophageal SCC cancer
 
 These estimates are stored in `tobalcepi::tob_alc_risk_int`.
 
@@ -182,12 +181,12 @@ annually.
 
 The types of data included in tobalcepi are:
 
--   Lists of the names of the diseases that are related to tobacco
-    and/or alcohol.  
--   Parameters used in the modelling of single occasion drinking.  
--   Tobacco relative risks of current vs. never smokers.
--   Tobacco lag times.  
--   Tobacco - alcohol risk interactions.
+- Lists of the names of the diseases that are related to tobacco and/or
+  alcohol.  
+- Parameters used in the modelling of single occasion drinking.  
+- Tobacco relative risks of current vs. never smokers.
+- Tobacco lag times.  
+- Tobacco - alcohol risk interactions.
 
 When these data need to be updated, the inputs and code in the package
 folder `data-raw` will need to be changed, and the package rebuild with

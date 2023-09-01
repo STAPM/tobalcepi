@@ -178,6 +178,7 @@ subgroupRisk <- function(
       
       # For PAF
       out[, (paste0(d, "_z")) := weight * (get(d) - 1)]
+      #out[, (paste0(d, "_z")) := weight * (get(d))]
       
     } else {
       
@@ -276,6 +277,25 @@ subgroupRisk <- function(
     # if(any(disease_names %in% colnames(out_risk))) {
     #   out_risk[ , (disease_names[disease_names %in% colnames(out_risk)]) := NULL]
     # }
+    
+    ##########################
+    # Summarise the proportion of oesophageal cancer cases that are scc 
+    # in the same way as the above attributable fractions
+    out_scc_prop <- out[ , .(prop_scc = sum(weight * prop_scc, na.rm = T) / sum(weight, na.rm = T)), by =  subgroups]
+    
+    # Merge in the proportions of scc into the paf dataset
+    out_risk <- merge(out_risk, out_scc_prop, all.x = T, all.y = F, by = subgroups)
+    
+    # Multiple the estimated attributable fractions for Oesophageal Scc and AC by the proportions of each subtype
+    out_risk[ , Oesophageal_SCC_z := Oesophageal_SCC_z * prop_scc]
+    
+    if(substance %fin% c("tob")) {
+      
+      out_risk[ , Oesophageal_AC_z := Oesophageal_AC_z * (1 - prop_scc)]
+      
+    }
+    
+    ###########################
     
     setnames(out_risk, paste0(disease_names, "_z"), disease_names)
 

@@ -7,7 +7,8 @@
 TobLags(
   disease_name = c("Pharynx", "Oral_cavity"),
   n_years = 40,
-  lag_data = tobalcepi::tobacco_lag_times
+  lag_data = tobalcepi::tobacco_lag_times,
+  other_lag_function = "Cancers"
 )
 }
 \arguments{
@@ -18,6 +19,11 @@ consumption emerges. Defaults to 40 years to fit with the current lag data.}
 
 \item{lag_data}{Data table containing the numerical description of the lag function.
 The data table "tobacco lag times" is embedded within the stapmr package.}
+
+\item{other_lag_function}{Character - the name of the lag function to use for tobacco related conditions 
+that are not categorised as CVD, COPD, or Cancer. Options: c("Cancers", "CVD", "COPD", "immediate"). 
+The default is "Cancers", which gives the most conservative (i.e. slowest) estimate of the rate of decline in 
+the risk of disease after quitting smoking.}
 }
 \value{
 Returns a data table with two columns - one for the years since consumption changed, and the other

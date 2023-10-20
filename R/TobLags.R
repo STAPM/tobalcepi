@@ -32,6 +32,10 @@
 #' consumption emerges. Defaults to 40 years to fit with the current lag data.
 #' @param lag_data Data table containing the numerical description of the lag function.
 #' The data table "tobacco lag times" is embedded within the stapmr package.
+#' @param other_lag_function Character - the name of the lag function to use for tobacco related conditions 
+#' that are not categorised as CVD, COPD, or Cancer. Options: c("Cancers", "CVD", "COPD", "immediate"). 
+#' The default is "Cancers", which gives the most conservative (i.e. slowest) estimate of the rate of decline in 
+#' the risk of disease after quitting smoking.
 #'
 #' @return Returns a data table with two columns - one for the years since consumption changed, and the other
 #' that gives the proportion by which the effect of a change in consumption
@@ -51,64 +55,76 @@
 #' TobLags("Pharynx")
 #'
 TobLags <- function(
-  disease_name = c("Pharynx", "Oral_cavity"),
-  n_years = 40,
-  lag_data = tobalcepi::tobacco_lag_times
+    disease_name = c("Pharynx", "Oral_cavity"),
+    n_years = 40,
+    lag_data = tobalcepi::tobacco_lag_times,
+    other_lag_function = "Cancers"
 ) {
-
+  
   #################################
   # List the specific diseases that fall under each functional form of lag time
-
+  
   cancer_lags <- c("Oral_cavity", "Pharynx", "Lung", "Nasopharynx_sinonasal", "Larynx", "Oesophageal_AC",
-    "Oesophageal_SCC", "Stomach", "Pancreas", "Liver", "Colorectal", "Kidney", "Lower_urinary_tract",
-    "Bladder", "Cervical", "Acute_myeloid_leukaemia")
-
+                   "Oesophageal_SCC", "Stomach", "Pancreas", "Liver", "Colorectal", "Kidney", "Lower_urinary_tract",
+                   "Bladder", "Cervical", "Acute_myeloid_leukaemia")
+  
   cvd_lags <- c("Ischaemic_heart_disease", "Haemorrhagic_Stroke", "Ischaemic_Stroke", "Peripheral_arterial_disease",
-    "Abdominal_aortic_aneurysm", "Venous_thromboembolism", "Diabetes")
-
+                "Abdominal_aortic_aneurysm", "Venous_thromboembolism", "Diabetes")
+  
   copd_lags <- c("Chronic_obstructive_pulmonary_disease")
-
+  
   
   #################################
   # Specify the functional forms of the lags
   
   ##################
-  # Set the default
-
+  
+  if(!(other_lag_function %in% c("Cancers", "CVD", "COPD", "immediate"))) {
+    
+    warning("TobLags: specified other_lag_function not in list of possible values")
+    
+  }
+  
   # An instant reduction of risk e.g. for acute conditions
-  #lag_func <- c(1, rep(0, n_years))
-
-  # Assume that other diseases follow the cancer lag
-  lag_func <- lag_data[cause_group == "Cancers", excess_risk_percent]
-
+  if(other_lag_function == "immediate") {
+    
+    lag_func <- c(1, rep(0, n_years))
+    
+  } else {
+    
+    # Assume that other diseases follow the cancer lag
+    lag_func <- lag_data[cause_group == other_lag_function, excess_risk_percent]
+    
+  }
+  
   ##################
-
+  
   if(disease_name %fin% cancer_lags) {
     lag_func <- lag_data[cause_group == "Cancers", excess_risk_percent]
   }
-
+  
   if(disease_name %fin% cvd_lags) {
     lag_func <- lag_data[cause_group == "CVD", excess_risk_percent]
   }
-
+  
   if(disease_name %fin% copd_lags) {
     lag_func <- lag_data[cause_group == "COPD", excess_risk_percent]
   }
-
+  
   #################################
   # Format the output
-
+  
   # The numbers above are currently in the form of the proportion of excess risk remaining
   # Re-format so they show the cumulative proportion by which risk reduces over time
   # i.e. after 40 years, all excess risk has gone, so the cumulative proportion of risk reduction = 1
-
+  
   disease_lag_data <- data.table(
     time_since_quit = 0:n_years,
     prop_risk_reduction = 1 - lag_func
   )
-
   
-return(disease_lag_data)
+  
+  return(disease_lag_data)
 }
 
 

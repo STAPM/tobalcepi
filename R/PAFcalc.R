@@ -29,6 +29,10 @@
 #' @param mort_or_morb Character string - whether the risk functions for conditions with separate mortality and morbidity risk functions 
 #' should refer to mortality or morbidity. Values could be "mort" or "morb". Default is "mort".
 #' @param country Character string - "England" or "Scotland"
+#' @param other_lag_function Character - the name of the lag function to use for tobacco related conditions 
+#' that are not categorised as CVD, COPD, or Cancer. Options: c("Cancers", "CVD", "COPD", "immediate"). 
+#' The default is "Cancers", which gives the most conservative (i.e. slowest) estimate of the rate of decline in 
+#' the risk of disease after quitting smoking.
 #' 
 #' @return Returns a data.table containing the estimated PAFs.
 #' 
@@ -67,7 +71,8 @@ PAFcalc <- function(
     tobalc_include_int = FALSE,
     within_model = FALSE,
     mort_or_morb = c("mort", "morb")[1],
-    country = c("England", "Scotland")[1]
+    country = c("England", "Scotland")[1],
+    other_lag_function = "Cancers"
 ) {
   
   
@@ -113,7 +118,8 @@ PAFcalc <- function(
         show_progress = TRUE,
         within_model = within_model,
         tobalc_include_int = tobalc_include_int,
-        country = country)
+        country = country,
+        other_lag_function = other_lag_function)
       
       if(y == years[1]) {
         

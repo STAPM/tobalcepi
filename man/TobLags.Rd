@@ -59,9 +59,13 @@ on diabetes risk occur within a few years, more similar to the CVDs than cancers
   and assume that the decline in risk follows the cancer estimate provided by Kontis et al., as this has the slowest decline in risk.
 }
 \examples{
-
+\dontrun{
 TobLags("Pharynx")
 
+TobLags("Low_back_pain", other_lag_function = "immediate")
+TobLags("Low_back_pain", other_lag_function = "CVD")
+TobLags("Low_back_pain", other_lag_function = "Cancers")
+}
 }
 \references{
 \insertRef{Kontis2014}{tobalcepi}  

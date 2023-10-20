@@ -23,7 +23,8 @@ RRFunc(
   tobalc_int_data = tobalcepi::tob_alc_risk_int,
   show_progress = FALSE,
   within_model = TRUE,
-  country = c("England", "Scotland")[1]
+  country = c("England", "Scotland")[1],
+  other_lag_function = "Cancers"
 )
 }
 \arguments{
@@ -90,6 +91,11 @@ there is a version that suits the STAPM model by using only the age, sex and IMD
 that are tracked within the STAPM model simulation.}
 
 \item{country}{Character string - "England" or "Scotland"}
+
+\item{other_lag_function}{Character - the name of the lag function to use for tobacco related conditions 
+that are not categorised as CVD, COPD, or Cancer. Options: c("Cancers", "CVD", "COPD", "immediate"). 
+The default is "Cancers", which gives the most conservative (i.e. slowest) estimate of the rate of decline in 
+the risk of disease after quitting smoking.}
 }
 \value{
 Two data tables are returned:
@@ -282,7 +288,9 @@ RRFunc(
   data = data,
   substance = "tob",
   tob_diseases = tob_disease_names,
-  show_progress = TRUE
+  show_progress = TRUE,
+  other_lag_function = "Cancers"
+  
 )
 
 

@@ -20,7 +20,8 @@ PAFcalc(
   tobalc_include_int = FALSE,
   within_model = FALSE,
   mort_or_morb = c("mort", "morb")[1],
-  country = c("England", "Scotland")[1]
+  country = c("England", "Scotland")[1],
+  other_lag_function = "Cancers"
 )
 }
 \arguments{
@@ -73,6 +74,11 @@ from the results of a STAPM model simulation. Defaults to FALSE.}
 should refer to mortality or morbidity. Values could be "mort" or "morb". Default is "mort".}
 
 \item{country}{Character string - "England" or "Scotland"}
+
+\item{other_lag_function}{Character - the name of the lag function to use for tobacco related conditions 
+that are not categorised as CVD, COPD, or Cancer. Options: c("Cancers", "CVD", "COPD", "immediate"). 
+The default is "Cancers", which gives the most conservative (i.e. slowest) estimate of the rate of decline in 
+the risk of disease after quitting smoking.}
 }
 \value{
 Returns a data.table containing the estimated PAFs.

@@ -51,9 +51,13 @@
 #' 
 #'
 #' @examples
-#'
+#' \dontrun{
 #' TobLags("Pharynx")
-#'
+#' 
+#' TobLags("Low_back_pain", other_lag_function = "immediate")
+#' TobLags("Low_back_pain", other_lag_function = "CVD")
+#' TobLags("Low_back_pain", other_lag_function = "Cancers")
+#'}
 TobLags <- function(
     disease_name = c("Pharynx", "Oral_cavity"),
     n_years = 40,

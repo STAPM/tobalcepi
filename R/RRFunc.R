@@ -102,6 +102,10 @@
 #' there is a version that suits the STAPM model by using only the age, sex and IMD quintile variables 
 #' that are tracked within the STAPM model simulation.
 #' @param country Character string - "England" or "Scotland"
+#' @param other_lag_function Character - the name of the lag function to use for tobacco related conditions 
+#' that are not categorised as CVD, COPD, or Cancer. Options: c("Cancers", "CVD", "COPD", "immediate"). 
+#' The default is "Cancers", which gives the most conservative (i.e. slowest) estimate of the rate of decline in 
+#' the risk of disease after quitting smoking.
 #' 
 #' @return Two data tables are returned:
 #' \itemize{
@@ -224,7 +228,9 @@
 #'   data = data,
 #'   substance = "tob",
 #'   tob_diseases = tob_disease_names,
-#'   show_progress = TRUE
+#'   show_progress = TRUE,
+#'   other_lag_function = "Cancers"
+#'   
 #' )
 #'
 #'
@@ -250,7 +256,8 @@ RRFunc <- function(
     tobalc_int_data = tobalcepi::tob_alc_risk_int,
     show_progress = FALSE,
     within_model = TRUE,
-    country = c("England", "Scotland")[1]
+    country = c("England", "Scotland")[1],
+    other_lag_function = "Cancers"
 ) {
   
   
@@ -712,7 +719,7 @@ RRFunc <- function(
       # Matching on the time since quit
       data <- merge(
         data,
-        tobalcepi::TobLags(d),
+        tobalcepi::TobLags(d, other_lag_function = other_lag_function),
         by = "time_since_quit", all.x = T, all.y = F, sort = F)
       
       data[is.na(prop_risk_reduction), prop_risk_reduction := 0L]

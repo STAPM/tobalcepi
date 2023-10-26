@@ -11,23 +11,19 @@
 # do not save the intermediate datasets as don't want these uploaded to gitlab
 # (but for development purposes the intermediate datasets were saved locally)
 
-
-#####################################
-
-# Check that height is in m not cm
-
-#####################################
-
-
 library(data.table)
 library(tobalcepi)
 
 set.seed(1)
 
-# Requires connection to the X drive to read the HSE data
-# takes a while to run
-source("data-raw/binge_params/England/10_HSE_variable_processing.R", echo = F, verbose = F)
-source("data-raw/binge_params/England/12_Imputation.R", echo = F, verbose = F)
+# Read the imputed survey data sample
+data <- readRDS("data-raw/binge_params/England/tobalc_consumption_eng_national_2011-2018_v1_2023-10-26_hseclean_1.11.3_imputed.rds")
+
+# height must be in m
+# weight must be in kg
+
+# In the current version of the input data, height is in cm
+data[ , height := height / 100]
 
 # Read the imputed HSE data sample
 #data <- fread("data-raw/binge_params/HSE_2011_to_2017_imputed.csv")
@@ -196,4 +192,4 @@ binge_params_stapm <- list(freq_model_coef_av, select_model_coef_av, sdv_model_c
 # Save the result to the package data folder
 usethis::use_data(binge_params_stapm, overwrite = T)
 
-
+# in the long term rename binge_params_stapm to binge_params_stapm_eng

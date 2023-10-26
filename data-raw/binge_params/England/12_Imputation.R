@@ -5,9 +5,13 @@
 # all the variables to be imputed are categorical - to feed into Multiple Correspondence Analysis
 
 library(data.table)
+library(hseclean)
 
-# Load the data
-#data <- fread("data/HSE_2011_to_2017.csv")
+
+# choose the file output by 10_HSE_variable_processing.R
+
+data <- readRDS("X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi/data-raw/binge_params/England/tobalc_consumption_eng_national_2011-2018_v1_2023-10-26_hseclean_1.11.3.rds")
+
 
 # view variables with missingness
 misscheck <- function(var) {
@@ -126,7 +130,7 @@ imp <- impute_data_mice(
     "",
     "polyreg"
   ),
-  n_imputations = 1 
+  n_imputations = 5
   # for testing just do 1 imputation
   # but test with more later
   # for point estimates, apparently 2-10 imputations are enough
@@ -136,23 +140,10 @@ data_imp <- copy(imp$data)
 
 #write.table(data_imp, "data/HSE_2011_to_2017_imputed.csv", row.names = FALSE, sep = ",")
 
+# note the package version so that the data can be tagged with it
+ver <- packageVersion("hseclean")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+saveRDS(data_imp, paste0("X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi/data-raw/binge_params/England/tobalc_consumption_eng_national_2011-2018_v1_", Sys.Date(), "_hseclean_", ver, "_imputed.rds"))
 
 
 

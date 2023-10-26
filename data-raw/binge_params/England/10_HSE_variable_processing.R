@@ -104,8 +104,8 @@ cleandata <- function(data) {
     alc_sevenday_child %>%
     
     select_data(
-      ages = 11:89,
-      years = 2011:2017,
+      ages = 16:89,
+      years = 2011:2018,
       
       # variables to retain
       keep_vars = keep_vars,
@@ -125,11 +125,19 @@ data <- combine_years(list(
   cleandata(read_2014(root = root_dir)),
   cleandata(read_2015(root = root_dir)),
   cleandata(read_2016(root = root_dir)),
-  cleandata(read_2017(root = root_dir))
+  cleandata(read_2017(root = root_dir)),
+  cleandata(read_2018(root = root_dir))
 ))
 
-# clean the survey weights
-data <- clean_surveyweights(data)
+# Load population data for England
+# from here - X:\ScHARR\PR_Mortality_data_TA\data\Processed pop sizes and death rates from VM
+
+eng_pops <- fread("X:/ScHARR/PR_Mortality_data_TA/data/Processed pop sizes and death rates from VM/pop_sizes_england_national_2001-2019_v1_2022-03-30_mort.tools_1.4.0.csv")
+setnames(eng_pops, c("pops"), c("N"))
+
+# adjust the survey weights according to the ratio of the real population to the sampled population
+data <- clean_surveyweights(data, pop_data = eng_pops)
+
 
 # remake age categories
 data[, age_cat := c("11-15",
@@ -197,6 +205,12 @@ rm(data_kids, data_adults)
 
 #write.table(data, "data/HSE_2011_to_2017.csv", row.names = FALSE, sep = ",")
 
+######## Write the data
+
+# note the package version so that the data can be tagged with it
+ver <- packageVersion("hseclean")
+
+saveRDS(data, paste0("X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi/data-raw/binge_params/England/tobalc_consumption_eng_national_2011-2018_v1_", Sys.Date(), "_hseclean_", ver, ".rds"))
 
 
 

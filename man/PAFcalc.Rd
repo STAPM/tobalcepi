@@ -21,7 +21,8 @@ PAFcalc(
   within_model = FALSE,
   mort_or_morb = c("mort", "morb")[1],
   country = c("England", "Scotland")[1],
-  other_lag_function = "Cancers"
+  other_lag_function = "Cancers",
+  oesoph_subtypes = FALSE
 )
 }
 \arguments{
@@ -79,6 +80,9 @@ should refer to mortality or morbidity. Values could be "mort" or "morb". Defaul
 that are not categorised as CVD, COPD, or Cancer. Options: c("Cancers", "CVD", "COPD", "immediate"). 
 The default is "Cancers", which gives the most conservative (i.e. slowest) estimate of the rate of decline in 
 the risk of disease after quitting smoking.}
+
+\item{oesoph_subtypes}{Logical - should the attributable fractions for oesophageal cancer 
+be multiplied by the proportions of each subtype. Defaults to FALSE.}
 }
 \value{
 Returns a data.table containing the estimated PAFs.

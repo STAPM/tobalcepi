@@ -55,7 +55,7 @@ just tobacco ("tob") or joint risks for tobacco and alcohol ("tobalc").}
 For use only if average risk is stratified by single years of age. Defaults to FALSE}
 
 \item{oesoph_subtypes}{Logical - should the attributable fractions for oesophageal cancer 
-be multiplied by the proportions of each subtype. In development. Defaults to FALSE.}
+be multiplied by the proportions of each subtype. Defaults to FALSE.}
 }
 \value{
 Returns a data table containing the subgroup specific summaries for each disease.

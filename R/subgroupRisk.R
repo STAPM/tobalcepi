@@ -28,7 +28,7 @@
 #' @param smooth Logical - should the age patterns in average risk be smoothed with a moving average. 
 #' For use only if average risk is stratified by single years of age. Defaults to FALSE
 #' @param oesoph_subtypes Logical - should the attributable fractions for oesophageal cancer 
-#' be multiplied by the proportions of each subtype. In development. Defaults to FALSE.
+#' be multiplied by the proportions of each subtype. Defaults to FALSE.
 #'
 #' @return Returns a data table containing the subgroup specific summaries for each disease.
 #' 

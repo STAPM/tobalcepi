@@ -167,7 +167,8 @@ PAFcalc <- function(
     use_weights = use_weights,
     pool = pool,
     subgroups = subgroups,
-    oesoph_subtypes = oesoph_subtypes)
+    oesoph_subtypes = oesoph_subtypes,
+    substance = substance)
   
   
   return(paf_data)

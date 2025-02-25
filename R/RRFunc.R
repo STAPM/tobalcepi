@@ -322,6 +322,10 @@ RRFunc <- function(
         binge_params_sim <- tobalcepi::binge_params_stapm
       }
       
+      if(country == "Wales") {
+        binge_params_sim <- tobalcepi::binge_params_stapm ### DAMON EDIT: USING ENGLAND FOR NOW (17/02/2025)
+      }
+      
       if(country == "Scotland") {
         binge_params_sim <- tobalcepi::binge_params_stapm_scot
       }
@@ -631,10 +635,14 @@ RRFunc <- function(
           
         ), use.names = T)
         
+        #indiv_risk_trajectories_alc <- fread("X:/HAR_PR/PR/ScotMUPupdate22/MUPmodelling/scottish-mup-uprating-v-2/30_outputs/alc_indiv_risk_trajectories_treatment_scotMUP_test_v5_1e.txt")
+        #k_year <- 2040
+        #d <- "Liver"
         
         # Calculate the time differences to the current year
-        indiv_risk_trajectories_alc[ , years_since_change := year - k_year + 2]
-        indiv_risk_trajectories_alc[years_since_change > 20, years_since_change := 20]
+        #indiv_risk_trajectories_alc[ , years_since_change := year - k_year + 2]
+        indiv_risk_trajectories_alc[ , years_since_change := k_year - year + 1] # 25-02-25 QA check
+        #indiv_risk_trajectories_alc[years_since_change > 20, years_since_change := 20] # 25-02-25 QA check
         
         # Merge into the data the proportional reduction in relative risk
         # according to the time since alcohol consumption changed
@@ -647,7 +655,10 @@ RRFunc <- function(
           # the proportional reductions in relative risk
           tobalcepi::AlcLags(d), 
           
-          by = "years_since_change", all.x = T, all.y = F, sort = F)
+          by = "years_since_change", 
+          
+          #all.x = T, all.y = F, sort = F) # 25-02-25 QA check
+          all = T, sort = F) # removes all rows that don't have years since change of 1:20
         
         # Adjust the relative risk for the current year
         # to take into account the individual's past trajectory of relative risk
@@ -657,9 +668,20 @@ RRFunc <- function(
         # which means that the relative risk for the current year always has the lowest weight
         # reflecting the lagged link between current consumption and relative risk
         
-        indiv_risk_trajectories_alc_adjusted <- indiv_risk_trajectories_alc[ ,
-                                                                             list(rr_adj = sum(get(d_alc) * (1 + prop_risk_reduction), na.rm = T) / sum(1 + prop_risk_reduction, na.rm = T)),
-                                                                             by = "ran_id"]
+        #indiv_risk_trajectories_alc_adjusted <- indiv_risk_trajectories_alc[ , 
+          #list(rr_adj = sum(get(d_alc) * (1 + prop_risk_reduction), na.rm = T) / sum(1 + prop_risk_reduction, na.rm = T)), by = "ran_id"] # 25-02-25 QA check
+        
+        indiv_risk_trajectories_alc[ , min_year := min(year), by = "ran_id"]
+        indiv_risk_trajectories_alc[ , sum_prop := sum(prop_risk_reduction), by = "ran_id"]
+        indiv_risk_trajectories_alc[year == min_year & sum_prop == 0, prop_risk_reduction := 1]
+        indiv_risk_trajectories_alc[ , `:=`(sum_prop = NULL, min_year = NULL)]
+        
+        #test <- indiv_risk_trajectories_alc[ran_id == "52fb794fdf67ea7325f00ae0c8fc26c0", .(year, Liver_alcx, years_since_change, prop_risk_reduction)]
+        #test
+        
+        #sum(test$Liver_alcx * (test$prop_risk_reduction)) / sum(test$prop_risk_reduction)
+        
+        indiv_risk_trajectories_alc_adjusted <- indiv_risk_trajectories_alc[ , list(rr_adj = sum(get(d_alc) * prop_risk_reduction, na.rm = T) / sum(prop_risk_reduction, na.rm = T)), by = "ran_id"]
         
         # Remove the unadjusted relative risks from the data
         data[ , (d_alc) := NULL]

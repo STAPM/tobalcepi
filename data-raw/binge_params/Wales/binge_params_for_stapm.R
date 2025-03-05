@@ -17,7 +17,7 @@ library(tobalcepi)
 set.seed(1)
 
 # Read the imputed survey data sample
-data <- readRDS("data-raw/binge_params/England/tobalc_consumption_eng_national_2011-2018_v1_2023-10-26_hseclean_1.11.3_imputed.rds")
+data <- readRDS("X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi/data-raw/binge_params/Wales/tobalc_consumption_wales_2016-2022_v1_FINAL_imputed.rds")
 
 # height must be in m
 # weight must be in kg
@@ -187,7 +187,7 @@ height_weight_av <- data[ , .(
 ################################
 
 # put the data into a list
-binge_params_stapm <- list(freq_model_coef_av, select_model_coef_av, sdv_model_coef_av, height_weight_av)
+binge_params_stapm_wales <- list(freq_model_coef_av, select_model_coef_av, sdv_model_coef_av, height_weight_av)
 
 # Save the result to the package data folder
 usethis::use_data(binge_params_stapm_wales, overwrite = T)

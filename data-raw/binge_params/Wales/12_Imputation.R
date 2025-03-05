@@ -1,5 +1,5 @@
 
-# This code reads the processed HSE datasets for each year
+# This code reads the processed NSW datasets for each year
 # and conducts imputation.
 
 # all the variables to be imputed are categorical - to feed into Multiple Correspondence Analysis
@@ -10,7 +10,7 @@ library(hseclean)
 
 # choose the file output by 10_HSE_variable_processing.R
 
-data <- readRDS("X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi/data-raw/binge_params/Wales/tobalc_consumption_eng_national_2011-2018_v1_2023-10-26_hseclean_1.11.3.rds")
+data <- readRDS("X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi/data-raw/binge_params/Wales/tobalc_consumption_wales_2016-2022_v1_2025-03-05_hseclean_1.14.0.rds")
 
 
 # view variables with missingness
@@ -48,9 +48,9 @@ imp <- impute_data_mice(
     "ethnicity_4cat",
     "ethnicity_2cat",
     "imd_quintile",
-    "eduend4cat",
+    #"eduend4cat",
     "degree",
-    "nssec3_lab",
+    #"nssec3_lab",
     "employ2cat",
     "activity_lstweek",
     "income5cat",
@@ -68,13 +68,13 @@ imp <- impute_data_mice(
     "hse_muscskel",
     "hse_infect",
     "hse_blood",
-    "hse_other",
+    #"hse_other",
     "cig_smoker_status",
-    "giveup_smk",
-    "smoker_cat",
-    "banded_consumption",
-    "cig_type",
-    "time_to_first_cig",
+    #"giveup_smk",
+    #"smoker_cat",
+    #"banded_consumption",
+    #"cig_type",
+    #"time_to_first_cig",
     "drinks_now",
     "drinker_cat",
     "spirits_pref_cat",
@@ -82,8 +82,8 @@ imp <- impute_data_mice(
     "rtd_pref_cat",
     "beer_pref_cat",
     "binge_cat",
-    "bmi_4cat",
-    "social_grade"
+    "bmi_4cat"
+    #"social_grade"
   ),
   var_methods = c(
     "",
@@ -93,9 +93,9 @@ imp <- impute_data_mice(
     "polyreg",
     "polyreg",
     "",
-    "polyreg",
+    #"polyreg",
     "logreg",
-    "polyreg",
+    #"polyreg",
     "",
     "",
     "polr",
@@ -113,22 +113,22 @@ imp <- impute_data_mice(
     "logreg",
     "logreg",
     "logreg",
-    "logreg",
+    #"logreg",
+    "",
+    #"polyreg",
+    #"",
+    #"",
+    #"polyreg",
+    #"polyreg",
+    "",
+    "",
+    "",
+    "",
+    "",
     "",
     "polyreg",
-    "",
-    "",
-    "polyreg",
-    "polyreg",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "polyreg",
-    "",
-    "polyreg"
+    ""
+    #"polyreg"
   ),
   n_imputations = 5
   # for testing just do 1 imputation
@@ -143,7 +143,7 @@ data_imp <- copy(imp$data)
 # note the package version so that the data can be tagged with it
 ver <- packageVersion("hseclean")
 
-saveRDS(data_imp, paste0("X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi/data-raw/binge_params/England/tobalc_consumption_eng_national_2011-2018_v1_", Sys.Date(), "_hseclean_", ver, "_imputed.rds"))
+saveRDS(data_imp, paste0("X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi/data-raw/binge_params/Wales/tobalc_consumption_wales_2016-2022_v1_", Sys.Date(), "_hseclean_", ver, "_imputed.rds"))
 
 
 

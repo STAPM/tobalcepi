@@ -1,84 +1,63 @@
+# Processing tobacco and alcohol data from the National Survey for Wales
 
-# Processing tobacco and alcohol data from the Health Survey for England
+# use a sample with as many years as possible from the data
+# Noting that:
+# - the first year of detailed alcohol data was 2011
+# - the first year of smoking product preference data was 2013
 
-# install and load the hseclean package (with version specified)
-#devtools::install_github("STAPM/hseclean", ref = "1.0.0")
+# include the variables commonly used to describe health and social inequalities
+# that are also available in the HSE data
+
+# use variables that describe smoking and drinking status and product preferences
 
 library(hseclean)
 library(magrittr)
 library(data.table)
 
-#root_dir <- "/Volumes/Shared/"
-root_dir <- "X:/"
 
 # apply functions to create the variables for analysis and to retain only the required variables
 
 # The variables to retain
 keep_vars = c(
-  # Survey design variables
-  "wt_int",
-  "psu",
-  "cluster",
-  "year",
+  # "hse_id",
+  "wt_int", "psu", "cluster", 
+  "year", #"quarter",
+  "age", "age_cat", "sex", "imd_quintile",
+  "ethnicity_4cat", "ethnicity_2cat", "degree", 
+  # "marstat", 
+  "relationship_status", "employ2cat", "income5cat",  "kids",
+  # "social_grade", "kids","nssec3_lab", "man_nonman", 
+  "activity_lstweek", 
+  # "eduend4cat",
   
-  # Social / economic / demographic variables
-  "age",
-  "age_cat",
-  "sex",
-  "imd_quintile",
-  "ethnicity_4cat",
-  "ethnicity_2cat",
-  "degree",
-  "relationship_status",
-  "employ2cat",
-  "kids",
-  "income5cat",
-  "nssec3_lab",
-  "activity_lstweek",
-  "eduend4cat",
-  "social_grade",
+  "hse_cancer", "hse_endocrine", "hse_heart", "hse_mental", "hse_nervous", "hse_eye", "hse_ear", "hse_respir",
+  "hse_disgest", "hse_urinary", "hse_skin", "hse_muscskel", "hse_infect", "hse_blood",
   
-  # Long term health conditions
-  "hse_cancer",
-  "hse_endocrine",
-  "hse_heart",
-  "hse_mental",
-  "hse_nervous",
-  "hse_eye",
-  "hse_ear",
-  "hse_respir",
-  "hse_disgest",
-  "hse_urinary",
-  "hse_skin",
-  "hse_muscskel",
-  "hse_infect",
-  "hse_blood",
-  "hse_other",
+  "weight", "height", "bmi",
   
-  "bmi", "weight", "height",
-  
-  # Smoking
   "cig_smoker_status",
-  "smoker_cat",
-  "cig_type",
-  "time_to_first_cig",
-  "giveup_smk",
-  "banded_consumption",
+  #  "years_since_quit", "years_reg_smoker", "cig_ever",
+  #  "cigs_per_day", "smoker_cat", "banded_consumption", "time_to_first_cig",
+  #  "smk_start_age", "smk_stop_age", "censor_age", "giveup_smk",
+  #  "cig_type",
+  #  "units_RYO_tob", "units_FM_cigs", "prop_handrolled",
   
-  # Drinking
-  "drinks_now",
+  "drinks_now", "drink_freq_7d",
+  "n_days_drink", "peakday", "binge_cat",
+  "beer_units", "wine_units", "spirit_units", "rtd_units",
+  "weekmean", 
+  "perc_spirit_units", "perc_wine_units", "perc_rtd_units", "perc_beer_units",
   "drinker_cat",
-  "spirits_pref_cat",
-  "wine_pref_cat",
-  "rtd_pref_cat",
-  "beer_pref_cat",
-  "binge_cat",
-  "weekmean"
+  "spirits_pref_cat", "wine_pref_cat", "rtd_pref_cat", "beer_pref_cat"
+  #  "totalwu", "total_units7_ch"
 )
 
 # The variables that must have complete cases
-complete_vars <- c("age", "sex", "year", "psu", "cluster", "cig_smoker_status", "drinker_cat")
+complete_vars <- c("age", "sex", "year","psu", "cluster","imd_quintile", 
+                   #"censor_age", 
+                   "cig_smoker_status")
 
+complete_vars <- NULL
 
 #-----------------------------------------------------
 # Read and clean the HSE tobacco and alcohol data
@@ -96,16 +75,16 @@ cleandata <- function(data) {
     smk_status %>%
     smk_former %>%
     smk_quit %>%
-    smk_life_history %>%
-    smk_amount %>%
+    #smk_life_history %>%       - none of these variables are in NSW - leave out and impute later
+    #smk_amount %>%             - none of these variables are in NSW - leave out and impute later
     alc_drink_now_allages %>%
     alc_weekmean_adult %>%
     alc_sevenday_adult %>%
-    alc_sevenday_child %>%
+    #alc_sevenday_child %>%     - no children in NSW
     
     select_data(
-      ages = 16:89,
-      years = 2011:2018,
+      ages = 13:89,
+      years = 2013:2022,
       
       # variables to retain
       keep_vars = keep_vars,
@@ -119,24 +98,25 @@ cleandata <- function(data) {
 
 # Read and clean each year of data and bind them together in one big dataset
 data <- combine_years(list(
-  cleandata(read_2011(root = root_dir)),
-  cleandata(read_2012(root = root_dir)),
-  cleandata(read_2013(root = root_dir)),
-  cleandata(read_2014(root = root_dir)),
-  cleandata(read_2015(root = root_dir)),
-  cleandata(read_2016(root = root_dir)),
-  cleandata(read_2017(root = root_dir)),
-  cleandata(read_2018(root = root_dir))
+  cleandata(read_NSW_2016_17()),
+  cleandata(read_NSW_2017_18()),
+  cleandata(read_NSW_2018_19()),
+  cleandata(read_NSW_2019_20()),
+  cleandata(read_NSW_2020_21()),
+  cleandata(read_NSW_2021_22()),
+  cleandata(read_NSW_2022_23())
 ))
+
+
 
 # Load population data for England
 # from here - X:\ScHARR\PR_Mortality_data_TA\data\Processed pop sizes and death rates from VM
 
-eng_pops <- fread("X:/ScHARR/PR_Mortality_data_TA/data/Processed pop sizes and death rates from VM/pop_sizes_england_national_2001-2019_v1_2022-03-30_mort.tools_1.4.0.csv")
-setnames(eng_pops, c("pops"), c("N"))
+wales_pops <- stapmr::pop_counts_wales
+#setnames(eng_pops, c("pops"), c("N"))
 
 # adjust the survey weights according to the ratio of the real population to the sampled population
-data <- clean_surveyweights(data, pop_data = eng_pops)
+data <- clean_surveyweights(data, pop_data = wales_pops)
 
 
 # remake age categories
@@ -210,7 +190,7 @@ rm(data_kids, data_adults)
 # note the package version so that the data can be tagged with it
 ver <- packageVersion("hseclean")
 
-saveRDS(data, paste0("X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi/data-raw/binge_params/Wales/tobalc_consumption_eng_national_2011-2018_v1_", Sys.Date(), "_hseclean_", ver, ".rds"))
+saveRDS(data, paste0("X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi/data-raw/binge_params/Wales/tobalc_consumption_wales_2016-2022_v1_", Sys.Date(), "_hseclean_", ver, ".rds"))
 
 
 

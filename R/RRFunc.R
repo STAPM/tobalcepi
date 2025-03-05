@@ -394,10 +394,12 @@ RRFunc <- function(
   wa_acute_flag <- 0
   ########
   
+  alc_indiv_risk_trajectories_temp <- NULL # 25-02-25 QA check
+  
   # Loop through each disease
   for (i in 1:dn) {
     
-    #i <- 4
+    #i <- 5
     
     d <- as.character(diseases[i])
     
@@ -412,11 +414,11 @@ RRFunc <- function(
     
     if(d %in% alc_diseases_expanded & substance %in% c("alc", "tobalc")) {
       
-      # d <- "Fall_injuries"
+      # d <- "Liver"
       
       # Setup names of temporary variables
       d_alc <- paste0(d, "_alcx")
-      d_alc_adj <- paste0(d, "_alc_adj")
+      #d_alc_adj <- paste0(d, "_alc_adj")
       
       alc_mort_or_morb <- ifelse(stringr::str_detect(d, "_morb"), "morb", "mort")
       
@@ -564,6 +566,7 @@ RRFunc <- function(
       
       ##
       # all the other alcohol related conditions
+      # including cancers etc that will later have their relative risks lag adjusted
       if(!(d %in% c(
         "Assault", "Other_intentional_injuries",
         "Mechanical_forces", "Drowning", "Other_unintentional_injuries", "intentional_self_harm", "Accidental_poisoning", "Fire_injuries",
@@ -604,6 +607,28 @@ RRFunc <- function(
         
       }
       
+      
+      if(isTRUE(alc_risk_lags) & d %in% alc_lag_diseases) {
+        
+        # Store the unadjusted relative risks
+        # as the lagged diseases pass through this part of the code in the course of the loop through diseases,
+        # the unadjusted relative risks for the lagged diseases will be stored in this 
+        # year specific data table
+        # this can then be joined onto the multi-year relative risk storage table at the end of this function
+        if(is.null(alc_indiv_risk_trajectories_temp)) {
+          
+          alc_indiv_risk_trajectories_temp <- copy(data[ , c("ran_id", "year", "age", d_alc), with = F])
+          
+        } else {
+          
+          alc_indiv_risk_trajectories_temp <- merge(
+            alc_indiv_risk_trajectories_temp,
+            copy(data[ , c("ran_id", "year", d_alc), with = F]),
+            by = c("ran_id", "year"), all = T, sort = F)
+          
+        }
+      }
+      
       #############################################################
       #############################################################
       
@@ -613,6 +638,9 @@ RRFunc <- function(
       
       # also see code at the end of this function that initialises alc_indiv_risk_trajectories_store
       # if it is null in the first year of the simulation
+      
+      #alc_indiv_risk_trajectories_store <- copy(alc_indiv_risk_trajectories_temp)[ , year := 2016]
+      
       
       if(isTRUE(alc_risk_lags) & !is.null(alc_indiv_risk_trajectories_store) & 
          
@@ -627,22 +655,57 @@ RRFunc <- function(
         indiv_risk_trajectories_alc <- rbindlist(list(
           
           # current alcohol risks for the individuals currently present in the simulation
-          data[ , c("ran_id", "year", d_alc), with = F], 
+          data[ , c("ran_id", "year", "age", d_alc), with = F], 
           
           # past relative risk trajectories for the individuals currently present in the simulation
           # for the focal disease
-          alc_indiv_risk_trajectories_store[ , c("ran_id", "year", d_alc), with = F]
+          alc_indiv_risk_trajectories_store[ , c("ran_id", "year", "age", d_alc), with = F]
           
         ), use.names = T)
         
+        #indiv_risk_trajectories_alc_control <- fread("X:/HAR_PR/PR/ScotMUPupdate22/MUPmodelling/scottish-mup-uprating-v-2/30_outputs/alc_indiv_risk_trajectories_control_scotMUP_test_v5.txt")
         #indiv_risk_trajectories_alc <- fread("X:/HAR_PR/PR/ScotMUPupdate22/MUPmodelling/scottish-mup-uprating-v-2/30_outputs/alc_indiv_risk_trajectories_treatment_scotMUP_test_v5_1e.txt")
+        
         #k_year <- 2040
-        #d <- "Liver"
+        #d <- "Epilepsy"
+        
+        # New code added to back-fill the stored risk trajectories 
+        # for the years within the 20 year risk history for each individual
+        # for which they were not in the model
+        
+        # Make a new data structure that has a row for the past 20 years
+        # for each individual currently in the model
+        risk_domain <- setDT(data.frame(expand.grid(ran_id = unique(indiv_risk_trajectories_alc$ran_id),
+                                                    year = (k_year - 19): k_year)))
+        
+        # Merge the above indiv_risk_trajectories_alc into this data structure
+        # this will bring with it the stored relative risk and age
+        indiv_risk_trajectories_alc <- merge(
+          risk_domain, 
+          indiv_risk_trajectories_alc, by = c("ran_id", "year"), all.x = T, all.y = F, sort = F)
+        
+        # Ages for individuals in years they were not in the model will be missing
+        # fill the missing values for age by calculating the birth year for each individual
+        indiv_risk_trajectories_alc[ , birth_year := unique(na.omit(year - age)), by = "ran_id"]
+        indiv_risk_trajectories_alc[ , age := year - birth_year]
+        
+        testthat::expect_equal(nrow(indiv_risk_trajectories_alc[is.na(age)]), 0, info = "Missing values for age in alcohol risk trajectories")
+        
+        # Then do the back-filling of risk history
+        
+        # Fill missing RR values with the first stored value
+        indiv_risk_trajectories_alc[ , min_year := min(year[!is.na(get(d_alc))]), by = "ran_id"]
+        indiv_risk_trajectories_alc[ , first_rr := get(d_alc)[year == min_year[1]], by = "ran_id"]
+        indiv_risk_trajectories_alc[year < min_year, (d_alc) := first_rr[1], by = "ran_id"]
+        indiv_risk_trajectories_alc[ , `:=`(min_year = NULL, first_rr = NULL)]
+        
+        # Then apply the rule that age below 18 years always have RR = 1
+        indiv_risk_trajectories_alc[age < 18, (d_alc) := 1]
         
         # Calculate the time differences to the current year
-        #indiv_risk_trajectories_alc[ , years_since_change := year - k_year + 2]
-        indiv_risk_trajectories_alc[ , years_since_change := k_year - year + 1] # 25-02-25 QA check
+        #indiv_risk_trajectories_alc[ , years_since_change := year - k_year + 2] # 25-02-25 QA check [error]
         #indiv_risk_trajectories_alc[years_since_change > 20, years_since_change := 20] # 25-02-25 QA check
+        indiv_risk_trajectories_alc[ , years_since_change := k_year - year + 1] # 25-02-25 QA check
         
         # Merge into the data the proportional reduction in relative risk
         # according to the time since alcohol consumption changed
@@ -657,35 +720,70 @@ RRFunc <- function(
           
           by = "years_since_change", 
           
-          #all.x = T, all.y = F, sort = F) # 25-02-25 QA check
-          all = T, sort = F) # removes all rows that don't have years since change of 1:20
+          all.x = T, all.y = F, sort = F)
+        
+        
+        #test <- indiv_risk_trajectories_alc[ran_id == "52fb794fdf67ea7325f00ae0c8fc26c0", .(year, Epilepsy_alcx, years_since_change, prop_risk_reduction)]
+        #test
         
         # Adjust the relative risk for the current year
         # to take into account the individual's past trajectory of relative risk
         # The adjusted relative risk for the current year is a weighted average of
         # the relative risks for all past years for which the individual was tracked
         # where the weights are the expected proportional reduction in risk
-        # which means that the relative risk for the current year always has the lowest weight
-        # reflecting the lagged link between current consumption and relative risk
         
+        # 25-02-25 QA check [error]        
         #indiv_risk_trajectories_alc_adjusted <- indiv_risk_trajectories_alc[ , 
-          #list(rr_adj = sum(get(d_alc) * (1 + prop_risk_reduction), na.rm = T) / sum(1 + prop_risk_reduction, na.rm = T)), by = "ran_id"] # 25-02-25 QA check
+        #list(rr_adj = sum(get(d_alc) * (1 + prop_risk_reduction), na.rm = T) / sum(1 + prop_risk_reduction, na.rm = T)), by = "ran_id"]
         
-        indiv_risk_trajectories_alc[ , min_year := min(year), by = "ran_id"]
-        indiv_risk_trajectories_alc[ , sum_prop := sum(prop_risk_reduction), by = "ran_id"]
-        indiv_risk_trajectories_alc[year == min_year & sum_prop == 0, prop_risk_reduction := 1]
-        indiv_risk_trajectories_alc[ , `:=`(sum_prop = NULL, min_year = NULL)]
+        # in the 25-02-25 QA check, the method of applying the lags to individual relative risks
+        # was changed so that the weights were equal to the lag values from Holmes et al.
+        # for cancers this means that for the first 10 years the weights are zero
+        # but we cannot calculate a weighted average relative risks when all weights are zero
         
-        #test <- indiv_risk_trajectories_alc[ran_id == "52fb794fdf67ea7325f00ae0c8fc26c0", .(year, Liver_alcx, years_since_change, prop_risk_reduction)]
-        #test
+        # if it the case that all weights are zero, then 
+        # either the model must have been running for 10 years or fewer
+        # or that individual entered the model less than 10 years ago
         
-        #sum(test$Liver_alcx * (test$prop_risk_reduction)) / sum(test$prop_risk_reduction)
+        # and so the first relative risk value stored for each individual will be 
+        # the relative risk assigned on entry to the model
+        # that is assigned before any policy effect is applied
+        # and so should be the same for each individual between the control and intervention arms
+        
+        # so in the case when all weights are zero, assign a weight of 1 to the first stored relative risk value
+        # for that individual
+        # this will keep assigning an individual their first stored value 
+        # until there are two years with non-zero weight
+        # at which point a new weighted relative risk will be assigned
+        
+        # determine the first year an individual had a stored RR value
+        #indiv_risk_trajectories_alc[ , min_year := min(year), by = "ran_id"]
+        
+        # sum the weight values for that individual
+        #indiv_risk_trajectories_alc[ , sum_prop := sum(prop_risk_reduction), by = "ran_id"]
+        
+        # if the sum of the weights is zero, then give the first year a weight of 1
+        #indiv_risk_trajectories_alc[year == min_year & sum_prop == 0, prop_risk_reduction := 1]
+        
+        # if the sum of the weights is greater than zero but less than 1, 
+        # then give the first year a weight of 1 - sum_prop
+        #indiv_risk_trajectories_alc[year == min_year & sum_prop > 0 & sum_prop < 1, prop_risk_reduction := prop_risk_reduction + (1 - sum_prop)]
+        
+        # remove the variables that are now not needed
+        #indiv_risk_trajectories_alc[ , `:=`(sum_prop = NULL, min_year = NULL)]
+        
+        # Calculate the lag-adjusted relative risk as a weighted average
+        # of each individual's stored relative risk values
+        
+        testthat::expect_equal(nrow(indiv_risk_trajectories_alc[is.na(prop_risk_reduction)]), 0, info = "Missing values for prop_risk_reduction in alcohol risk trajectories")
+        testthat::expect_equal(nrow(indiv_risk_trajectories_alc[is.na(get(d_alc))]), 0, info = paste0("Missing values for ", d_alc, " in alcohol risk trajectories"))
         
         indiv_risk_trajectories_alc_adjusted <- indiv_risk_trajectories_alc[ , list(rr_adj = sum(get(d_alc) * prop_risk_reduction, na.rm = T) / sum(prop_risk_reduction, na.rm = T)), by = "ran_id"]
         
+        testthat::expect_equal(nrow(indiv_risk_trajectories_alc_adjusted[is.na(rr_adj)]), 0, info = "Missing values for adjusted rr in alcohol risk trajectories")
+        
         # Remove the unadjusted relative risks from the data
         data[ , (d_alc) := NULL]
-        
         
         # Assign the adjusted relative risk the appropriate disease-specific name
         setnames(indiv_risk_trajectories_alc_adjusted, "rr_adj", d_alc)
@@ -694,7 +792,7 @@ RRFunc <- function(
         data <- merge(
           data,
           indiv_risk_trajectories_alc_adjusted[ , c("ran_id", d_alc), with = F],
-          by = "ran_id", sort = F)
+          by = "ran_id", all.x = T, all.y = F, sort = F)
         
       }
       
@@ -848,20 +946,23 @@ RRFunc <- function(
       if(is.null(alc_indiv_risk_trajectories_store)) {
         
         # If the first year, then create the storage data table
-        alc_indiv_risk_trajectories_store <- data[ , c("ran_id", "year", paste0(alc_lag_diseases, "_alcx")), with = F]
+        #alc_indiv_risk_trajectories_store <- data[ , c("ran_id", "year", paste0(alc_lag_diseases, "_alcx")), with = F] # 25-02-25 QA check
+        alc_indiv_risk_trajectories_store <- copy(alc_indiv_risk_trajectories_temp)
+        
         
       } else {
         
         # Otherwise append the relative risks for the current year to the stored data table
         alc_indiv_risk_trajectories_store <- rbindlist(list(
           alc_indiv_risk_trajectories_store,
-          data[ , c("ran_id", "year", paste0(alc_lag_diseases, "_alcx")), with = F]
+          #data[ , c("ran_id", "year", paste0(alc_lag_diseases, "_alcx")), with = F] # 25-02-25 QA check
+          copy(alc_indiv_risk_trajectories_temp)
         ), use.names = T)
         
       }
     }
     
-    # After storing, remove unadjusted alcohol relative risks for the current year
+    # Remove unadjusted alcohol relative risks for the current year
     data <- data[ , colnames(data)[sapply(colnames(data), function(x) !stringr::str_detect(x, "_alcx"))], with = F]
     
   }

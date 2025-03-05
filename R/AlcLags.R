@@ -116,7 +116,8 @@ AlcLags <- function(
 
   lag_data <- data.table(
     years_since_change = 1:n_years,
-    prop_risk_reduction = cumsum(lag_func) / 100
+    prop_risk_reduction = lag_func
+    #prop_risk_reduction = cumsum(lag_func) / 100 # 25-02-25 QA check [error]
   )
   
 

@@ -323,7 +323,7 @@ RRFunc <- function(
       }
       
       if(country == "Wales") {
-        binge_params_sim <- tobalcepi::binge_params_stapm_wales ### DAMON EDIT: USING ENGLAND FOR NOW (17/02/2025)
+        binge_params_sim <- tobalcepi::binge_params_stapm_wales 
       }
       
       if(country == "Scotland") {

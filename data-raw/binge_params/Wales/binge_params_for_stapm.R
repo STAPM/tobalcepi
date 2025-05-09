@@ -186,8 +186,17 @@ height_weight_av <- data[ , .(
 ################################
 ################################
 
+### No under 18s in NSW so drop 16-17
+
+freq_model_coef_av <- freq_model_coef_av[age_cat != "16-17",]
+select_model_coef_av <- select_model_coef_av[age_cat != "16-17",]
+sdv_model_coef_av <- sdv_model_coef_av[age_cat != "16-17",]
+height_weight_av <- height_weight_av[age_cat != "16-17",]
+
 # put the data into a list
+
 binge_params_stapm_wales <- list(freq_model_coef_av, select_model_coef_av, sdv_model_coef_av, height_weight_av)
+
 
 # Save the result to the package data folder
 usethis::use_data(binge_params_stapm_wales, overwrite = T)

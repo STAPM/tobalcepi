@@ -10,7 +10,7 @@ library(hseclean)
 
 # choose the file output by 10_HSE_variable_processing.R
 
-data <- readRDS("X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi/data-raw/binge_params/Wales/tobalc_consumption_wales_2016-2022_v1_2025-03-05_hseclean_1.14.0.rds")
+data <- readRDS("X:/ScHARR/PR_STAPM/Code/R_packages/tobalcepi/data-raw/binge_params/Wales/tobalc_consumption_wales_2016-2022_v1_2025-03-12_hseclean_1.14.0.rds")
 
 
 # view variables with missingness

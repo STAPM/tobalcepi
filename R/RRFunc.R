@@ -323,6 +323,7 @@ RRFunc <- function(
       }
       
       if(country == "Wales") {
+        #binge_params_sim <- tobalcepi::binge_params_stapm 
         binge_params_sim <- tobalcepi::binge_params_stapm_wales 
       }
       
